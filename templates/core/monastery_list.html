@@ -1,0 +1,831 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Explore Monasteries" %} - Monastery360{% endblock %}
+
+{% block description %}{% trans "Discover Buddhist monasteries across Sikkim. Virtual tours, historical information, and cultural insights into sacred heritage sites." %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filters-sidebar {
+        background: var(--white);
+        border-radius: var(--border-radius-lg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 100px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+
+    .filter-section {
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid #eee;
+    }
+
+    .filter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .filter-title {
+        font-weight: 600;
+        margin-bottom: var(--spacing-md);
+        color: var(--primary-color);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-option {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-sm);
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        border-radius: var(--border-radius);
+        transition: var(--transition-base);
+    }
+
+    .filter-option:hover {
+        background-color: var(--light-gray);
+    }
+
+    .filter-option input[type="checkbox"],
+    .filter-option input[type="radio"] {
+        margin: 0;
+    }
+
+    .filter-option label {
+        margin: 0;
+        cursor: pointer;
+        flex: 1;
+        font-size: 0.9rem;
+    }
+
+    .filter-count {
+        font-size: 0.8rem;
+        color: var(--gray);
+        background: var(--light-gray);
+        padding: 0.125rem 0.375rem;
+        border-radius: var(--border-radius-xl);
+    }
+
+    .search-header {
+        background: var(--white);
+        border-radius: var(--border-radius-lg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+
+    .results-count {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .sort-dropdown {
+        min-width: 200px;
+    }
+
+    .view-toggle {
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+
+    .view-toggle .btn {
+        padding: 0.375rem 0.75rem;
+        border: 1px solid #ddd;
+        background: var(--white);
+        color: var(--gray);
+    }
+
+    .view-toggle .btn.active {
+        background: var(--primary-color);
+        color: var(--white);
+        border-color: var(--primary-color);
+    }
+
+    .monastery-list-view .monastery-card {
+        display: flex;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
+    }
+
+    .monastery-list-view .monastery-image {
+        width: 200px;
+        height: 150px;
+        flex-shrink: 0;
+    }
+
+    .monastery-list-view .monastery-content {
+        flex: 1;
+    }
+
+    .distance-badge {
+        background: var(--secondary-color);
+        color: var(--white);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--border-radius-xl);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--gray);
+    }
+
+    .no-results-icon {
+        font-size: 4rem;
+        margin-bottom: var(--spacing-lg);
+        color: var(--light-gray);
+    }
+
+    .loading-skeleton {
+        background: var(--light-gray);
+        border-radius: var(--border-radius);
+        margin-bottom: var(--spacing-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skeleton-text {
+        height: 1rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .skeleton-title {
+        height: 1.5rem;
+        width: 70%;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .skeleton-image {
+        height: 200px;
+        margin-bottom: var(--spacing-md);
+    }
+
+    @media (max-width: 768px) {
+        .filters-sidebar {
+            position: static;
+            margin-bottom: var(--spacing-lg);
+            max-height: none;
+        }
+
+        .monastery-list-view .monastery-card {
+            flex-direction: column;
+        }
+
+        .monastery-list-view .monastery-image {
+            width: 100%;
+            height: 200px;
+        }
+
+        .results-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: var(--spacing-sm);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Search Header -->
+    <div class="search-header">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="h3 mb-3 mb-lg-0">{% trans "Explore Monasteries" %}</h1>
+                <p class="mb-0 text-muted">{% trans "Discover the sacred Buddhist monasteries of Sikkim" %}</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="search-box">
+                    <div class="input-group">
+                        <input type="search"
+                               class="form-control"
+                               id="monastery-search"
+                               placeholder="{% trans 'Search monasteries...' %}"
+                               value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-primary" type="button" id="clear-search">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="filters-sidebar">
+                <h5 class="mb-3">
+                    <i class="fas fa-filter me-2"></i>{% trans "Filters" %}
+                    <button class="btn btn-sm btn-outline-secondary ms-auto" id="clear-filters">
+                        {% trans "Clear All" %}
+                    </button>
+                </h5>
+
+                <!-- Location Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="fas fa-map-marker-alt"></i>{% trans "Location" %}
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="location" value="all" id="location-all" checked>
+                        <label for="location-all">{% trans "All Locations" %}</label>
+                        <span class="filter-count" id="count-all">{{ stats.total_monasteries }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="location" value="near-me" id="location-near">
+                        <label for="location-near">{% trans "Near Me" %}</label>
+                        <span class="filter-count" id="count-near">0</span>
+                    </div>
+                    {% for district in districts %}
+                    <div class="filter-option">
+                        <input type="radio" name="location" value="{{ district.slug }}" id="location-{{ district.slug }}">
+                        <label for="location-{{ district.slug }}">{{ district.name }}</label>
+                        <span class="filter-count">{{ district.monastery_count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Monastery Type Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="fas fa-dharmachakra"></i>{% trans "Tradition" %}
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="type" value="gelug" id="type-gelug">
+                        <label for="type-gelug">{% trans "Gelug" %}</label>
+                        <span class="filter-count">{{ stats.gelug_count }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="type" value="nyingma" id="type-nyingma">
+                        <label for="type-nyingma">{% trans "Nyingma" %}</label>
+                        <span class="filter-count">{{ stats.nyingma_count }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="type" value="kagyu" id="type-kagyu">
+                        <label for="type-kagyu">{% trans "Kagyu" %}</label>
+                        <span class="filter-count">{{ stats.kagyu_count }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="type" value="sakya" id="type-sakya">
+                        <label for="type-sakya">{% trans "Sakya" %}</label>
+                        <span class="filter-count">{{ stats.sakya_count }}</span>
+                    </div>
+                </div>
+
+                <!-- Features Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="fas fa-star"></i>{% trans "Features" %}
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="features" value="virtual-tour" id="feature-tour">
+                        <label for="feature-tour">{% trans "Virtual Tour" %}</label>
+                        <span class="filter-count">{{ stats.with_tours }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="features" value="audio-guide" id="feature-audio">
+                        <label for="feature-audio">{% trans "Audio Guide" %}</label>
+                        <span class="filter-count">{{ stats.with_audio }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="features" value="archives" id="feature-archives">
+                        <label for="feature-archives">{% trans "Digital Archives" %}</label>
+                        <span class="filter-count">{{ stats.with_archives }}</span>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="features" value="accessible" id="feature-accessible">
+                        <label for="feature-accessible">{% trans "Wheelchair Accessible" %}</label>
+                        <span class="filter-count">{{ stats.accessible_count }}</span>
+                    </div>
+                </div>
+
+                <!-- Visiting Hours Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="fas fa-clock"></i>{% trans "Visiting Hours" %}
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="hours" value="open-now" id="hours-now">
+                        <label for="hours-now">{% trans "Open Now" %}</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="hours" value="sunrise" id="hours-sunrise">
+                        <label for="hours-sunrise">{% trans "Sunrise Prayers" %}</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" name="hours" value="evening" id="hours-evening">
+                        <label for="hours-evening">{% trans "Evening Ceremonies" %}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Results Header -->
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="results-text">{% trans "Showing" %} <strong id="results-start">1</strong>-<strong id="results-end">{{ monasteries|length }}</strong> {% trans "of" %} <strong id="results-total">{{ total_count }}</strong> {% trans "monasteries" %}</span>
+                </div>
+
+                <div class="d-flex gap-3 align-items-center">
+                    <!-- Sort Dropdown -->
+                    <select class="form-select sort-dropdown" id="sort-select">
+                        <option value="name">{% trans "Sort by Name" %}</option>
+                        <option value="distance">{% trans "Sort by Distance" %}</option>
+                        <option value="established">{% trans "Sort by Age" %}</option>
+                        <option value="popularity">{% trans "Sort by Popularity" %}</option>
+                        <option value="rating">{% trans "Sort by Rating" %}</option>
+                    </select>
+
+                    <!-- View Toggle -->
+                    <div class="view-toggle">
+                        <button class="btn active" id="grid-view" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="btn" id="list-view" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- React Component Container -->
+            <div id="monasteries-react-container">
+                <!-- Loading skeleton -->
+                <div class="monastery-grid" id="loading-skeleton">
+                    {% for i in "123456" %}
+                    <div class="card">
+                        <div class="loading-skeleton skeleton-image"></div>
+                        <div class="card-body">
+                            <div class="loading-skeleton skeleton-title"></div>
+                            <div class="loading-skeleton skeleton-text"></div>
+                            <div class="loading-skeleton skeleton-text" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Fallback for non-JS users -->
+            <noscript>
+                <div class="monastery-grid">
+                    {% for monastery in monasteries %}
+                        <div class="monastery-card">
+                            <div class="monastery-image" style="background-image: url('{{ monastery.main_image.url|default:'/static/images/monastery-placeholder.jpg' }}')">
+                                {% if monastery.distance %}
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="distance-badge">{{ monastery.distance|floatformat:1 }}km</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="monastery-content">
+                                <h3 class="monastery-title">{{ monastery.name }}</h3>
+                                <p class="monastery-location">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    {{ monastery.location_description }}
+                                </p>
+                                <p class="monastery-description">{{ monastery.description|truncatewords:25 }}</p>
+
+                                <div class="monastery-meta">
+                                    <span>
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {% if monastery.established_year %}
+                                            {{ monastery.established_year }}
+                                        {% else %}
+                                            {% trans "Ancient" %}
+                                        {% endif %}
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-dharmachakra me-1"></i>
+                                        {{ monastery.get_monastery_type_display }}
+                                    </span>
+                                </div>
+
+                                <div class="monastery-actions">
+                                    <a href="{% url 'core:monastery_detail' monastery.slug %}" class="btn btn-primary btn-sm">
+                                        {% trans "View Details" %}
+                                    </a>
+                                    {% if monastery.has_virtual_tour %}
+                                    <a href="{% url 'tours:monastery_tour' monastery.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-vr-cardboard me-1"></i>{% trans "Tour" %}
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="no-results">
+                            <div class="no-results-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h4>{% trans "No monasteries found" %}</h4>
+                            <p>{% trans "Try adjusting your search criteria or filters." %}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </noscript>
+
+            <!-- Pagination will be handled by React -->
+            <div id="pagination-container"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block react_components %}
+<script type="text/babel">
+    // Monastery List React Components
+    const MonasteryListApp = () => {
+        const [monasteries, setMonasteries] = React.useState([]);
+        const [filteredMonasteries, setFilteredMonasteries] = React.useState([]);
+        const [loading, setLoading] = React.useState(true);
+        const [error, setError] = React.useState(null);
+        const [currentPage, setCurrentPage] = React.useState(1);
+        const [viewMode, setViewMode] = React.useState('grid');
+        const [sortBy, setSortBy] = React.useState('name');
+        const [filters, setFilters] = React.useState({
+            search: '',
+            location: 'all',
+            types: [],
+            features: [],
+            hours: []
+        });
+
+        const itemsPerPage = 12;
+
+        React.useEffect(() => {
+            loadMonasteries();
+        }, []);
+
+        React.useEffect(() => {
+            applyFilters();
+        }, [monasteries, filters, sortBy]);
+
+        const loadMonasteries = async () => {
+            try {
+                setLoading(true);
+                const response = await window.Monastery360.utils.api('monasteries/');
+                setMonasteries(response.results || response);
+                setLoading(false);
+            } catch (err) {
+                setError('Failed to load monasteries');
+                setLoading(false);
+                console.error('Error loading monasteries:', err);
+            }
+        };
+
+        const applyFilters = () => {
+            let filtered = [...monasteries];
+
+            // Search filter
+            if (filters.search) {
+                const searchTerm = filters.search.toLowerCase();
+                filtered = filtered.filter(m =>
+                    m.name.toLowerCase().includes(searchTerm) ||
+                    m.description.toLowerCase().includes(searchTerm) ||
+                    m.location_description.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Location filter
+            if (filters.location !== 'all') {
+                if (filters.location === 'near-me') {
+                    const userLocation = window.Monastery360.geofence.getCurrentPosition();
+                    if (userLocation) {
+                        filtered = filtered.filter(m => {
+                            if (m.location && m.location.coordinates) {
+                                const distance = window.Monastery360.geofence.calculateDistance(
+                                    userLocation,
+                                    { lat: m.location.coordinates[1], lng: m.location.coordinates[0] }
+                                );
+                                return distance <= 50000; // 50km
+                            }
+                            return false;
+                        });
+                    }
+                } else {
+                    filtered = filtered.filter(m =>
+                        m.district && m.district.toLowerCase() === filters.location
+                    );
+                }
+            }
+
+            // Type filters
+            if (filters.types.length > 0) {
+                filtered = filtered.filter(m =>
+                    filters.types.includes(m.monastery_type)
+                );
+            }
+
+            // Feature filters
+            if (filters.features.length > 0) {
+                filtered = filtered.filter(m => {
+                    return filters.features.every(feature => {
+                        switch (feature) {
+                            case 'virtual-tour':
+                                return m.has_virtual_tour;
+                            case 'audio-guide':
+                                return m.has_audio_guide;
+                            case 'archives':
+                                return m.has_archives;
+                            case 'accessible':
+                                return m.is_accessible;
+                            default:
+                                return true;
+                        }
+                    });
+                });
+            }
+
+            // Sort
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'distance':
+                        const userPos = window.Monastery360.geofence.getCurrentPosition();
+                        if (!userPos) return 0;
+                        const distA = a.location ? window.Monastery360.geofence.calculateDistance(
+                            userPos, { lat: a.location.coordinates[1], lng: a.location.coordinates[0] }
+                        ) : Infinity;
+                        const distB = b.location ? window.Monastery360.geofence.calculateDistance(
+                            userPos, { lat: b.location.coordinates[1], lng: b.location.coordinates[0] }
+                        ) : Infinity;
+                        return distA - distB;
+                    case 'established':
+                        return (a.established_year || 0) - (b.established_year || 0);
+                    case 'popularity':
+                        return (b.view_count || 0) - (a.view_count || 0);
+                    case 'rating':
+                        return (b.rating || 0) - (a.rating || 0);
+                    default:
+                        return 0;
+                }
+            });
+
+            setFilteredMonasteries(filtered);
+            setCurrentPage(1);
+            updateResultsCounter(filtered.length);
+        };
+
+        const updateResultsCounter = (total) => {
+            const start = Math.min(1, total);
+            const end = Math.min(itemsPerPage, total);
+
+            document.getElementById('results-start').textContent = start;
+            document.getElementById('results-end').textContent = end;
+            document.getElementById('results-total').textContent = total;
+        };
+
+        const paginatedMonasteries = filteredMonasteries.slice(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage
+        );
+
+        const totalPages = Math.ceil(filteredMonasteries.length / itemsPerPage);
+
+        if (loading) {
+            return null; // Show skeleton loader
+        }
+
+        if (error) {
+            return React.createElement('div', { className: 'alert alert-danger' },
+                React.createElement('i', { className: 'fas fa-exclamation-triangle me-2' }),
+                error
+            );
+        }
+
+        return React.createElement('div', null,
+            React.createElement('div', {
+                className: `monastery-grid${viewMode === 'list' ? ' monastery-list-view' : ''}`
+            },
+                paginatedMonasteries.length > 0 ?
+                    paginatedMonasteries.map(monastery =>
+                        React.createElement(MonasteryCard, {
+                            key: monastery.id,
+                            monastery: monastery,
+                            viewMode: viewMode
+                        })
+                    ) :
+                    React.createElement('div', { className: 'no-results col-12' },
+                        React.createElement('div', { className: 'no-results-icon' },
+                            React.createElement('i', { className: 'fas fa-search' })
+                        ),
+                        React.createElement('h4', null, 'No monasteries found'),
+                        React.createElement('p', null, 'Try adjusting your search criteria or filters.')
+                    )
+            ),
+            totalPages > 1 && React.createElement(window.Monastery360.React.Pagination, {
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: setCurrentPage
+            })
+        );
+    };
+
+    const MonasteryCard = ({ monastery, viewMode }) => {
+        const userLocation = window.Monastery360.geofence.getCurrentPosition();
+        let distance = null;
+
+        if (userLocation && monastery.location) {
+            distance = window.Monastery360.geofence.calculateDistance(
+                userLocation,
+                { lat: monastery.location.coordinates[1], lng: monastery.location.coordinates[0] }
+            );
+        }
+
+        return React.createElement('div', { className: 'monastery-card' },
+            React.createElement('div', {
+                className: 'monastery-image',
+                style: {
+                    backgroundImage: `url(${monastery.main_image || '/static/images/monastery-placeholder.jpg'})`
+                }
+            },
+                distance && React.createElement('div', { className: 'position-absolute top-0 end-0 m-2' },
+                    React.createElement('span', { className: 'distance-badge' },
+                        window.Monastery360.utils.formatDistance(distance)
+                    )
+                )
+            ),
+            React.createElement('div', { className: 'monastery-content' },
+                React.createElement('h3', { className: 'monastery-title' }, monastery.name),
+                React.createElement('p', { className: 'monastery-location' },
+                    React.createElement('i', { className: 'fas fa-map-marker-alt me-1' }),
+                    monastery.location_description
+                ),
+                React.createElement('p', { className: 'monastery-description' },
+                    monastery.description.substring(0, viewMode === 'list' ? 200 : 150) + '...'
+                ),
+                React.createElement('div', { className: 'monastery-meta' },
+                    React.createElement('span', null,
+                        React.createElement('i', { className: 'fas fa-calendar me-1' }),
+                        monastery.established_year || 'Ancient'
+                    ),
+                    React.createElement('span', null,
+                        React.createElement('i', { className: 'fas fa-dharmachakra me-1' }),
+                        monastery.monastery_type
+                    )
+                ),
+                React.createElement('div', { className: 'monastery-actions' },
+                    React.createElement('a', {
+                        href: `/monastery/${monastery.slug}/`,
+                        className: 'btn btn-primary btn-sm'
+                    }, 'View Details'),
+                    monastery.has_virtual_tour && React.createElement('a', {
+                        href: `/tours/monastery/${monastery.id}/`,
+                        className: 'btn btn-outline-primary btn-sm'
+                    },
+                        React.createElement('i', { className: 'fas fa-vr-cardboard me-1' }),
+                        'Tour'
+                    )
+                )
+            )
+        );
+    };
+
+    // Initialize React app
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('monasteries-react-container');
+        const skeleton = document.getElementById('loading-skeleton');
+
+        if (container && window.React && window.ReactDOM) {
+            // Hide skeleton
+            if (skeleton) skeleton.style.display = 'none';
+
+            // Mount React app
+            const app = React.createElement(MonasteryListApp);
+            ReactDOM.render(app, container);
+        }
+
+        // Initialize filter interactions
+        initializeFilters();
+        initializeViewToggle();
+        initializeSearch();
+        initializeSorting();
+    });
+
+    // Filter management
+    function initializeFilters() {
+        const filterInputs = document.querySelectorAll('.filter-option input');
+
+        filterInputs.forEach(input => {
+            input.addEventListener('change', updateFilters);
+        });
+
+        document.getElementById('clear-filters').addEventListener('click', clearAllFilters);
+    }
+
+    function updateFilters() {
+        // This would update the React state
+        // Implementation depends on how you want to bridge DOM events to React
+    }
+
+    function clearAllFilters() {
+        document.querySelectorAll('.filter-option input').forEach(input => {
+            if (input.type === 'radio' && input.value === 'all') {
+                input.checked = true;
+            } else {
+                input.checked = false;
+            }
+        });
+        updateFilters();
+    }
+
+    // View toggle
+    function initializeViewToggle() {
+        const gridBtn = document.getElementById('grid-view');
+        const listBtn = document.getElementById('list-view');
+
+        gridBtn.addEventListener('click', () => switchView('grid'));
+        listBtn.addEventListener('click', () => switchView('list'));
+    }
+
+    function switchView(mode) {
+        const gridBtn = document.getElementById('grid-view');
+        const listBtn = document.getElementById('list-view');
+
+        if (mode === 'grid') {
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+        } else {
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+        }
+
+        // Update React state
+        // This requires a bridge to React component
+    }
+
+    // Search functionality
+    function initializeSearch() {
+        const searchInput = document.getElementById('monastery-search');
+        const clearBtn = document.getElementById('clear-search');
+
+        if (searchInput) {
+            const debouncedSearch = window.Monastery360.utils.debounce((query) => {
+                // Update React filters
+            }, 300);
+
+            searchInput.addEventListener('input', (e) => {
+                debouncedSearch(e.target.value);
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                // Update React filters
+            });
+        }
+    }
+
+    // Sorting
+    function initializeSorting() {
+        const sortSelect = document.getElementById('sort-select');
+
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                // Update React sorting
+            });
+        }
+    }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Update location-based features
+    document.addEventListener('monastery360:positionUpdate', function(event) {
+        const nearFilter = document.getElementById('location-near');
+        const nearCount = document.getElementById('count-near');
+
+        if (nearFilter && nearCount) {
+            nearFilter.disabled = false;
+            // Update count based on nearby monasteries
+            const nearby = window.Monastery360.geofence.getNearbyMonasteries();
+            nearCount.textContent = nearby.length;
+        }
+    });
+</script>
+{% endblock %}

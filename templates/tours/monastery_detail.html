@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ monastery.name }} - Virtual Tour | Sikkim Monasteries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Pannellum for 360° Panoramic Views -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif !important; overflow-x: hidden; }
+        #root { width: 100vw; min-height: 100vh; }
+
+        .panorama-container {
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .archive-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .archive-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <!-- Pass Django context to JavaScript -->
+    <script>
+        window.userAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+        window.userName = "{{ user.get_full_name|default:user.username|escapejs }}";
+        window.userEmail = "{{ user.email|escapejs }}";
+        window.monasteryData = {
+            id: "{{ monastery.id }}",
+            name: "{{ monastery.name|escapejs }}",
+            region: "{{ monastery.region|escapejs }}",
+            description: "{{ monastery.description|escapejs }}",
+            imageUrl: "{{ monastery.imageUrl|escapejs }}",
+            panoId: "{{ monastery.panoId|escapejs }}"
+        };
+    </script>
+
+    <!-- CSRF Token for forms -->
+    {% csrf_token %}
+    <script>
+        window.csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
+
+    <script type="text/babel">
+        {% verbatim %}
+        const { useState, useEffect } = React;
+
+        // SharedNavigation Component (same as other pages)
+        const SharedNavigation = ({ currentPage = "", theme = "dark" }) => {
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+          const navItems = [
+            {
+              name: "Virtual Tours",
+              href: "/tours/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12H22"/>
+                  <path d="M12 2A15.3 15.3 0 0 1 16 12A15.3 15.3 0 0 1 12 22A15.3 15.3 0 0 1 8 12A15.3 15.3 0 0 1 12 2Z"/>
+                </svg>
+              )
+            },
+            {
+              name: "Interactive Map",
+              href: "/monasteries/map/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10C21 17 12 23 12 23S3 17 3 10A9 9 0 0 1 21 10Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              )
+            },
+            {
+              name: "Digital Archives",
+              href: "/archives/portal/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6A2 2 0 0 0 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8L14 2Z"/>
+                  <polyline points="14,2 14,8 20,8"/>
+                </svg>
+              )
+            },
+            {
+              name: "Cultural Calendar",
+              href: "/events/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              )
+            }
+          ];
+
+          const themeClasses = {
+            dark: {
+              header: "bg-gray-900 shadow-lg",
+              text: "text-white",
+              subtext: "text-gray-400",
+              navText: "text-gray-300",
+              navHover: "hover:text-orange-500",
+              activeText: "text-orange-500",
+              mobileBorder: "border-gray-700"
+            }
+          };
+
+          const currentTheme = themeClasses[theme] || themeClasses.dark;
+
+          return (
+            <header className={`sticky top-0 z-50 py-4 px-8 ${currentTheme.header}`}>
+              <div className="flex items-center justify-between">
+                {/* Logo */}
+                <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
+                  <div className="w-12 h-12 text-orange-500">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                      <path d="M12 2L3 7V10.5L12 15.5L21 10.5V7L12 2ZM12 4.2L18.4 7.5L12 10.8L5.6 7.5L12 4.2ZM5 9.1L11 12.1V19.9L5 16.9V9.1ZM13 19.9V12.1L19 9.1V16.9L13 19.9Z"/>
+                      <path d="M12 1L2 6V11L12 16L22 11V6L12 1ZM4 8.5V9.5L12 14L20 9.5V8.5L12 13L4 8.5Z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className={`text-xl font-bold ${currentTheme.text}`}>Sikkim Monasteries</h1>
+                    <p className={`text-sm ${currentTheme.subtext}`}>Heritage & Culture</p>
+                  </div>
+                </a>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden lg:flex items-center space-x-8">
+                  {navItems.map((item) => {
+                    const isActive = currentPage === "tours" && item.name === "Virtual Tours";
+                    return (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className={`flex items-center space-x-2 transition-colors ${
+                          isActive
+                            ? `${currentTheme.activeText} font-semibold`
+                            : `${currentTheme.navText} ${currentTheme.navHover}`
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </a>
+                    );
+                  })}
+
+                  {/* Authentication Buttons */}
+                  {window.userAuthenticated ? (
+                    <>
+                      <a href="/profile/" className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Profile</span>
+                      </a>
+                      <form method="post" action="/logout/" className="inline-block">
+                        <input type="hidden" name="csrfmiddlewaretoken" value={window.csrfToken} />
+                        <button type="submit" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M9 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H9"/>
+                            <polyline points="16,17 21,12 16,7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                          </svg>
+                          <span>Logout</span>
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <a href="/login/" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 3H19A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H15"/>
+                        <polyline points="10,17 15,12 10,7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                      </svg>
+                      <span>Login</span>
+                    </a>
+                  )}
+                </nav>
+
+                {/* Mobile Menu Button */}
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className={`lg:hidden ${currentTheme.navText}`}
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Mobile Navigation */}
+              {isMobileMenuOpen && (
+                <nav className={`lg:hidden mt-4 pt-4 border-t ${currentTheme.mobileBorder}`}>
+                  <div className="flex flex-col space-y-4">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className={`flex items-center space-x-2 transition-colors ${currentTheme.navText} ${currentTheme.navHover}`}
+                      >
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </nav>
+              )}
+            </header>
+          );
+        };
+
+        // Panoramic Viewer Component
+        const PanoramicViewer = ({ panoId, monasteryName }) => {
+          const [isLoaded, setIsLoaded] = useState(false);
+          const [error, setError] = useState(false);
+
+          useEffect(() => {
+            // Panoramic image URLs (you can replace these with actual monastery panoramic images)
+            const panoramicImages = {
+              rumtek: 'https://pannellum.org/images/alma.jpg',
+              pemayangtse: 'https://pannellum.org/images/bma-1.jpg',
+              enchey: 'https://pannellum.org/images/cerro-toco-0.jpg',
+              tashiding: 'https://pannellum.org/images/alma.jpg',
+              dubdi: 'https://pannellum.org/images/bma-1.jpg',
+              phodong: 'https://pannellum.org/images/cerro-toco-0.jpg',
+              labrang: 'https://pannellum.org/images/alma.jpg',
+              ralang: 'https://pannellum.org/images/bma-1.jpg',
+              sangachoeling: 'https://pannellum.org/images/cerro-toco-0.jpg',
+              ralong: 'https://pannellum.org/images/alma.jpg'
+            };
+
+            const imageUrl = panoramicImages[panoId] || panoramicImages.rumtek;
+
+            // Initialize Pannellum viewer
+            if (window.pannellum && !isLoaded) {
+              try {
+                window.pannellum.viewer('panorama', {
+                  type: 'equirectangular',
+                  panorama: imageUrl,
+                  autoLoad: true,
+                  autoRotate: -2,
+                  compass: true,
+                  showZoomCtrl: true,
+                  showFullscreenCtrl: true,
+                  mouseZoom: true,
+                  draggable: true,
+                  keyboardZoom: true,
+                  showControls: true,
+                  title: `${monasteryName} - 360° Virtual Tour`,
+                  author: 'Sikkim Monasteries',
+                  onLoad: () => {
+                    setIsLoaded(true);
+                    setError(false);
+                  },
+                  onError: () => {
+                    setError(true);
+                    setIsLoaded(false);
+                  }
+                });
+              } catch (err) {
+                setError(true);
+                console.error('Panoramic viewer error:', err);
+              }
+            }
+          }, [panoId, monasteryName, isLoaded]);
+
+          if (error) {
+            return (
+              <div className="panorama-container flex items-center justify-center bg-gray-200">
+                <div className="text-center text-gray-600">
+                  <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  <p className="text-lg font-medium">360° View Currently Unavailable</p>
+                  <p className="text-sm mt-2">Please try again later</p>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="panorama-container">
+              <div id="panorama" style={{ width: '100%', height: '100%' }}>
+                {!isLoaded && (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                      <p className="text-gray-600">Loading 360° Virtual Tour...</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+  // Monastery archives removed per request
+
+        // Main Monastery Detail Component
+        const MonasteryDetail = () => {
+          const monastery = window.monasteryData;
+          // relatedMonasteries removed per request
+
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <SharedNavigation currentPage="tours" theme="dark" />
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Breadcrumb */}
+                <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+                  <a href="/" className="hover:text-orange-500">Home</a>
+                  <span>/</span>
+                  <a href="/tours/" className="hover:text-orange-500">Virtual Tours</a>
+                  <span>/</span>
+                  <span className="text-gray-900 font-medium">{monastery.name}</span>
+                </nav>
+
+                {/* Hero Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                  <div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                      {monastery.name}
+                    </h1>
+                    <div className="flex items-center space-x-2 text-gray-600 mb-6">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 10C21 17 12 23 12 23S3 17 3 10A9 9 0 0 1 21 10Z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span className="font-medium">{monastery.region}</span>
+                    </div>
+                    <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                      {monastery.description}
+                    </p>
+
+                    <div className="flex items-center space-x-4">
+                      <button className="btn-primary text-white px-6 py-3 rounded-lg font-semibold flex items-center space-x-2">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polygon points="10,8 16,12 10,16 10,8"/>
+                        </svg>
+                        <span>Start Virtual Tour</span>
+                      </button>
+
+                      <a
+                        href="/events/"
+                        className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                          <line x1="16" y1="2" x2="16" y2="6"/>
+                          <line x1="8" y1="2" x2="8" y2="6"/>
+                          <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span>Visit Events</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <img
+                      src={monastery.imageUrl}
+                      alt={monastery.name}
+                      className="w-full h-96 object-cover rounded-xl shadow-lg"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop';
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* 360° Panoramic Viewer */}
+                <div className="mb-16">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">360° Virtual Experience</h2>
+                  <PanoramicViewer panoId={monastery.panoId} monasteryName={monastery.name} />
+                  <p className="text-gray-600 text-center mt-4">
+                    Use your mouse to navigate • Scroll to zoom • Click and drag to explore
+                  </p>
+                </div>
+
+                {/* Archives Section removed per request */}
+
+
+              </div>
+            </div>
+          );
+        };
+
+        // Render the component
+        ReactDOM.render(<MonasteryDetail />, document.getElementById('root'));
+        {% endverbatim %}
+    </script>
+</body>
+</html>

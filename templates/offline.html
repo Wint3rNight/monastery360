@@ -1,0 +1,495 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Offline" %} - Monastery360{% endblock %}
+
+{% block description %}{% trans "You are currently offline. Some features may not be available." %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .offline-container {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-xxl) 0;
+    }
+
+    .offline-icon {
+        font-size: 6rem;
+        color: var(--gray);
+        margin-bottom: var(--spacing-xl);
+        opacity: 0.7;
+    }
+
+    .offline-content h1 {
+        color: var(--dark);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .offline-content p {
+        color: var(--gray);
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-xl);
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .offline-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cached-content {
+        background: var(--white);
+        border-radius: var(--border-radius-lg);
+        padding: var(--spacing-xl);
+        box-shadow: var(--shadow);
+        margin: var(--spacing-xl) 0;
+    }
+
+    .cached-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius);
+        transition: var(--transition-base);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .cached-item:hover {
+        background: var(--light-gray);
+        color: inherit;
+    }
+
+    .cached-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--border-radius);
+        background: var(--primary-color);
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cached-info h6 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .cached-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+
+    .network-status {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-xl);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .network-status.offline {
+        background: #fee;
+        color: #c53030;
+        border: 1px solid #feb2b2;
+    }
+
+    .network-status.online {
+        background: #f0fff4;
+        color: #22543d;
+        border: 1px solid #9ae6b4;
+    }
+
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    @media (max-width: 576px) {
+        .offline-icon {
+            font-size: 4rem;
+        }
+
+        .offline-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cached-item {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="offline-container">
+        <div class="offline-content">
+            <!-- Network Status Indicator -->
+            <div class="network-status offline" id="network-status">
+                <div class="status-indicator"></div>
+                <span id="status-text">{% trans "You are offline" %}</span>
+            </div>
+
+            <!-- Offline Icon -->
+            <div class="offline-icon">
+                <i class="fas fa-wifi-slash"></i>
+            </div>
+
+            <!-- Offline Message -->
+            <h1>{% trans "No Internet Connection" %}</h1>
+            <p>
+                {% trans "Don't worry! You can still explore some content that has been saved for offline viewing. We'll automatically sync your data when you're back online." %}
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="offline-actions">
+                <button class="btn btn-primary" onclick="window.location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i>{% trans "Try Again" %}
+                </button>
+                <a href="/" class="btn btn-outline-primary">
+                    <i class="fas fa-home me-2"></i>{% trans "Go Home" %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cached Content Section -->
+    <div class="cached-content">
+        <h3 class="mb-4">
+            <i class="fas fa-download me-2"></i>{% trans "Available Offline" %}
+        </h3>
+
+        <div class="row" id="cached-content-list">
+            <!-- Home Page -->
+            <div class="col-md-6 mb-3">
+                <a href="/" class="cached-item">
+                    <div class="cached-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="cached-info">
+                        <h6>{% trans "Homepage" %}</h6>
+                        <p>{% trans "Explore Monastery360's main features" %}</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Monastery List -->
+            <div class="col-md-6 mb-3">
+                <a href="/monasteries/" class="cached-item">
+                    <div class="cached-icon">
+                        <i class="fas fa-temple"></i>
+                    </div>
+                    <div class="cached-info">
+                        <h6>{% trans "Monasteries" %}</h6>
+                        <p>{% trans "Browse available monastery information" %}</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Map -->
+            <div class="col-md-6 mb-3">
+                <a href="/map/" class="cached-item">
+                    <div class="cached-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <div class="cached-info">
+                        <h6>{% trans "Map" %}</h6>
+                        <p>{% trans "View monastery locations (offline mode)" %}</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Virtual Tours -->
+            <div class="col-md-6 mb-3">
+                <a href="/tours/" class="cached-item">
+                    <div class="cached-icon">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <div class="cached-info">
+                        <h6>{% trans "Virtual Tours" %}</h6>
+                        <p>{% trans "Cached 360° experiences" %}</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sync Status -->
+        <div class="sync-status mt-4 p-3 bg-light rounded">
+            <h6>
+                <i class="fas fa-sync me-2"></i>{% trans "Data Sync Status" %}
+            </h6>
+            <div id="sync-info">
+                <p class="mb-2">
+                    <i class="fas fa-clock me-2"></i>
+                    {% trans "Last synced:" %} <span id="last-sync">{% trans "Unknown" %}</span>
+                </p>
+                <p class="mb-0">
+                    <i class="fas fa-database me-2"></i>
+                    {% trans "Offline storage:" %} <span id="storage-usage">{% trans "Calculating..." %}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips for Offline Usage -->
+    <div class="cached-content">
+        <h3 class="mb-4">
+            <i class="fas fa-lightbulb me-2"></i>{% trans "Offline Tips" %}
+        </h3>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-download fa-2x text-primary"></i>
+                    </div>
+                    <h6>{% trans "Download Content" %}</h6>
+                    <p class="small text-muted">
+                        {% trans "When online, visit pages to cache them for offline viewing." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-bookmark fa-2x text-primary"></i>
+                    </div>
+                    <h6>{% trans "Save Favorites" %}</h6>
+                    <p class="small text-muted">
+                        {% trans "Bookmark monasteries to access them even when offline." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-sync-alt fa-2x text-primary"></i>
+                    </div>
+                    <h6>{% trans "Auto Sync" %}</h6>
+                    <p class="small text-muted">
+                        {% trans "Your actions will sync automatically when you're back online." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Network status monitoring
+    updateNetworkStatus();
+
+    window.addEventListener('online', () => {
+        updateNetworkStatus();
+        showReconnectionMessage();
+    });
+
+    window.addEventListener('offline', () => {
+        updateNetworkStatus();
+    });
+
+    // Load cached content information
+    loadCachedContentInfo();
+
+    // Load sync information
+    loadSyncInfo();
+
+    // Calculate storage usage
+    calculateStorageUsage();
+});
+
+function updateNetworkStatus() {
+    const statusElement = document.getElementById('network-status');
+    const statusText = document.getElementById('status-text');
+
+    if (navigator.onLine) {
+        statusElement.className = 'network-status online';
+        statusText.textContent = 'Back online';
+
+        // Hide offline message after 3 seconds if we're back online
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    } else {
+        statusElement.className = 'network-status offline';
+        statusText.textContent = 'You are offline';
+    }
+}
+
+function showReconnectionMessage() {
+    window.Monastery360.utils.showNotification(
+        'Connection restored! Syncing data...',
+        'success'
+    );
+
+    // Trigger background sync if available
+    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+        navigator.serviceWorker.ready.then(function(registration) {
+            return registration.sync.register('background-sync');
+        }).catch(function(error) {
+            console.log('Background sync registration failed:', error);
+        });
+    }
+}
+
+async function loadCachedContentInfo() {
+    if ('caches' in window) {
+        try {
+            const cacheNames = await caches.keys();
+            const cachedContent = document.getElementById('cached-content-list');
+
+            // Check which content is actually cached
+            const urlsToCheck = [
+                { url: '/', name: 'Homepage', icon: 'fas fa-home', description: 'Explore Monastery360\'s main features' },
+                { url: '/monasteries/', name: 'Monasteries', icon: 'fas fa-temple', description: 'Browse available monastery information' },
+                { url: '/map/', name: 'Map', icon: 'fas fa-map', description: 'View monastery locations (offline mode)' },
+                { url: '/tours/', name: 'Virtual Tours', icon: 'fas fa-vr-cardboard', description: 'Cached 360° experiences' }
+            ];
+
+            for (const cacheItem of urlsToCheck) {
+                let isCached = false;
+
+                for (const cacheName of cacheNames) {
+                    const cache = await caches.open(cacheName);
+                    const response = await cache.match(cacheItem.url);
+                    if (response) {
+                        isCached = true;
+                        break;
+                    }
+                }
+
+                // Update the cached item indicator
+                const cachedItems = cachedContent.querySelectorAll(`a[href="${cacheItem.url}"]`);
+                cachedItems.forEach(item => {
+                    if (isCached) {
+                        item.classList.add('cached');
+                        const icon = item.querySelector('.cached-icon i');
+                        if (icon) {
+                            icon.style.color = '#22543d'; // Green for cached
+                        }
+                    } else {
+                        item.style.opacity = '0.5';
+                        const description = item.querySelector('.cached-info p');
+                        if (description) {
+                            description.textContent += ' (Not cached)';
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error checking cached content:', error);
+        }
+    }
+}
+
+function loadSyncInfo() {
+    const lastSyncElement = document.getElementById('last-sync');
+
+    // Get last sync time from localStorage
+    const lastSync = localStorage.getItem('last-sync');
+    if (lastSync) {
+        const syncDate = new Date(parseInt(lastSync));
+        lastSyncElement.textContent = syncDate.toLocaleString();
+    } else {
+        lastSyncElement.textContent = 'Never';
+    }
+
+    // Check for pending sync items
+    const pendingSync = JSON.parse(localStorage.getItem('pending-sync') || '[]');
+    if (pendingSync.length > 0) {
+        const syncInfo = document.getElementById('sync-info');
+        const pendingElement = document.createElement('p');
+        pendingElement.innerHTML = `
+            <i class="fas fa-clock me-2"></i>
+            Pending sync: ${pendingSync.length} items
+        `;
+        pendingElement.className = 'mb-0 text-warning';
+        syncInfo.appendChild(pendingElement);
+    }
+}
+
+async function calculateStorageUsage() {
+    const storageElement = document.getElementById('storage-usage');
+
+    try {
+        if ('storage' in navigator && 'estimate' in navigator.storage) {
+            const estimate = await navigator.storage.estimate();
+            const used = estimate.usage || 0;
+            const quota = estimate.quota || 0;
+
+            const usedMB = (used / (1024 * 1024)).toFixed(1);
+            const quotaMB = (quota / (1024 * 1024)).toFixed(1);
+
+            storageElement.textContent = `${usedMB} MB / ${quotaMB} MB`;
+        } else {
+            storageElement.textContent = 'Not available';
+        }
+    } catch (error) {
+        console.error('Error calculating storage usage:', error);
+        storageElement.textContent = 'Error calculating';
+    }
+}
+
+// Clear cached data function
+function clearOfflineData() {
+    if (confirm('Are you sure you want to clear all offline data? This will remove cached content and require re-downloading when online.')) {
+        if ('caches' in window) {
+            caches.keys().then(function(cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                        return caches.delete(cacheName);
+                    })
+                );
+            }).then(function() {
+                localStorage.clear();
+                window.Monastery360.utils.showNotification(
+                    'Offline data cleared successfully',
+                    'success'
+                );
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            });
+        }
+    }
+}
+
+// Add clear data button
+document.addEventListener('DOMContentLoaded', function() {
+    const clearButton = document.createElement('button');
+    clearButton.className = 'btn btn-outline-danger btn-sm mt-3';
+    clearButton.innerHTML = '<i class="fas fa-trash me-2"></i>Clear Offline Data';
+    clearButton.onclick = clearOfflineData;
+
+    const syncStatus = document.querySelector('.sync-status');
+    if (syncStatus) {
+        syncStatus.appendChild(clearButton);
+    }
+});
+</script>
+{% endblock %}

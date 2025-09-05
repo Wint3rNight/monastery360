@@ -1,0 +1,196 @@
+{
+  "archives": [
+    {
+      "id": 1,
+      "title": "Kangyur Manuscript Collection",
+      "type": "Manuscript",
+      "century": "15th Century",
+      "monastery": "Pemayangtse Monastery",
+      "description": "Ancient Buddhist canonical texts written in traditional Tibetan script on handmade paper. This collection contains 108 volumes of the Buddha's teachings.",
+      "imageUrl": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop",
+      "tags": [
+        "Buddhism",
+        "Philosophy",
+        "Scripture",
+        "Tibetan"
+      ],
+  "downloadUrl": "/media/downloads/kangyur-collection.pdf"
+    },
+    {
+      "id": 2,
+      "title": "Tara Deity Thangka Painting",
+      "type": "Artwork",
+      "century": "17th Century",
+      "monastery": "Rumtek Monastery",
+      "description": "Exquisite thangka painting depicting Green Tara, the Buddhist goddess of compassion and protection, painted with mineral pigments on silk.",
+      "imageUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+      "tags": [
+        "Art",
+        "Thangka",
+        "Deity",
+        "Compassion"
+      ],
+  "downloadUrl": "/media/downloads/tara-thangka.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Monastery Foundation Chronicles",
+      "type": "Historical Document",
+      "century": "18th Century",
+      "monastery": "Enchey Monastery",
+      "description": "Official records documenting the establishment and early history of monasteries in Sikkim, including land grants and royal patronage.",
+      "imageUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop",
+      "tags": [
+        "History",
+        "Documentation",
+        "Royal",
+        "Foundation"
+      ],
+  "downloadUrl": "/media/downloads/foundation-chronicles.pdf"
+    },
+    {
+      "id": 4,
+      "title": "Vajrayana Ritual Instructions",
+      "type": "Manuscript",
+      "century": "16th Century",
+      "monastery": "Phodong Monastery",
+      "description": "Detailed instructions for Vajrayana Buddhist rituals and ceremonies, including mandala construction and meditation practices.",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+      "tags": [
+        "Ritual",
+        "Vajrayana",
+        "Meditation",
+        "Practice"
+      ],
+  "downloadUrl": "/media/downloads/vajrayana-rituals.pdf"
+    },
+    {
+      "id": 5,
+      "title": "Mandala Sand Art Documentation",
+      "type": "Artwork",
+      "century": "19th Century",
+      "monastery": "Labrang Monastery",
+      "description": "Photographic documentation and sketches of intricate sand mandala creations, capturing the impermanent art form before dissolution.",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
+      "tags": [
+        "Mandala",
+        "Sand Art",
+        "Impermanence",
+        "Sacred Geometry"
+      ],
+  "downloadUrl": "/media/downloads/mandala-documentation.pdf"
+    },
+    {
+      "id": 6,
+      "title": "Traditional Medicine Texts",
+      "type": "Manuscript",
+      "century": "14th Century",
+      "monastery": "Tashiding Monastery",
+      "description": "Ancient Tibetan medical texts describing traditional healing practices, herbal remedies, and diagnostic techniques used in monastery infirmaries.",
+      "imageUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop",
+      "tags": [
+        "Medicine",
+        "Healing",
+        "Herbs",
+        "Traditional"
+      ],
+  "downloadUrl": "/media/downloads/medicine-texts.pdf"
+    },
+    {
+      "id": 7,
+      "title": "Padmasambhava Life Stories",
+      "type": "Historical Document",
+      "century": "17th Century",
+      "monastery": "Pemayangste Monastery",
+      "description": "Biographical accounts of Guru Padmasambhava's travels through the Himalayas and his role in establishing Buddhism in Sikkim.",
+      "imageUrl": "https://images.unsplash.com/photo-1589395937807-95399734dca4?w=400&h=300&fit=crop",
+      "tags": [
+        "Biography",
+        "Guru",
+        "Buddhism",
+        "History"
+      ],
+  "downloadUrl": "/media/downloads/padmasambhava-stories.pdf"
+    },
+    {
+      "id": 8,
+      "title": "Ceremonial Mask Designs",
+      "type": "Artwork",
+      "century": "18th Century",
+      "monastery": "Rumtek Monastery",
+      "description": "Original designs and patterns for traditional Cham dance masks used in monastery festivals and religious ceremonies.",
+      "imageUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+      "tags": [
+        "Masks",
+        "Dance",
+        "Ceremony",
+        "Festival"
+      ],
+  "downloadUrl": "/media/downloads/mask-designs.pdf"
+    },
+    {
+      "id": 9,
+      "title": "Monastic Rules and Discipline",
+      "type": "Manuscript",
+      "century": "15th Century",
+      "monastery": "Enchey Monastery",
+      "description": "Comprehensive guide to monastic conduct, daily routines, and disciplinary codes followed by Buddhist monks in Sikkim monasteries.",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+      "tags": [
+        "Monastic",
+        "Discipline",
+        "Rules",
+        "Conduct"
+      ],
+  "downloadUrl": "/media/downloads/monastic-rules.pdf"
+    },
+    {
+      "id": 10,
+      "title": "Butter Sculpture Techniques",
+      "type": "Artwork",
+      "century": "19th Century",
+      "monastery": "Phodong Monastery",
+      "description": "Detailed instructions and photographic records of traditional butter sculpture creation for religious festivals and offerings.",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
+      "tags": [
+        "Sculpture",
+        "Butter",
+        "Festival",
+        "Offering"
+      ],
+  "downloadUrl": "/media/downloads/butter-sculpture.pdf"
+    },
+    {
+      "id": 11,
+      "title": "Astronomical Calculations",
+      "type": "Historical Document",
+      "century": "16th Century",
+      "monastery": "Labrang Monastery",
+      "description": "Mathematical texts used for calculating auspicious dates for religious ceremonies and understanding celestial movements according to Buddhist cosmology.",
+      "imageUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop",
+      "tags": [
+        "Astronomy",
+        "Mathematics",
+        "Calendar",
+        "Cosmology"
+      ],
+  "downloadUrl": "/media/downloads/astronomical-calculations.pdf"
+    },
+    {
+      "id": 12,
+      "title": "Prayer Flag Blessing Texts",
+      "type": "Manuscript",
+      "century": "18th Century",
+      "monastery": "Tashiding Monastery",
+      "description": "Sacred texts and mantras traditionally printed on prayer flags, along with instructions for proper blessing and installation rituals.",
+      "imageUrl": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop",
+      "tags": [
+        "Prayer Flags",
+        "Mantras",
+        "Blessing",
+        "Rituals"
+      ],
+      "downloadUrl": "/archives/tashiding-monastery/item/TASHIDING-MONASTERY-TEXTILE-004/download/"
+    }
+  ]
+}

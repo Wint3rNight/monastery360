@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monastery360 - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(-100%) translateY(0px); }
+            50% { transform: translateX(0%) translateY(-10px); }
+            100% { transform: translateX(100%) translateY(0px); }
+        }
+
+        @keyframes orbitGlow {
+            0% { box-shadow: 0 0 60px 10px rgba(186,51,233,0.3), 0 0 120px 30px rgba(236,72,153,0.15); }
+            50% { box-shadow: 0 0 80px 20px rgba(236,72,153,0.25), 0 0 160px 40px rgba(186,51,233,0.18); }
+            100% { box-shadow: 0 0 60px 10px rgba(186,51,233,0.3), 0 0 120px 30px rgba(236,72,153,0.15); }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #1e1b4b, #581c87, #be185d, #9333ea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .wave-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: wave 8s linear infinite;
+        }
+
+        .orbit-glow {
+            animation: orbitGlow 8s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen animated-bg overflow-hidden relative">
+    <!-- Wave Effects -->
+    <div class="wave-effect"></div>
+    <div class="wave-effect" style="animation-delay: -4s;"></div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div id="login-app"></div>
+    </div>
+
+    <script>
+        // Django URLs for JavaScript
+        window.LOGIN_URL = "{% url 'core:login' %}";
+        window.HOME_URL = "{% url 'core:home' %}";
+        window.CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
+
+    {% verbatim %}
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [view, setView] = useState("login");
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState("");
+            const [success, setSuccess] = useState("");
+            const [cardVisible, setCardVisible] = useState(false);
+
+            const [loginData, setLoginData] = useState({
+                username: "",
+                password: ""
+            });
+
+            const [signupData, setSignupData] = useState({
+                fullName: "",
+                username: "",
+                email: "",
+                phone: "",
+                password: "",
+            });
+
+            // Entry animation
+            useEffect(() => {
+                setTimeout(() => setCardVisible(true), 100);
+            }, []);
+
+            // Form handlers - Simple version
+            const handleLoginChange = (e) => {
+                const { name, value } = e.target;
+                setLoginData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSignupChange = (e) => {
+                const { name, value } = e.target;
+                setSignupData(prev => ({ ...prev, [name]: value }));
+            };
+
+            // Clear messages when switching views
+            useEffect(() => {
+                setError("");
+                setSuccess("");
+            }, [view]);
+
+            // API calls - Fixed for Django authentication
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError("");
+                setSuccess("");
+
+                try {
+                    const formData = new FormData();
+                    formData.append('username', loginData.username);
+                    formData.append('password', loginData.password);
+                    formData.append('login_submit', 'true'); // Required by Django view
+                    formData.append('csrfmiddlewaretoken', window.CSRF_TOKEN);
+
+                    const res = await fetch(window.LOGIN_URL, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (res.redirected) {
+                        // Successful login - redirect to home
+                        window.location.href = res.url;
+                    } else {
+                        // Check for errors in the response
+                        const text = await res.text();
+                        if (text.includes('Invalid') || text.includes('error') || text.includes('incorrect')) {
+                            setError("Invalid username or password.");
+                        } else if (text.includes('login_test')) {
+                            // Form was returned with errors
+                            setError("Please check your credentials and try again.");
+                        } else {
+                            setSuccess("Login successful!");
+                            // Force redirect if not automatic
+                            setTimeout(() => {
+                                window.location.href = window.HOME_URL;
+                            }, 1000);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Login error:", err);
+                    setError("Network error. Please try again.");
+                }
+                setLoading(false);
+            };
+
+            const handleSignup = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError("");
+                setSuccess("");
+
+                try {
+                    const formData = new FormData();
+                    formData.append('first_name', signupData.fullName.split(' ')[0] || '');
+                    formData.append('last_name', signupData.fullName.split(' ').slice(1).join(' ') || '');
+                    formData.append('username', signupData.username);
+                    formData.append('email', signupData.email);
+                    formData.append('phone', signupData.phone);
+                    formData.append('password1', signupData.password);
+                    formData.append('password2', signupData.password);
+                    formData.append('signup_submit', 'true'); // Required by Django view
+                    formData.append('csrfmiddlewaretoken', window.CSRF_TOKEN);
+
+                    const res = await fetch(window.LOGIN_URL, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (res.redirected) {
+                        // Successful signup and auto-login
+                        window.location.href = res.url;
+                    } else {
+                        const text = await res.text();
+                        if (text.includes('already exists') || text.includes('already taken')) {
+                            setError("Username or email already exists.");
+                        } else if (text.includes('password') && text.includes('error')) {
+                            setError("Password requirements not met.");
+                        } else {
+                            setSuccess("Account created! Logging you in...");
+                            setTimeout(() => {
+                                window.location.href = window.HOME_URL;
+                            }, 1000);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Signup error:", err);
+                    setError("Network error. Please try again.");
+                }
+                setLoading(false);
+            };
+
+            return (
+                <div
+                    className={`relative z-10 w-full max-w-md transition-all duration-700 ${
+                        cardVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                    }`}
+                >
+                    {/* Animated Glow Effect */}
+                    <div className="absolute -inset-2 rounded-3xl border-2 border-transparent orbit-glow pointer-events-none"></div>
+
+                    {/* Main Card */}
+                    <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+                        {/* Header */}
+                        <div className="text-center mb-8">
+                            <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                                {view === "login" ? "Welcome Back" : "Join Us"}
+                            </h1>
+                            <p className="text-white/70 text-lg">
+                                {view === "login"
+                                    ? "Sign in to your account"
+                                    : "Create your account"}
+                            </p>
+                        </div>
+
+                        {/* Toggle Buttons */}
+                        <div className="flex mb-8 bg-white/10 rounded-full p-1 backdrop-blur-sm">
+                            <button
+                                onClick={() => setView("login")}
+                                className={`flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                    view === "login"
+                                        ? "bg-white text-purple-600 shadow-lg"
+                                        : "text-white hover:text-white/80"
+                                }`}
+                            >
+                                Login
+                            </button>
+                            <button
+                                onClick={() => setView("signup")}
+                                className={`flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                    view === "signup"
+                                        ? "bg-white text-purple-600 shadow-lg"
+                                        : "text-white hover:text-white/80"
+                                }`}
+                            >
+                                Sign Up
+                            </button>
+                        </div>
+
+                        {/* Messages */}
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-500/20 border border-red-400/50 rounded-lg text-red-300 text-center font-medium animate-pulse backdrop-blur-sm">
+                                {error}
+                            </div>
+                        )}
+                        {success && (
+                            <div className="mb-4 p-3 bg-green-500/20 border border-green-400/50 rounded-lg text-green-300 text-center font-medium animate-pulse backdrop-blur-sm">
+                                {success}
+                            </div>
+                        )}
+
+                        {/* Forms */}
+                        <div className="transition-all duration-500">
+                            {view === "login" ? (
+                                <form className="space-y-6" onSubmit={handleLogin}>
+                                    <div className="space-y-4">
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            placeholder="Username or Email"
+                                            value={loginData.username}
+                                            onChange={handleLoginChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            placeholder="Password"
+                                            value={loginData.password}
+                                            onChange={handleLoginChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+                                        disabled={loading}
+                                    >
+                                        {loading ? "Logging in..." : "Sign In"}
+                                    </button>
+
+                                    <div className="text-center">
+                                        <span className="text-white/60 text-sm">
+                                            Don't have an account?{" "}
+                                            <button
+                                                type="button"
+                                                className="text-purple-300 hover:text-purple-200 font-medium transition-colors underline"
+                                                onClick={() => setView("signup")}
+                                            >
+                                                Sign Up
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                            ) : (
+                                <form className="space-y-6" onSubmit={handleSignup}>
+                                    <div className="space-y-4">
+                                        <input
+                                            type="text"
+                                            name="fullName"
+                                            placeholder="Full Name"
+                                            value={signupData.fullName}
+                                            onChange={handleSignupChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            placeholder="Username"
+                                            value={signupData.username}
+                                            onChange={handleSignupChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                            value={signupData.email}
+                                            onChange={handleSignupChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="Phone Number"
+                                            value={signupData.phone}
+                                            onChange={handleSignupChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            placeholder="Password"
+                                            value={signupData.password}
+                                            onChange={handleSignupChange}
+                                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full py-3 px-4 bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-pink-500/25"
+                                        disabled={loading}
+                                    >
+                                        {loading ? "Creating Account..." : "Create Account"}
+                                    </button>
+
+                                    <div className="text-center">
+                                        <span className="text-white/60 text-sm">
+                                            Already have an account?{" "}
+                                            <button
+                                                type="button"
+                                                className="text-purple-300 hover:text-purple-200 font-medium transition-colors underline"
+                                                onClick={() => setView("login")}
+                                            >
+                                                Sign In
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('login-app'));
+    </script>
+    {% endverbatim %}
+</body>
+</html>

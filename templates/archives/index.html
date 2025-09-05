@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Archives - Sikkim Monasteries{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 mb-4">Archive Collections</h1>
+            <p class="lead mb-5">Explore our comprehensive digital archive of manuscripts, artworks, and historical documents from Sikkim's monasteries.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h2 class="card-title">{{ total_items }}</h2>
+                    <p class="card-text">Total Items</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h2 class="card-title">{{ total_monasteries }}</h2>
+                    <p class="card-text">Monasteries</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h2 class="card-title">{{ item_type_stats|length }}</h2>
+                    <p class="card-text">Item Types</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h2 class="card-title">{{ monastery_stats|length }}</h2>
+                    <p class="card-text">Collections</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Browse Archives</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'archives:digital_portal' %}" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-laptop me-2"></i>Digital Archives Portal
+                            </a>
+                            <small class="text-muted d-block mt-1">Interactive browsing with search and filters</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'archives:list' %}" class="btn btn-outline-primary btn-lg btn-block">
+                                <i class="fas fa-list me-2"></i>Browse All Items
+                            </a>
+                            <small class="text-muted d-block mt-1">Complete list view with pagination</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Items -->
+    {% if featured_items %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">Featured Items</h3>
+        </div>
+        {% for item in featured_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if item.thumbnail_url %}
+                <img src="{{ item.thumbnail_url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+                    <small class="text-muted">{{ item.monastery.name }} | {{ item.item_type }}</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'archives:item_detail' item.monastery.slug item.catalog_number %}" class="btn btn-primary btn-sm">View Details</a>
+                    {% if item.scan %}
+                    <a href="{% url 'archives:item_download' item.monastery.slug item.catalog_number %}" class="btn btn-outline-secondary btn-sm ms-2" download>Download</a>
+                    <a href="#" class="btn btn-outline-secondary btn-sm ms-2" data-download-url="{% url 'archives:item_download' item.monastery.slug item.catalog_number %}" data-preview="1">Preview</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Recent Additions -->
+    {% if recent_items %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4">Recent Additions</h3>
+        </div>
+        {% for item in recent_items %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if item.thumbnail_url %}
+                <img src="{{ item.thumbnail_url }}" class="card-img-top" alt="{{ item.title }}" style="height: 150px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h6 class="card-title">{{ item.title|truncatechars:30 }}</h6>
+                    <small class="text-muted">{{ item.monastery.name }}</small>
+                </div>
+                <div class="card-footer">
+                        <a href="{% url 'archives:item_detail' item.monastery.slug item.catalog_number %}" class="btn btn-outline-primary btn-sm">View</a>
+                        {% if item.scan %}
+                        <a href="{% url 'archives:item_download' item.monastery.slug item.catalog_number %}" class="btn btn-outline-secondary btn-sm ms-2" download>Download</a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm ms-2" data-download-url="{% url 'archives:item_download' item.monastery.slug item.catalog_number %}" data-preview="1">Preview</a>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+    {% block extra_js %}
+    <script src="{% static 'js/archives-downloads.js' %}"></script>
+    {% endblock %}

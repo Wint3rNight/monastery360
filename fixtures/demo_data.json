@@ -1,0 +1,332 @@
+[
+  {
+    "model": "core.monastery",
+    "pk": 1,
+    "fields": {
+      "name": "Rumtek Monastery",
+      "local_name": "རུམ་ཐེག་དགོན་པ།",
+      "slug": "rumtek-monastery",
+      "description": "The Rumtek Monastery, also called the Dharmachakra Centre, is a gompa located in the Indian state of Sikkim near the capital Gangtok. It is the largest monastery in Sikkim and is the seat-in-exile of the Gyalwa Karmapa, inaugurated in 1966 by the 16th Karmapa. Built in the 1960s, it is modeled after the Karma Kagyu monastery of Tsurphu in Tibet.",
+      "short_description": "The largest monastery in Sikkim and seat-in-exile of the Gyalwa Karmapa",
+      "monastery_type": "kagyu",
+      "established_year": 1966,
+      "district": "East Sikkim",
+      "location_description": "Rumtek, 24 km from Gangtok",
+      "location": "POINT(88.5478 27.3133)",
+      "altitude": 1547,
+      "monk_count": 300,
+      "is_accessible": true,
+      "visiting_hours_start": "06:00:00",
+      "visiting_hours_end": "18:00:00",
+      "entry_fee": "0.00",
+      "phone_number": "+91-3592-252023",
+      "website": "http://www.rumtek.org",
+      "is_featured": true,
+      "cultural_significance": "Home to the Golden Stupa containing relics of the 16th Karmapa. Houses precious artifacts, thangkas, and the crown and robes of the Karmapa.",
+      "architectural_style": "Traditional Tibetan architecture with ornate decorations and golden roof",
+      "festivals": "Kagyu Monlam, Losar, Buddha Jayanti",
+      "special_features": "Golden Stupa, Prayer Wheels, Ancient Manuscripts, Monastic University",
+      "is_active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.monastery",
+    "pk": 2,
+    "fields": {
+      "name": "Enchey Monastery",
+      "local_name": "ཨེན་ཅེ་དགོན་པ།",
+      "slug": "enchey-monastery",
+      "description": "Enchey Monastery is an important monastery of the Nyingma sect located in Gangtok, the capital city of Sikkim. Built in 1909, it was established by Lama Druptob Karpo, a famous Sikkimese mystic known for his flying powers. The monastery houses images of gods, goddesses, and other religious artifacts.",
+      "short_description": "Historic Nyingma monastery in Gangtok built by the famous flying lama",
+      "monastery_type": "nyingma",
+      "established_year": 1909,
+      "district": "East Sikkim",
+      "location_description": "Gangtok, near TV Tower",
+      "location": "POINT(88.6138 27.3314)",
+      "altitude": 1830,
+      "monk_count": 90,
+      "is_accessible": true,
+      "visiting_hours_start": "05:30:00",
+      "visiting_hours_end": "19:00:00",
+      "entry_fee": "0.00",
+      "phone_number": "+91-3592-202123",
+      "website": "",
+      "is_featured": true,
+      "cultural_significance": "Associated with Lama Druptob Karpo, known for miraculous flying abilities. Important center for Nyingma teachings.",
+      "architectural_style": "Traditional Sikkimese architecture with colorful murals and intricate woodwork",
+      "festivals": "Chaam Dance during Pang Lhabsol, Losar, Drupka Teshi",
+      "special_features": "Flying Lama Legend, Sacred Masks, Traditional Chaam Dance",
+      "is_active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.monastery",
+    "pk": 3,
+    "fields": {
+      "name": "Tashiding Monastery",
+      "local_name": "བཀྲ་ཤིས་སྡིང་དགོན་པ།",
+      "slug": "tashiding-monastery",
+      "description": "Tashiding Monastery is a Buddhist monastery of the Nyingma sect located on top of a hill between the Rathong and Rangeet rivers in Tashiding, Sikkim. Founded in 1641, it is one of the most sacred monasteries in Sikkim. The monastery is famous for its holy water (Bum Chu) ceremony during Losar.",
+      "short_description": "One of the most sacred Nyingma monasteries, famous for the holy water ceremony",
+      "monastery_type": "nyingma",
+      "established_year": 1641,
+      "district": "West Sikkim",
+      "location_description": "Tashiding, between Rathong and Rangeet rivers",
+      "location": "POINT(88.2750 27.3472)",
+      "altitude": 1465,
+      "monk_count": 45,
+      "is_accessible": false,
+      "visiting_hours_start": "06:00:00",
+      "visiting_hours_end": "17:00:00",
+      "entry_fee": "10.00",
+      "phone_number": "+91-3595-242015",
+      "website": "",
+      "is_featured": true,
+      "cultural_significance": "Center of the famous Bum Chu ceremony. Believed that a sip of holy water from here can wash away sins.",
+      "architectural_style": "Ancient Nyingma architecture with traditional Sikkimese elements",
+      "festivals": "Bum Chu Festival, Losar, Saga Dawa",
+      "special_features": "Holy Water Ceremony, Sacred Chortens, Ancient Texts",
+      "is_active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.monastery",
+    "pk": 4,
+    "fields": {
+      "name": "Pemayangtse Monastery",
+      "local_name": "པད་མ་ཡང་རྩེ་དགོན་པ།",
+      "slug": "pemayangtse-monastery",
+      "description": "Pemayangtse Monastery is a Buddhist monastery in Pemayangtse, near Pelling in the northeastern Indian state of Sikkim. Planned, designed and founded by Lama Lhatsun Chempo in 1705, it is one of the oldest and premier monasteries of Sikkim, also holding the distinction of being the head monastery of the Nyingma sect.",
+      "short_description": "Premier Nyingma monastery and one of the oldest in Sikkim",
+      "monastery_type": "nyingma",
+      "established_year": 1705,
+      "district": "West Sikkim",
+      "location_description": "Pemayangtse, near Pelling",
+      "location": "POINT(88.2131 27.2956)",
+      "altitude": 2085,
+      "monk_count": 108,
+      "is_accessible": true,
+      "visiting_hours_start": "07:00:00",
+      "visiting_hours_end": "17:00:00",
+      "entry_fee": "5.00",
+      "phone_number": "+91-3595-250221",
+      "website": "",
+      "is_featured": true,
+      "cultural_significance": "Head monastery of Nyingma sect in Sikkim. Only pure-blood Bhutias can become monks here.",
+      "architectural_style": "Three-storied traditional architecture with exquisite woodcarving",
+      "festivals": "Chaam Dance, Losar, Drupka Teshi",
+      "special_features": "Seven-tiered Wooden Sculpture, Ancient Murals, Monastery Museum",
+      "is_active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.monastery",
+    "pk": 5,
+    "fields": {
+      "name": "Dubdi Monastery",
+      "local_name": "འདུབ་སྡེ་དགོན་པ།",
+      "slug": "dubdi-monastery",
+      "description": "Dubdi Monastery, also known as Yuksom Monastery, is a Buddhist monastery of the Nyingma sect located near Yuksom in Sikkim. Built in 1701, it is the oldest monastery in Sikkim and holds great historical significance as it was here that the first Chogyal was crowned.",
+      "short_description": "The oldest monastery in Sikkim where the first Chogyal was crowned",
+      "monastery_type": "nyingma",
+      "established_year": 1701,
+      "district": "West Sikkim",
+      "location_description": "Yuksom, trek from Yuksom village",
+      "location": "POINT(88.2297 27.3628)",
+      "altitude": 2100,
+      "monk_count": 25,
+      "is_accessible": false,
+      "visiting_hours_start": "06:00:00",
+      "visiting_hours_end": "16:00:00",
+      "entry_fee": "20.00",
+      "phone_number": "",
+      "website": "",
+      "is_featured": false,
+      "cultural_significance": "Coronation site of first Chogyal. Oldest monastery in Sikkim with immense historical importance.",
+      "architectural_style": "Ancient Sikkimese architecture in pristine mountain setting",
+      "festivals": "Coronation Day, Losar, Local festivals",
+      "special_features": "Historical Coronation Site, Meditation Caves, Ancient Artifacts",
+      "is_active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 1,
+    "fields": {
+      "monastery": 1,
+      "title": "Kagyu Monlam Prayer Festival",
+      "description": "Annual prayer festival celebrating the Kagyu tradition with special ceremonies and teachings",
+      "event_type": "festival",
+      "start_time": "2025-09-15T06:00:00Z",
+      "end_time": "2025-09-15T18:00:00Z",
+      "max_participants": 500,
+      "registration_required": false,
+      "is_featured": true,
+      "is_public": true,
+      "is_cancelled": false,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 2,
+    "fields": {
+      "monastery": 2,
+      "title": "Morning Meditation Session",
+      "description": "Join the monks for daily morning meditation and chanting",
+      "event_type": "prayer",
+      "start_time": "2025-09-03T05:30:00Z",
+      "end_time": "2025-09-03T07:00:00Z",
+      "max_participants": 50,
+      "registration_required": true,
+      "is_featured": false,
+      "is_public": true,
+      "is_cancelled": false,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+      "monastery": 3,
+      "title": "Bum Chu Festival",
+      "description": "Sacred holy water ceremony - one of the most important festivals in Sikkim",
+      "event_type": "festival",
+      "start_time": "2025-09-25T06:00:00Z",
+      "end_time": "2025-09-25T20:00:00Z",
+      "max_participants": 1000,
+      "registration_required": false,
+      "is_featured": true,
+      "is_public": true,
+      "is_cancelled": false,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.panorama",
+    "pk": 1,
+    "fields": {
+      "monastery": 1,
+      "title": "Rumtek Main Hall",
+      "description": "360° view of the magnificent main prayer hall",
+      "scene_type": "main_hall",
+      "hotspots_data": [
+        {
+          "id": "altar",
+          "pitch": -5,
+          "yaw": 0,
+          "type": "info",
+          "text": "The main altar with golden Buddha statue"
+        },
+        {
+          "id": "paintings",
+          "pitch": 10,
+          "yaw": 90,
+          "type": "info",
+          "text": "Traditional Tibetan thangka paintings"
+        }
+      ],
+      "order": 1,
+      "is_active": true,
+      "view_count": 0,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.panorama",
+    "pk": 2,
+    "fields": {
+      "monastery": 2,
+      "title": "Enchey Courtyard",
+      "description": "Central courtyard where Chaam dances are performed",
+      "scene_type": "courtyard",
+      "hotspots_data": [
+        {
+          "id": "dance_area",
+          "pitch": 0,
+          "yaw": 180,
+          "type": "info",
+          "text": "Traditional Chaam dance performance area"
+        },
+        {
+          "id": "mountains",
+          "pitch": 15,
+          "yaw": 270,
+          "type": "info",
+          "text": "View of the Eastern Himalayas"
+        }
+      ],
+      "order": 1,
+      "is_active": true,
+      "view_count": 0,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "archives.archiveitem",
+    "pk": 1,
+    "fields": {
+      "monastery": 1,
+      "title": "16th Karmapa's Sacred Robe",
+      "description": "The ceremonial robe worn by the 16th Karmapa during important ceremonies",
+      "item_type": "textile",
+      "material": "silk",
+      "condition": "excellent",
+      "cultural_significance": "Sacred relic of the 16th Karmapa, representing the spiritual lineage",
+      "acquisition_date": "2025-08-01",
+      "is_public": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "archives.archiveitem",
+    "pk": 2,
+    "fields": {
+      "monastery": 2,
+      "title": "Flying Lama Manuscript",
+      "description": "Historical manuscript describing the miraculous powers of Lama Druptob Karpo",
+      "item_type": "manuscript",
+      "material": "paper",
+      "condition": "fair",
+      "cultural_significance": "Documents the legendary flying abilities and spiritual achievements",
+      "acquisition_date": "2025-07-15",
+      "is_public": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "archives.archiveitem",
+    "pk": 3,
+    "fields": {
+      "monastery": 3,
+      "title": "Bum Chu Sacred Vessel",
+      "description": "Ancient vessel used in the holy water ceremony",
+      "item_type": "artifact",
+      "material": "bronze",
+      "condition": "good",
+      "cultural_significance": "Central to the most sacred ceremony of Tashiding Monastery",
+      "acquisition_date": "2025-06-20",
+      "is_public": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  }
+]

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Map - Sikkim Monasteries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif !important; overflow-x: hidden; background-color: #111827; }
+        #root { width: 100vw; min-height: 100vh; }
+
+        /* Map container height */
+        .map-container {
+            min-height: calc(100vh - 4rem);
+        }
+
+        /* Dark theme for Leaflet */
+        .leaflet-tile {
+            filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: #1f2937;
+            color: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .leaflet-popup-tip {
+            background: #1f2937;
+        }
+
+        .leaflet-control-zoom a {
+            background-color: #374151;
+            color: #f9fafb;
+            border: 1px solid #4b5563;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background-color: #4b5563;
+        }
+
+        .leaflet-control-attribution {
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #d1d5db;
+        }
+
+        .leaflet-control-attribution a {
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Pass Django authentication state to JavaScript -->
+    <script>
+        window.userAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+        window.userName = "{{ user.get_full_name|default:user.username|escapejs }}";
+        window.userEmail = "{{ user.email|escapejs }}";
+    </script>
+
+    <!-- CSRF Token for forms -->
+    {% csrf_token %}
+    <script>
+        window.csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Shared Navigation Component
+        const SharedNavigation = ({ currentPage = "", theme = "dark" }) => {
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+          // Navigation items with their routes and icons
+          const navItems = [
+            {
+              name: "Home",
+              href: "/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 9L12 2L21 9V20A2 2 0 0 1 19 22H5A2 2 0 0 1 3 20V9Z"/>
+                </svg>
+              )
+            },
+            {
+              name: "Virtual Tours",
+              href: "/tours/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12H22"/>
+                  <path d="M12 2A15.3 15.3 0 0 1 16 12A15.3 15.3 0 0 1 12 22A15.3 15.3 0 0 1 8 12A15.3 15.3 0 0 1 12 2Z"/>
+                </svg>
+              )
+            },
+            {
+              name: "Interactive Map",
+              href: "/monasteries/map/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10C21 17 12 23 12 23S3 17 3 10A9 9 0 0 1 21 10Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              )
+            },
+            {
+              name: "Digital Archives",
+              href: "/archives/portal/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6A2 2 0 0 0 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8L14 2Z"/>
+                  <polyline points="14,2 14,8 20,8"/>
+                </svg>
+              )
+            },
+            {
+              name: "Cultural Calendar",
+              href: "/events/",
+              icon: (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              )
+            }
+          ];
+
+          // Theme configurations
+          const themeClasses = {
+            light: {
+              header: "bg-white shadow-sm",
+              text: "text-gray-900",
+              subtext: "text-gray-600",
+              navText: "text-gray-700",
+              navHover: "hover:text-orange-500",
+              activeText: "text-orange-500",
+              mobileBorder: "border-gray-200"
+            },
+            dark: {
+              header: "bg-gray-900 shadow-lg",
+              text: "text-white",
+              subtext: "text-gray-400",
+              navText: "text-gray-300",
+              navHover: "hover:text-orange-500",
+              activeText: "text-orange-500",
+              mobileBorder: "border-gray-700"
+            },
+            transparent: {
+              header: "bg-white/10 backdrop-blur-sm",
+              text: "text-white",
+              subtext: "text-white/70",
+              navText: "text-white",
+              navHover: "hover:text-orange-400",
+              activeText: "text-orange-400",
+              mobileBorder: "border-white/20"
+            }
+          };
+
+          const currentTheme = themeClasses[theme] || themeClasses.dark;
+
+          return (
+            <header className={`sticky top-0 z-50 py-4 px-8 ${currentTheme.header}`}>
+              <div className="flex items-center justify-between">
+                {/* Logo */}
+                <button
+                  onClick={() => window.location.reload()}
+                  className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+                >
+                  <div className="w-12 h-12 text-orange-500">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                      <path d="M12 2L3 7V10.5L12 15.5L21 10.5V7L12 2ZM12 4.2L18.4 7.5L12 10.8L5.6 7.5L12 4.2ZM5 9.1L11 12.1V19.9L5 16.9V9.1ZM13 19.9V12.1L19 9.1V16.9L13 19.9Z"/>
+                      <path d="M12 1L2 6V11L12 16L22 11V6L12 1ZM4 8.5V9.5L12 14L20 9.5V8.5L12 13L4 8.5Z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className={`text-xl font-bold ${currentTheme.text}`}>Sikkim Monasteries</h1>
+                    <p className={`text-sm ${currentTheme.subtext}`}>Heritage & Culture</p>
+                  </div>
+                </button>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden lg:flex items-center space-x-8">
+                  {navItems.map((item) => {
+                    const isActive = currentPage === "map" && item.name === "Interactive Map";
+                    return (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className={`flex items-center space-x-2 transition-colors ${
+                          isActive
+                            ? `${currentTheme.activeText} font-semibold`
+                            : `${currentTheme.navText} ${currentTheme.navHover}`
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </a>
+                    );
+                  })}
+
+                  {/* Authentication Buttons */}
+                  {window.userAuthenticated ? (
+                    <>
+                      <a href="/profile/" className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Profile</span>
+                      </a>
+                      <form method="post" action="/logout/" className="inline-block">
+                        <input type="hidden" name="csrfmiddlewaretoken" value={window.csrfToken} />
+                        <button type="submit" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M9 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H9"/>
+                            <polyline points="16,17 21,12 16,7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                          </svg>
+                          <span>Logout</span>
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <a href="/login/" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 3H19A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H15"/>
+                        <polyline points="10,17 15,12 10,7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                      </svg>
+                      <span>Login</span>
+                    </a>
+                  )}
+                </nav>
+
+                {/* Mobile Menu Button */}
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className={`lg:hidden ${currentTheme.navText}`}
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Mobile Navigation */}
+              {isMobileMenuOpen && (
+                <nav className={`lg:hidden mt-4 pt-4 border-t ${currentTheme.mobileBorder}`}>
+                  <div className="flex flex-col space-y-4">
+                    {navItems.map((item) => {
+                      const isActive = currentPage === "map" && item.name === "Interactive Map";
+                      return (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className={`flex items-center space-x-2 transition-colors ${
+                            isActive
+                              ? `${currentTheme.activeText} font-semibold`
+                              : `${currentTheme.navText} ${currentTheme.navHover}`
+                          }`}
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </a>
+                      );
+                    })}
+
+                    {/* Mobile Authentication Buttons */}
+                    {window.userAuthenticated ? (
+                      <>
+                        <a href="/profile/" className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 w-fit">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21"/>
+                            <circle cx="12" cy="7" r="4"/>
+                          </svg>
+                          <span>Profile</span>
+                        </a>
+                        <form method="post" action="/logout/" className="inline-block">
+                          <input type="hidden" name="csrfmiddlewaretoken" value={window.csrfToken} />
+                          <button type="submit" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 w-fit">
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M9 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H9"/>
+                              <polyline points="16,17 21,12 16,7"/>
+                              <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            <span>Logout</span>
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <a href="/login/" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 w-fit">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M15 3H19A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H15"/>
+                          <polyline points="10,17 15,12 10,7"/>
+                          <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        <span>Login</span>
+                      </a>
+                    )}
+                  </div>
+                </nav>
+              )}
+            </header>
+          );
+        };
+
+        // Main App Component
+        const App = () => {
+          console.log("App component is rendering");
+
+          // State for monasteries data
+          const [monasteries, setMonasteries] = useState([
+            {
+              id: 1,
+              name: "Rumtek Monastery",
+              region: "East Sikkim",
+              distance: "24 km from Gangtok",
+              coordinates: [27.3389, 88.5603],
+              description: "The largest monastery in Sikkim and seat of the Karma Kagyu lineage."
+            },
+            {
+              id: 2,
+              name: "Pemayangtse Monastery",
+              region: "West Sikkim",
+              distance: "110 km from Gangtok",
+              coordinates: [27.2167, 88.2167],
+              description: "One of the oldest and most important monasteries in Sikkim."
+            },
+            {
+              id: 3,
+              name: "Enchey Monastery",
+              region: "East Sikkim",
+              distance: "3 km from Gangtok",
+              coordinates: [27.3358, 88.6138],
+              description: "A 200-year-old monastery known for its annual Cham dance."
+            },
+            {
+              id: 4,
+              name: "Tashiding Monastery",
+              region: "West Sikkim",
+              distance: "118 km from Gangtok",
+              coordinates: [27.3231, 88.2767],
+              description: "Sacred monastery believed to cleanse sins of visiting pilgrims."
+            },
+            {
+              id: 5,
+              name: "Ralang Monastery",
+              region: "South Sikkim",
+              distance: "65 km from Gangtok",
+              coordinates: [27.1667, 88.5833],
+              description: "Famous for its annual Pang Lhabsol festival."
+            },
+            {
+              id: 6,
+              name: "Dubdi Monastery",
+              region: "West Sikkim",
+              distance: "135 km from Gangtok",
+              coordinates: [27.2833, 88.2333],
+              description: "The first monastery built in Sikkim in 1701."
+            },
+            {
+              id: 7,
+              name: "Phensang Monastery",
+              region: "North Sikkim",
+              distance: "145 km from Gangtok",
+              coordinates: [27.7333, 88.5833],
+              description: "Remote monastery with spectacular views of Kanchenjunga."
+            },
+            {
+              id: 8,
+              name: "Do-drul Chorten",
+              region: "East Sikkim",
+              distance: "1 km from Gangtok",
+              coordinates: [27.3167, 88.6167],
+              description: "Magnificent stupa surrounded by prayer wheels."
+            }
+          ]);
+
+          // State for active monastery and filters
+          const [activeMonasteryId, setActiveMonasteryId] = useState(null);
+          const [selectedRegion, setSelectedRegion] = useState('All Regions');
+          const [showPOIs, setShowPOIs] = useState(true);
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+          // Refs for map
+          const mapRef = useRef(null);
+          const mapInstanceRef = useRef(null);
+          const markersRef = useRef({});
+
+          // Suggested routes data
+          const suggestedRoutes = [
+            { name: "East Sikkim Circuit", duration: "2 days", monasteries: 4 },
+            { name: "West Sikkim Heritage Trail", duration: "3 days", monasteries: 3 },
+            { name: "Complete Sikkim Tour", duration: "7 days", monasteries: 8 },
+            { name: "Sacred Pilgrimage Route", duration: "5 days", monasteries: 6 }
+          ];
+
+          // Filter monasteries by region
+          const filteredMonasteries = selectedRegion === 'All Regions'
+            ? monasteries
+            : monasteries.filter(m => m.region === selectedRegion);
+
+          // Initialize map
+          useEffect(() => {
+            if (mapRef.current && !mapInstanceRef.current) {
+              // Initialize Leaflet map
+              const map = L.map(mapRef.current).setView([27.3389, 88.5603], 9);
+
+              // Add tile layer with dark theme
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+              }).addTo(map);
+
+              mapInstanceRef.current = map;
+            }
+          }, []);
+
+          // Update markers when monasteries change
+          useEffect(() => {
+            if (mapInstanceRef.current) {
+              // Clear existing markers
+              Object.values(markersRef.current).forEach(marker => {
+                mapInstanceRef.current.removeLayer(marker);
+              });
+              markersRef.current = {};
+
+              // Add new markers
+              filteredMonasteries.forEach(monastery => {
+                if (showPOIs) {
+                  const marker = L.marker(monastery.coordinates)
+                    .addTo(mapInstanceRef.current)
+                    .bindPopup(`
+                      <div class="p-2">
+                        <h3 class="font-bold text-lg text-white">${monastery.name}</h3>
+                        <p class="text-gray-300 text-sm mb-2">${monastery.region}</p>
+                        <p class="text-gray-400 text-xs">${monastery.description}</p>
+                      </div>
+                    `);
+
+                  // Add click handler
+                  marker.on('click', () => {
+                    setActiveMonasteryId(monastery.id);
+                  });
+
+                  markersRef.current[monastery.id] = marker;
+                }
+              });
+            }
+          }, [filteredMonasteries, showPOIs]);
+
+          // Handle monastery click from sidebar
+          const handleMonasteryClick = (monastery) => {
+            setActiveMonasteryId(monastery.id);
+
+            if (mapInstanceRef.current && markersRef.current[monastery.id]) {
+              mapInstanceRef.current.flyTo(monastery.coordinates, 12);
+              markersRef.current[monastery.id].openPopup();
+            }
+          };
+
+
+          // Main App Component
+
+          // Sidebar Component
+          const Sidebar = () => (
+            <div className="bg-gray-800 h-full overflow-y-auto">
+              <div className="p-6">
+                {/* Filters */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-4">Filters</h3>
+
+                  {/* Region Filter */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Region</label>
+                    <select
+                      value={selectedRegion}
+                      onChange={(e) => setSelectedRegion(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    >
+                      <option value="All Regions">All Regions</option>
+                      <option value="East Sikkim">East Sikkim</option>
+                      <option value="West Sikkim">West Sikkim</option>
+                      <option value="North Sikkim">North Sikkim</option>
+                      <option value="South Sikkim">South Sikkim</option>
+                    </select>
+                  </div>
+
+                  {/* POI Toggle */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="poi-toggle"
+                      checked={showPOIs}
+                      onChange={(e) => setShowPOIs(e.target.checked)}
+                      className="mr-2 h-4 w-4 text-orange-500 bg-gray-700 border-gray-600 rounded focus:ring-orange-500"
+                    />
+                    <label htmlFor="poi-toggle" className="text-sm text-gray-300">Show Points of Interest</label>
+                  </div>
+                </div>
+
+                {/* Monasteries List */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-4">Monasteries ({filteredMonasteries.length})</h3>
+                  <div className="space-y-3">
+                    {filteredMonasteries.map(monastery => (
+                      <div
+                        key={monastery.id}
+                        onClick={() => handleMonasteryClick(monastery)}
+                        className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                          activeMonasteryId === monastery.id
+                            ? 'bg-orange-500 border-2 border-orange-400'
+                            : 'bg-gray-700 hover:bg-gray-600 border-2 border-transparent'
+                        }`}
+                      >
+                        <h4 className="font-medium text-white text-sm">{monastery.name}</h4>
+                        <p className="text-xs text-gray-300 mb-2">{monastery.region}</p>
+                        <p className="text-xs text-gray-400 mb-2">{monastery.distance}</p>
+
+                        <div className="flex items-center space-x-3">
+                          <button className="flex items-center space-x-1 text-xs text-gray-400 hover:text-white">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+                              <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path>
+                            </svg>
+                            <span>Directions</span>
+                          </button>
+
+                          <button className="flex items-center space-x-1 text-xs text-gray-400 hover:text-white">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <path d="M12 16v-4"></path>
+                              <path d="M12 8h.01"></path>
+                            </svg>
+                            <span>Info</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Suggested Routes */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Suggested Routes</h3>
+                  <div className="space-y-3">
+                    {suggestedRoutes.map((route, index) => (
+                      <div key={index} className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 cursor-pointer transition-colors">
+                        <h4 className="font-medium text-white text-sm">{route.name}</h4>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-xs text-gray-400">{route.duration}</span>
+                          <span className="text-xs text-orange-400">{route.monasteries} monasteries</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+          return (
+            <div className="min-h-screen bg-gray-900">
+              <SharedNavigation currentPage="map" theme="dark" />
+
+              {/* Main Content */}
+              <div className="flex h-screen">
+                {/* Sidebar - Hidden on mobile, visible on desktop */}
+                <div className="hidden lg:block w-80 bg-gray-800">
+                  <Sidebar />
+                </div>
+
+                {/* Map Container */}
+                <div className="flex-1 relative">
+                  <div
+                    ref={mapRef}
+                    className="w-full h-full map-container"
+                  />
+
+                  {/* Mobile Sidebar Toggle */}
+                  <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="lg:hidden absolute top-4 left-4 z-10 bg-gray-800 text-white p-2 rounded-lg shadow-lg"
+                  >
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                      <line x1="3" y1="12" x2="21" y2="12"/>
+                      <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                  </button>
+
+                  {/* Mobile Sidebar Overlay */}
+                  {isMobileMenuOpen && (
+                    <div className="lg:hidden absolute inset-0 z-20 flex">
+                      <div className="w-80 bg-gray-800 shadow-xl">
+                        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+                          <h2 className="text-white font-semibold">Map Controls</h2>
+                          <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <line x1="18" y1="6" x2="6" y2="18"/>
+                              <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                          </button>
+                        </div>
+                        <Sidebar />
+                      </div>
+                      <div
+                        className="flex-1 bg-black bg-opacity-50"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // Render the App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

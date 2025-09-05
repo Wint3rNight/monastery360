@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monastery360 - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen animated-bg overflow-hidden relative">
+    <!-- Floating Elements -->
+    <div class="floating-element absolute top-20 left-10 w-32 h-32 bg-purple-400 opacity-20 rounded-full blur-xl" style="animation: float 6s ease-in-out infinite;"></div>
+    <div class="floating-element absolute top-40 right-20 w-24 h-24 bg-pink-400 opacity-30 rounded-full blur-lg" style="animation: float 8s ease-in-out infinite reverse;"></div>
+    <div class="floating-element absolute bottom-32 left-1/4 w-40 h-40 bg-blue-400 opacity-15 rounded-full blur-2xl" style="animation: float 10s ease-in-out infinite;"></div>
+
+    <!-- Orbiting Glow Effects -->
+    <div class="orbit-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div class="orbit-glow" style="animation: orbitGlow 20s linear infinite;"></div>
+        <div class="orbit-glow" style="animation: orbitGlow 25s linear infinite reverse; animation-delay: -5s;"></div>
+        <div class="orbit-glow" style="animation: orbitGlow 30s linear infinite; animation-delay: -10s;"></div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div id="login-app"></div>
+    </div>
+
+    {% verbatim %}
+    <script type="text/babel">
+        const { useState } = React;
+
+        function LoginPage() {
+            const [isLogin, setIsLogin] = useState(true);
+            const [formData, setFormData] = useState({
+                username: '',
+                password: '',
+                email: '',
+                confirmPassword: ''
+            });
+
+            const handleInputChange = (e) => {
+                setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value
+                });
+            };
+
+            return (
+                <div className="glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl backdrop-blur-xl border border-white/20">
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-white mb-2">
+                            {isLogin ? 'Welcome Back' : 'Join Us'}
+                        </h1>
+                        <p className="text-white/70">
+                            {isLogin ? 'Sign in to your account' : 'Create your account'}
+                        </p>
+                    </div>
+
+                    {/* Toggle Buttons */}
+                    <div className="flex mb-8 bg-white/10 rounded-full p-1">
+                        <button
+                            onClick={() => setIsLogin(true)}
+                            className={`flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                isLogin
+                                    ? 'bg-white text-purple-600 shadow-lg'
+                                    : 'text-white hover:text-white/80'
+                            }`}
+                        >
+                            Login
+                        </button>
+                        <button
+                            onClick={() => setIsLogin(false)}
+                            className={`flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                !isLogin
+                                    ? 'bg-white text-purple-600 shadow-lg'
+                                    : 'text-white hover:text-white/80'
+                            }`}
+                        >
+                            Sign Up
+                        </button>
+                    </div>
+
+                    {/* Form */}
+                    <form method="post" action="/login/" className="space-y-6">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+
+                        {!isLogin && (
+                            <div className="relative">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email Address"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                />
+                            </div>
+                        )}
+
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                required
+                            />
+                        </div>
+
+                        <div className="relative">
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                required
+                            />
+                        </div>
+
+                        {!isLogin && (
+                            <div className="relative">
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    placeholder="Confirm Password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                />
+                            </div>
+                        )}
+
+                        {isLogin && (
+                            <div className="flex items-center justify-between text-sm">
+                                <label className="flex items-center text-white/70">
+                                    <input type="checkbox" className="mr-2 rounded" />
+                                    Remember me
+                                </label>
+                                <a href="#" className="text-purple-300 hover:text-purple-200 transition-colors">
+                                    Forgot password?
+                                </a>
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg"
+                        >
+                            {isLogin ? 'Sign In' : 'Create Account'}
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <div className="mt-8 text-center">
+                        <p className="text-white/60 text-sm">
+                            {isLogin ? "Don't have an account? " : "Already have an account? "}
+                            <button
+                                onClick={() => setIsLogin(!isLogin)}
+                                className="text-purple-300 hover:text-purple-200 font-medium transition-colors"
+                            >
+                                {isLogin ? 'Sign up' : 'Sign in'}
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<LoginPage />, document.getElementById('login-app'));
+    </script>
+    {% endverbatim %}
+
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes orbitGlow {
+            0% { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #1e1b4b, #581c87, #be185d, #9333ea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .orbit-glow {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.8), transparent);
+            border-radius: 50%;
+            animation: orbitGlow 20s linear infinite;
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .orbit-container {
+            pointer-events: none;
+        }
+
+        /* Additional glass morphism effects */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        /* Focus states for better UX */
+        input:focus {
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+        }
+
+        button:hover {
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+        }
+    </style>
+</body>
+</html>
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes orbitGlow {
+            0% { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #1e1b4b, #581c87, #be185d, #9333ea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .orbit-glow {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.8), transparent);
+            border-radius: 50%;
+            animation: orbitGlow 8s linear infinite;
+            top: 50%;
+            left: 50%;
+            margin-top: -7px;
+            margin-left: -7px;
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="animated-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Floating Elements -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="floating-element absolute w-20 h-20 bg-purple-400/20 rounded-full" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="floating-element absolute w-16 h-16 bg-pink-400/20 rounded-full" style="left: 80%; top: 30%; animation-delay: 2s;"></div>
+        <div class="floating-element absolute w-24 h-24 bg-blue-400/20 rounded-full" style="left: 20%; top: 70%; animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="glass-card relative max-w-md w-full p-8 rounded-2xl shadow-2xl">
+        <!-- Orbiting Glow Effect -->
+        <div class="orbit-glow"></div>
+
+        <!-- Logo/Brand -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">M</span>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Monastery360</h1>
+            <p class="text-white/60 text-sm">Spiritual Journey Awaits</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="space-y-6">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                <p class="text-white/70">Sign in to your account</p>
+            </div>
+
+            <form method="post" action="{% url 'core:login' %}" class="space-y-6">
+                {% csrf_token %}
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Username or Email</label>
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter your username or email"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center text-white/70">
+                        <input type="checkbox" class="mr-2" />
+                        Remember me
+                    </label>
+                    <a href="#" class="text-purple-300 hover:text-purple-200 transition-colors">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg font-semibold text-white transition-all duration-300 transform hover:scale-105">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="text-center">
+                <p class="text-white/70">
+                    Don't have an account?
+                    <button onclick="toggleForm()" class="text-purple-300 hover:text-purple-200 font-semibold transition-colors ml-1">
+                        Sign Up
+                    </button>
+                </p>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="space-y-6 hidden">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
+                <p class="text-white/70">Join our spiritual journey</p>
+            </div>
+
+            <form method="post" action="{% url 'core:signup' %}" class="space-y-4">
+                {% csrf_token %}
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Full Name</label>
+                    <input
+                        type="text"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Choose a username"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Phone Number</label>
+                    <input
+                        type="tel"
+                        name="phone_number"
+                        placeholder="Enter your phone number"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Password</label>
+                    <input
+                        type="password"
+                        name="password1"
+                        placeholder="Create a strong password"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-white/80">Confirm Password</label>
+                    <input
+                        type="password"
+                        name="password2"
+                        placeholder="Confirm your password"
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all duration-300"
+                    />
+                </div>
+
+                <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg font-semibold text-white transition-all duration-300 transform hover:scale-105">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="text-center">
+                <p class="text-white/70">
+                    Already have an account?
+                    <button onclick="toggleForm()" class="text-purple-300 hover:text-purple-200 font-semibold transition-colors ml-1">
+                        Sign In
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+
+            if (loginForm.classList.contains('hidden')) {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+            }
+    </style>
+</body>
+</html>
+        /* Custom animations and keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(15px) rotate(240deg); }
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(-100%) translateY(0%) rotate(0deg); }
+            100% { transform: translateX(100%) translateY(-10%) rotate(360deg); }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes orbitGlow {
+            0% { transform: rotate(0deg) translateX(300px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
+        }
+
+        @keyframes cardEntry {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0px);
+            }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #1e1b4b, #581c87, #be185d, #9333ea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .wave-effect {
+            background: linear-gradient(45deg,
+                rgba(99, 102, 241, 0.1),
+                rgba(139, 92, 246, 0.15),
+                rgba(236, 72, 153, 0.1)
+            );
+            animation: wave 20s linear infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: cardEntry 1s ease-out;
+        }
+
+        .orbit-glow {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.8), transparent);
+            border-radius: 50%;
+            animation: orbitGlow 8s linear infinite;
+            top: 50%;
+            left: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            background-size: 200% 200%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            background-position: 100% 0%;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="root">Loading...</div>
+    <!-- CSRF Token for Django -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{% csrf_token %}" />
+
+    <script>
+        // Check if libraries are loading
+        console.log('Starting script...');
+
+        function waitForLibraries() {
+            if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof Babel !== 'undefined') {
+                console.log('All libraries loaded!');
+                initializeApp();
+            } else {
+                console.log('Waiting for libraries...', {
+                    React: typeof React,
+                    ReactDOM: typeof ReactDOM,
+                    Babel: typeof Babel
+                });
+                setTimeout(waitForLibraries, 100);
+            }
+        }
+
+        function initializeApp() {
+            // Basic test first
+            document.getElementById('root').innerHTML = `
+                <div class="animated-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+                    <!-- Background Effects -->
+                    <div class="fixed inset-0 overflow-hidden">
+                        <div class="wave-effect absolute inset-0 opacity-30"></div>
+                        <div class="wave-effect absolute inset-0 opacity-20" style="animation-delay: 10s; animation-duration: 25s;"></div>
+                    </div>
+
+                    <!-- Main Card -->
+                    <div class="glass-card relative max-w-md w-full p-8 rounded-2xl shadow-2xl">
+                        <!-- Orbiting Glow Effect -->
+                        <div class="orbit-glow"></div>
+
+                        <!-- Logo/Brand -->
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">M</span>
+                            </div>
+                            <h1 class="text-2xl font-bold text-white">Monastery360</h1>
+                            <p class="text-white/60 text-sm">Spiritual Journey Awaits</p>
+                        </div>
+
+                        <!-- Login Form -->
+                        <div class="space-y-6">
+                            <div class="text-center">
+                                <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                                <p class="text-white/70">Sign in to your account</p>
+                            </div>
+
+                            <form method="post" action="/login/" class="space-y-6">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${document.querySelector('[name=csrfmiddlewaretoken]').value}" />
+
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-medium text-white/80">Username or Email</label>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        placeholder="Enter your username or email"
+                                        required
+                                        class="input-glow w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-medium text-white/80">Password</label>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        placeholder="Enter your password"
+                                        required
+                                        class="input-glow w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div class="flex items-center justify-between text-sm">
+                                    <label class="flex items-center text-white/70">
+                                        <input type="checkbox" class="mr-2" />
+                                        Remember me
+                                    </label>
+                                    <a href="#" class="text-purple-300 hover:text-purple-200 transition-colors">
+                                        Forgot password?
+                                    </a>
+                                </div>
+
+                                <button type="submit" class="btn-gradient w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300">
+                                    Sign In
+                                </button>
+                            </form>
+
+                            <div class="text-center">
+                                <p class="text-white/70">
+                                    Don't have an account?
+                                    <button onclick="showSignup()" class="text-purple-300 hover:text-purple-200 font-semibold transition-colors ml-1">
+                                        Sign Up
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add floating elements
+            addFloatingElements();
+        }
+
+        function addFloatingElements() {
+            const container = document.querySelector('.animated-bg');
+            if (container) {
+                for (let i = 0; i < 6; i++) {
+                    const element = document.createElement('div');
+                    element.className = 'floating-element absolute rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20 pointer-events-none';
+                    element.style.width = Math.random() * 100 + 50 + 'px';
+                    element.style.height = Math.random() * 100 + 50 + 'px';
+                    element.style.left = Math.random() * 100 + '%';
+                    element.style.top = Math.random() * 100 + '%';
+                    element.style.animationDelay = Math.random() * 6 + 's';
+                    element.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    element.style.position = 'fixed';
+                    container.appendChild(element);
+                }
+            }
+        }
+
+        function showSignup() {
+            alert('Signup form coming soon! For now, please use the login form.');
+        }
+
+        // Start the process
+        waitForLibraries();
+    </script>
+</body>
+</html>

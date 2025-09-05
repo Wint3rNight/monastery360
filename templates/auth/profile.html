@@ -1,0 +1,408 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Monastery360</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(-100%) translateY(0px); }
+            50% { transform: translateX(0%) translateY(-10px); }
+            100% { transform: translateX(100%) translateY(0px); }
+        }
+
+        @keyframes orbitGlow {
+            0% { box-shadow: 0 0 60px 10px rgba(186,51,233,0.3), 0 0 120px 30px rgba(236,72,153,0.15); }
+            50% { box-shadow: 0 0 80px 20px rgba(236,72,153,0.25), 0 0 160px 40px rgba(186,51,233,0.18); }
+            100% { box-shadow: 0 0 60px 10px rgba(186,51,233,0.3), 0 0 120px 30px rgba(236,72,153,0.15); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #1e1b4b, #581c87, #be185d, #9333ea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .wave-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: wave 8s linear infinite;
+        }
+
+        .orbit-glow {
+            animation: orbitGlow 8s linear infinite;
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .avatar-pulse {
+            animation: pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen animated-bg overflow-hidden relative">
+    <!-- Wave Effects -->
+    <div class="wave-effect"></div>
+    <div class="wave-effect" style="animation-delay: -4s;"></div>
+
+    <!-- Floating Elements -->
+    <div class="floating-element absolute top-20 left-10 w-32 h-32 bg-purple-400 opacity-20 rounded-full blur-xl" style="animation: float 6s ease-in-out infinite;"></div>
+    <div class="floating-element absolute top-40 right-20 w-24 h-24 bg-pink-400 opacity-30 rounded-full blur-lg" style="animation: float 8s ease-in-out infinite reverse;"></div>
+    <div class="floating-element absolute bottom-32 left-1/4 w-40 h-40 bg-blue-400 opacity-15 rounded-full blur-2xl" style="animation: float 10s ease-in-out infinite;"></div>
+    <div class="floating-element absolute top-1/2 right-10 w-16 h-16 bg-indigo-400 opacity-25 rounded-full blur-lg" style="animation: float 7s ease-in-out infinite;"></div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div id="profile-app"></div>
+    </div>
+
+    <script>
+        // Django data for JavaScript
+        window.USER_DATA = {
+            username: "{{ user.username|escapejs }}",
+            email: "{{ user.email|escapejs }}",
+            firstName: "{{ user.first_name|escapejs }}",
+            lastName: "{{ user.last_name|escapejs }}",
+            dateJoined: "{{ user.date_joined|date:'F Y'|escapejs }}",
+            lastLogin: "{{ user.last_login|date:'M d, Y'|escapejs }}"
+        };
+        window.HOME_URL = "{% url 'core:home' %}";
+        window.LOGOUT_URL = "{% url 'core:logout' %}";
+        window.PROFILE_UPDATE_URL = "{% url 'core:profile_update' %}";
+        window.CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
+
+    {% verbatim %}
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function ProfileApp() {
+            const [cardVisible, setCardVisible] = useState(false);
+            const [showEditForm, setShowEditForm] = useState(false);
+            const [userData, setUserData] = useState(window.USER_DATA);
+            const [editData, setEditData] = useState({
+                firstName: window.USER_DATA.firstName,
+                lastName: window.USER_DATA.lastName,
+                email: window.USER_DATA.email
+            });
+            const [saving, setSaving] = useState(false);
+            const [message, setMessage] = useState("");
+
+            // Entry animation
+            useEffect(() => {
+                setTimeout(() => setCardVisible(true), 100);
+            }, []);
+
+            const handleEditChange = (e) => {
+                const { name, value } = e.target;
+                setEditData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSaveProfile = async (e) => {
+                e.preventDefault();
+                setSaving(true);
+                setMessage("");
+
+                try {
+                    const formData = new FormData();
+                    formData.append('first_name', editData.firstName);
+                    formData.append('last_name', editData.lastName);
+                    formData.append('email', editData.email);
+                    formData.append('csrfmiddlewaretoken', window.CSRF_TOKEN);
+
+                    const res = await fetch(window.PROFILE_UPDATE_URL, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        // Update local state with new data
+                        setUserData(prev => ({
+                            ...prev,
+                            firstName: editData.firstName,
+                            lastName: editData.lastName,
+                            email: editData.email
+                        }));
+                        setMessage("Profile updated successfully!");
+                        setTimeout(() => {
+                            setShowEditForm(false);
+                            setMessage("");
+                        }, 2000);
+                    } else {
+                        if (data.error && data.error.includes('already exists')) {
+                            setMessage("Email already exists. Please choose another.");
+                        } else {
+                            setMessage(data.error || "Failed to update profile. Please try again.");
+                        }
+                    }
+                } catch (err) {
+                    console.error("Profile update error:", err);
+                    setMessage("Network error. Please try again.");
+                }
+                setSaving(false);
+            };
+
+            const handleLogout = async () => {
+                try {
+                    const formData = new FormData();
+                    formData.append('csrfmiddlewaretoken', window.CSRF_TOKEN);
+
+                    const res = await fetch(window.LOGOUT_URL, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (res.redirected || res.ok) {
+                        window.location.href = window.HOME_URL;
+                    }
+                } catch (err) {
+                    console.error("Logout error:", err);
+                    window.location.href = window.HOME_URL;
+                }
+            };
+
+            const getInitials = () => {
+                if (userData.firstName && userData.lastName) {
+                    return userData.firstName.charAt(0) + userData.lastName.charAt(0);
+                }
+                return userData.username.charAt(0).toUpperCase();
+            };
+
+            const getDisplayName = () => {
+                if (userData.firstName && userData.lastName) {
+                    return `${userData.firstName} ${userData.lastName}`;
+                }
+                return userData.username;
+            };
+
+            return (
+                <div
+                    className={`relative z-10 w-full max-w-4xl transition-all duration-700 ${
+                        cardVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                    }`}
+                >
+                    {/* Animated Glow Effect */}
+                    <div className="absolute -inset-2 rounded-3xl border-2 border-transparent orbit-glow pointer-events-none"></div>
+
+                    {/* Main Profile Card */}
+                    <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+                        {/* Header Section */}
+                        <div className="text-center mb-8">
+                            <div className="relative inline-block">
+                                <div className="w-32 h-32 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full mx-auto mb-4 flex items-center justify-center shadow-2xl avatar-pulse">
+                                    <span className="text-4xl font-bold text-white">
+                                        {getInitials()}
+                                    </span>
+                                </div>
+                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4 border-white/30 animate-ping"></div>
+                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4 border-white/30"></div>
+                            </div>
+
+                            <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                                {getDisplayName()}
+                            </h1>
+                            <p className="text-white/70 text-lg break-all px-4">{userData.email}</p>
+                            <div className="mt-4 inline-flex items-center px-3 py-1 bg-green-500/20 border border-green-400/50 rounded-full text-green-300 text-sm">
+                                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                Online
+                            </div>
+                        </div>
+
+                        {/* Profile Stats */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                                <div className="flex items-center mb-3">
+                                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
+                                        <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21"/>
+                                            <circle cx="12" cy="7" r="4"/>
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-white font-semibold">Username</h3>
+                                </div>
+                                <p className="text-white/80 text-sm break-words">{userData.username}</p>
+                            </div>
+
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                                <div className="flex items-center mb-3">
+                                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mr-3">
+                                        <svg className="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                            <polyline points="22,6 12,13 2,6"/>
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-white font-semibold">Email</h3>
+                                </div>
+                                <p className="text-white/80 text-sm break-all overflow-hidden">{userData.email}</p>
+                            </div>
+
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                                <div className="flex items-center mb-3">
+                                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mr-3">
+                                        <svg className="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-white font-semibold">Member Since</h3>
+                                </div>
+                                <p className="text-white/80 text-sm">{userData.dateJoined}</p>
+                            </div>
+
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                                <div className="flex items-center mb-3">
+                                    <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center mr-3">
+                                        <svg className="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12,6 12,12 16,14"/>
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-white font-semibold">Last Login</h3>
+                                </div>
+                                <p className="text-white/80 text-sm">{userData.lastLogin}</p>
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button
+                                onClick={() => window.location.href = window.HOME_URL}
+                                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                            >
+                                <svg className="w-5 h-5 inline mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9,22 9,12 15,12 15,22"/>
+                                </svg>
+                                Back to Home
+                            </button>
+
+                            <button
+                                onClick={() => setShowEditForm(!showEditForm)}
+                                className="flex-1 bg-gradient-to-r from-indigo-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:from-indigo-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-indigo-500/25"
+                            >
+                                <svg className="w-5 h-5 inline mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit Profile
+                            </button>
+
+                            <button
+                                onClick={handleLogout}
+                                className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:from-red-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-red-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-red-500/25"
+                            >
+                                <svg className="w-5 h-5 inline mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                    <polyline points="16,17 21,12 16,7"/>
+                                    <line x1="21" y1="12" x2="9" y2="12"/>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+
+                        {/* Edit Form (Hidden by default) */}
+                        {showEditForm && (
+                            <div className="mt-8 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 animate-fade-in">
+                                <h3 className="text-xl font-bold text-white mb-4">Edit Profile</h3>
+
+                                {/* Success/Error Messages */}
+                                {message && (
+                                    <div className={`mb-4 p-3 rounded-lg text-center font-medium ${
+                                        message.includes('successfully')
+                                            ? 'bg-green-500/20 border border-green-400/50 text-green-300'
+                                            : 'bg-red-500/20 border border-red-400/50 text-red-300'
+                                    }`}>
+                                        {message}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleSaveProfile}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            placeholder="First Name"
+                                            value={editData.firstName}
+                                            onChange={handleEditChange}
+                                            className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            placeholder="Last Name"
+                                            value={editData.lastName}
+                                            onChange={handleEditChange}
+                                            className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                            required
+                                        />
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                            value={editData.email}
+                                            onChange={handleEditChange}
+                                            className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                                            required
+                                        />
+                                        <div className="flex gap-2">
+                                            <button
+                                                type="submit"
+                                                disabled={saving}
+                                                className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-teal-600 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                {saving ? "Saving..." : "Save Changes"}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowEditForm(false)}
+                                                className="px-4 py-3 bg-gray-500/20 border border-gray-400/50 text-white rounded-xl font-semibold hover:bg-gray-500/30 transition-all duration-300"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ProfileApp />, document.getElementById('profile-app'));
+    </script>
+    {% endverbatim %}
+</body>
+</html>

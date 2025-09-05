@@ -1,0 +1,104 @@
+{
+  "monasteries": [
+    {
+      "id": 1,
+      "name": "Rumtek Monastery",
+      "region": "East Sikkim",
+      "description": "The largest monastery in Sikkim and the main seat of the Karma Kagyu lineage. Known for its stunning architecture and sacred relics.",
+      "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1974&auto=format&fit=crop",
+      "duration": 20,
+      "isFeatured": true,
+      "panoId": "rumtek"
+    },
+    {
+      "id": 2,
+      "name": "Pemayangtse Monastery",
+      "region": "West Sikkim",
+      "description": "One of the oldest and most important monasteries in Sikkim, offering breathtaking views of the Himalayas.",
+      "imageUrl": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=1974&auto=format&fit=crop",
+      "duration": 15,
+      "isFeatured": true,
+      "panoId": "pemayangtse"
+    },
+    {
+      "id": 3,
+      "name": "Enchey Monastery",
+      "region": "East Sikkim",
+      "description": "A 200-year-old monastery known for its annual Cham dance and beautiful murals depicting Buddhist teachings.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=1974&auto=format&fit=crop",
+      "duration": 12,
+      "isFeatured": false,
+      "panoId": "enchey"
+    },
+    {
+      "id": 4,
+      "name": "Tashiding Monastery",
+      "region": "West Sikkim",
+      "description": "Perched on a hilltop, this sacred monastery is believed to cleanse sins of pilgrims who visit it.",
+      "imageUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1974&auto=format&fit=crop",
+      "duration": 18,
+      "isFeatured": true,
+      "panoId": "tashiding"
+    },
+    {
+      "id": 5,
+      "name": "Ralang Monastery",
+      "region": "South Sikkim",
+      "description": "Famous for its annual Pang Lhabsol festival and ancient Buddhist texts preserved within its walls.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736876969-f70d6a2e86cf?q=80&w=1974&auto=format&fit=crop",
+      "duration": 14,
+      "isFeatured": false,
+      "panoId": "ralang"
+    },
+    {
+      "id": 6,
+      "name": "Dubdi Monastery",
+      "region": "West Sikkim",
+      "description": "The first monastery built in Sikkim, showcasing the earliest Buddhist architectural traditions in the region.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736969960-6e4e0c86e3e7?q=80&w=1974&auto=format&fit=crop",
+      "duration": 10,
+      "isFeatured": false,
+      "panoId": "dubdi"
+    },
+    {
+      "id": 7,
+      "name": "Phensang Monastery",
+      "region": "North Sikkim",
+      "description": "A remote monastery offering spectacular views of Kanchenjunga and housing ancient Tibetan manuscripts.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736969955-4b8c0b15c0b5?q=80&w=1974&auto=format&fit=crop",
+      "duration": 25,
+      "isFeatured": true,
+      "panoId": "phensang"
+    },
+    {
+      "id": 8,
+      "name": "Labrang Monastery",
+      "region": "North Sikkim",
+      "description": "Known for its meditation caves and peaceful environment, perfect for spiritual contemplation.",
+      "imageUrl": "https://images.unsplash.com/photo-1578662997603-62c044c4c8e4?q=80&w=1974&auto=format&fit=crop",
+      "duration": 16,
+      "isFeatured": false,
+      "panoId": "labrang"
+    },
+    {
+      "id": 9,
+      "name": "Sang Monastery",
+      "region": "North Sikkim",
+      "description": "An ancient monastery housing rare Buddhist artifacts and offering insights into Sikkimese spiritual heritage.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736969955-b2d49ccb6cf5?q=80&w=1974&auto=format&fit=crop",
+      "duration": 13,
+      "isFeatured": false,
+      "panoId": "sang"
+    },
+    {
+      "id": 10,
+      "name": "Do-drul Chorten",
+      "region": "East Sikkim",
+      "description": "A magnificent stupa surrounded by prayer wheels, representing the mind of Buddha and Buddhist cosmology.",
+      "imageUrl": "https://images.unsplash.com/photo-1590736969960-5bc8c1f7f4f7?q=80&w=1974&auto=format&fit=crop",
+      "duration": 8,
+      "isFeatured": false,
+      "panoId": "do-drul-chorten"
+    }
+  ]
+}

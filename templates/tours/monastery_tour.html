@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ page_title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-6xl mx-auto p-6">
+        <a href="/tours/" class="text-sm text-orange-600 hover:underline">← Back to Virtual Tours</a>
+        <h1 class="text-3xl font-extrabold mt-4 mb-2">{{ monastery.name }}</h1>
+        <p class="text-gray-700 mb-6 text-sm leading-relaxed">{{ page_description }}</p>
+
+    <!-- panorama / poi / archives data json for client-side consumption -->
+    {{ panorama_data_json|json_script:"panorama-data" }}
+    {{ poi_data_json|json_script:"poi-data" }}
+    {{ archive_items|json_script:"archive-data" }}
+
+    <!-- Panorama viewer -->
+    <div id="panorama" class="w-full h-[60vh] rounded-xl overflow-hidden shadow-2xl"></div>
+
+    <!-- Thumbnails / other panoramas -->
+    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4" id="panorama-thumbs"></div>
+
+        <!-- Audio POIs -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Audio Points of Interest</h2>
+            <div id="poi-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+    <!-- Archives section removed per request -->
+    </div>
+
+    <script>
+        (function(){
+            // parse JSON data injected via json_script
+            const panoramaData = JSON.parse(document.getElementById('panorama-data').textContent || '[]');
+            const poiData = JSON.parse(document.getElementById('poi-data').textContent || '[]');
+
+            // choose first panorama
+            const first = panoramaData && panoramaData.length ? panoramaData[0] : null;
+            const placeholder = 'https://pannellum.org/images/alma.jpg';
+
+            // create pannellum viewer instance and keep reference for switching
+            let viewer = null;
+            function createViewer(imageUrl, config={}){
+                const opts = Object.assign({
+                    type: 'equirectangular',
+                    panorama: imageUrl || placeholder,
+                    autoLoad: true,
+                    autoRotate: -2,
+                    showZoomCtrl: true,
+                    showFullscreenCtrl: true,
+                    pitch: config.initial_pitch || 0,
+                    yaw: config.initial_yaw || 0,
+                    hotSpots: config.hotspots || []
+                }, config.extra || {});
+
+                // if a viewer already exists, destroy its container then recreate
+                if(viewer){
+                    try{ viewer.destroy(); } catch(e){}
+                }
+
+                viewer = pannellum.viewer('panorama', opts);
+                return viewer;
+            }
+
+            try{
+                createViewer(first ? first.image_url : null, { initial_yaw: first ? first.initial_yaw : 0, initial_pitch: first ? first.initial_pitch : 0, hotspots: first ? (first.hotspots_data || []) : [] });
+            } catch (err) {
+                console.warn('Panorama init error', err);
+                document.getElementById('panorama').innerHTML = '<div class="p-8 text-center text-gray-600">Panorama currently unavailable.</div>';
+            }
+
+            // thumbnails (switch panorama in-page)
+            const thumbs = document.getElementById('panorama-thumbs');
+            const monasterySlug = "{{ monastery.slug }}";
+            panoramaData.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'block bg-white rounded overflow-hidden shadow cursor-pointer';
+                el.innerHTML = `
+                    <img src="${p.image_url || placeholder}" class="w-full h-36 object-cover" />
+                    <div class="p-2 text-sm font-medium text-gray-900">${p.title || 'Panorama'}</div>
+                `;
+
+                // click to switch panorama in the viewer
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // recreate viewer with selected panorama and hotspots
+                    createViewer(p.image_url, { initial_yaw: p.initial_yaw, initial_pitch: p.initial_pitch, hotspots: p.hotspots_data });
+                });
+
+                // secondary link to open the dedicated panorama detail page
+                const linkWrap = document.createElement('a');
+                linkWrap.href = p.id ? `/tours/panorama/${monasterySlug}/${p.id}/` : '#';
+                linkWrap.appendChild(el);
+                thumbs.appendChild(linkWrap);
+            });
+
+                        // POI list
+            const poiList = document.getElementById('poi-list');
+            if(!poiData || !poiData.length){
+                poiList.innerHTML = '<div class="text-gray-600">No audio points available.</div>';
+            } else {
+                poiData.forEach(poi => {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 bg-white rounded shadow';
+                    div.innerHTML = `
+                        <h3 class="font-semibold">${poi.title}</h3>
+                        <p class="text-sm text-gray-600 mb-2">${poi.description}</p>
+                        ${poi.audio_url ? `<audio controls src="${poi.audio_url}" class="w-full"></audio>` : ''}
+                    `;
+                    poiList.appendChild(div);
+                });
+            }
+
+                        // Archives rendering removed per request
+        })();
+    </script>
+</body>
+</html>

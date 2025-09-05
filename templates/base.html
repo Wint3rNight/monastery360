@@ -1,0 +1,348 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Monastery360">
+
+    <!-- Page Title and Description -->
+    <title>{% block title %}{{ page_title|default:"Monastery360 - Digital Heritage of Sikkim's Monasteries" }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ page_description|default:'Explore the rich heritage of Buddhist monasteries in Sikkim through virtual tours, digital archives, and cultural experiences.' }}{% endblock %}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}{{ page_title|default:"Monastery360" }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ page_description|default:'Digital heritage platform for Sikkim Buddhist monasteries' }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/monastery360-og.jpg' %}{% endblock %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ page_title|default:"Monastery360" }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ page_description|default:'Digital heritage platform for Sikkim Buddhist monasteries' }}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/monastery360-og.jpg' %}{% endblock %}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{% url 'manifest' %}">
+    <meta name="theme-color" content="#8B4513">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Monastery360">
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CSS Libraries -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUa6C2+0+p4aAJsJwvVk40yXY+1nF/UdGaA4m9O0PQQ5yA5EYmwl7j1p7j1p" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+    <!-- Pannellum CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- Additional CSS -->
+    {% block extra_css %}{% endblock %}
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Monastery360",
+        "description": "Digital heritage platform for Buddhist monasteries in Sikkim",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "sameAs": [
+            "https://twitter.com/monastery360",
+            "https://facebook.com/monastery360"
+        ],
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ request.scheme }}://{{ request.get_host }}{% url 'core:search' %}?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    {% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link visually-hidden-focusable">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core:home' %}" aria-label="Monastery360 Home">
+                <i class="fas fa-dharmachakra me-2" aria-hidden="true"></i>
+                <span>Monastery360</span>
+            </a>
+
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:home' %}">
+                            <i class="fas fa-home me-1" aria-hidden="true"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:monastery_list' %}">
+                            <i class="fas fa-temple me-1" aria-hidden="true"></i>Monasteries
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tours:panorama_list' %}">
+                            <i class="fas fa-vr-cardboard me-1" aria-hidden="true"></i>Virtual Tours
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'archives:digital_portal' %}">
+                            <i class="fas fa-archive me-1" aria-hidden="true"></i>Digital Archives
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'events:calendar' %}">
+                            <i class="fas fa-calendar me-1" aria-hidden="true"></i>Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:monastery_map' %}">
+                            <i class="fas fa-map me-1" aria-hidden="true"></i>Map
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Search form -->
+                <form class="d-flex me-3" method="get" action="{% url 'core:search' %}" role="search">
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" type="search" name="q"
+                               placeholder="Search..." aria-label="Search" value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-light btn-sm" type="submit" aria-label="Submit search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Language switcher -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
+                            id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
+                        <i class="fas fa-globe me-1" aria-hidden="true"></i>
+                        {% get_current_language as CURRENT_LANGUAGE %}
+                        {{ CURRENT_LANGUAGE|upper }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        {% get_available_languages as LANGUAGES %}
+                        {% for language_code, language_name in LANGUAGES %}
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:'2:' }}">
+                                    <input name="language" type="hidden" value="{{ language_code }}">
+                                    <button type="submit" class="dropdown-item{% if language_code == CURRENT_LANGUAGE %} active{% endif %}">
+                                        {{ language_name }}
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Book visit button -->
+                <a href="{% url 'bookings:form' %}" class="btn btn-warning btn-sm ms-2">
+                    <i class="fas fa-calendar-plus me-1" aria-hidden="true"></i>Book Visit
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main id="main-content" class="{% block main_class %}{% endblock %}">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-circle me-2" aria-hidden="true"></i>
+                        {% elif message.tags == 'success' %}
+                            <i class="fas fa-check-circle me-2" aria-hidden="true"></i>
+                        {% elif message.tags == 'info' %}
+                            <i class="fas fa-info-circle me-2" aria-hidden="true"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Page content -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-dharmachakra me-2" aria-hidden="true"></i>
+                        Monastery360
+                    </h5>
+                    <p class="text-muted">
+                        Preserving and sharing the rich Buddhist heritage of Sikkim's monasteries through digital innovation.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#" class="text-light me-3" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="text-light me-3" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="text-light" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Explore</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:monastery_list' %}" class="text-muted text-decoration-none">Monasteries</a></li>
+                        <li><a href="{% url 'tours:panorama_list' %}" class="text-muted text-decoration-none">Virtual Tours</a></li>
+                        <li><a href="{% url 'archives:digital_portal' %}" class="text-muted text-decoration-none">Digital Archives</a></li>
+                        <li><a href="{% url 'events:calendar' %}" class="text-muted text-decoration-none">Events</a></li>
+                        <li><a href="{% url 'core:monastery_map' %}" class="text-muted text-decoration-none">Map</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'bookings:form' %}" class="text-muted text-decoration-none">Book Visit</a></li>
+                        <li><a href="{% url 'bookings:search' %}" class="text-muted text-decoration-none">Find Booking</a></li>
+                        <li><a href="{% url 'api:overview' %}" class="text-muted text-decoration-none">API</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Mobile App</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">About</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">Our Mission</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Team</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Connect</h6>
+                    <ul class="list-unstyled">
+                        <li class="text-muted"><i class="fas fa-envelope me-2" aria-hidden="true"></i>info@monastery360.com</li>
+                        <li class="text-muted"><i class="fas fa-phone me-2" aria-hidden="true"></i>+91-XXX-XXX-XXXX</li>
+                        <li class="text-muted"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Gangtok, Sikkim</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-0 text-muted">
+                        &copy; 2025 Monastery360. Built for Smart India Hackathon. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button id="install-pwa" class="btn btn-outline-light btn-sm d-none">
+                        <i class="fas fa-download me-1" aria-hidden="true"></i>Install App
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button type="button" class="btn btn-primary btn-floating" id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- JavaScript Libraries -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <!-- Pannellum JS -->
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/geofence.js' %}"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('{% url "service_worker" %}')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+    </script>
+
+    <!-- Additional JavaScript -->
+    {% block extra_js %}{% endblock %}
+
+    <!-- Page-specific React components -->
+    {% block react_components %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,134 @@
+[
+  {
+    "title": "Kangyur Manuscript Collection",
+    "monastery_name": "Pemayangtse Monastery",
+    "original_downloadUrl": "/downloads/kangyur-collection.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Pemayangtse Monastery(1.00)",
+      "title_nomatch(0.51)"
+    ]
+  },
+  {
+    "title": "Tara Deity Thangka Painting",
+    "monastery_name": "Rumtek Monastery",
+    "original_downloadUrl": "/downloads/tara-thangka.jpg",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Rumtek Monastery(1.00)",
+      "title_nomatch(0.25)"
+    ]
+  },
+  {
+    "title": "Monastery Foundation Chronicles",
+    "monastery_name": "Enchey Monastery",
+    "original_downloadUrl": "/downloads/foundation-chronicles.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Enchey Monastery(1.00)",
+      "title_nomatch(0.29)"
+    ]
+  },
+  {
+    "title": "Vajrayana Ritual Instructions",
+    "monastery_name": "Phodong Monastery",
+    "original_downloadUrl": "/downloads/vajrayana-rituals.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Phensang Monastery(0.80)",
+      "title_nomatch(0.38)"
+    ]
+  },
+  {
+    "title": "Mandala Sand Art Documentation",
+    "monastery_name": "Labrang Monastery",
+    "original_downloadUrl": "/downloads/mandala-documentation.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Ralang Monastery(0.85)",
+      "title_nomatch(0.29)"
+    ]
+  },
+  {
+    "title": "Traditional Medicine Texts",
+    "monastery_name": "Tashiding Monastery",
+    "original_downloadUrl": "/downloads/medicine-texts.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Tashiding Monastery(1.00)",
+      "title_nomatch(0.42)"
+    ]
+  },
+  {
+    "title": "Padmasambhava Life Stories",
+    "monastery_name": "Pemayangste Monastery",
+    "original_downloadUrl": "/downloads/padmasambhava-stories.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Pemayangtse Monastery(0.95)",
+      "title_nomatch(0.34)"
+    ]
+  },
+  {
+    "title": "Ceremonial Mask Designs",
+    "monastery_name": "Rumtek Monastery",
+    "original_downloadUrl": "/downloads/mask-designs.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Rumtek Monastery(1.00)",
+      "title_nomatch(0.43)"
+    ]
+  },
+  {
+    "title": "Monastic Rules and Discipline",
+    "monastery_name": "Enchey Monastery",
+    "original_downloadUrl": "/downloads/monastic-rules.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Enchey Monastery(1.00)",
+      "title_nomatch(0.23)"
+    ]
+  },
+  {
+    "title": "Butter Sculpture Techniques",
+    "monastery_name": "Phodong Monastery",
+    "original_downloadUrl": "/downloads/butter-sculpture.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Phensang Monastery(0.80)",
+      "title_nomatch(0.16)"
+    ]
+  },
+  {
+    "title": "Astronomical Calculations",
+    "monastery_name": "Labrang Monastery",
+    "original_downloadUrl": "/downloads/astronomical-calculations.pdf",
+    "proposed_downloadUrl": null,
+    "ok": false,
+    "reason": [
+      "monastery_match=Ralang Monastery(0.85)",
+      "title_nomatch(0.39)"
+    ]
+  },
+  {
+    "title": "Prayer Flag Blessing Texts",
+    "monastery_name": "Tashiding Monastery",
+    "original_downloadUrl": "/downloads/prayer-flag-texts.pdf",
+    "proposed_downloadUrl": "/archives/tashiding-monastery/item/TASHIDING-MONASTERY-TEXTILE-004/download/",
+    "ok": true,
+    "reason": [
+      "monastery_match=Tashiding Monastery(1.00)",
+      "title_match=TASHIDING-MONASTERY-TEXTILE-004(0.61)"
+    ]
+  }
+]

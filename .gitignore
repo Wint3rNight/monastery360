@@ -1,0 +1,47 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+.env.local
+.env.*
+
+# Distribution / build artifacts
+build/
+dist/
+*.egg-info/
+
+# Test and coverage results
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Django
+db.sqlite3
+local_settings.py
+staticfiles/
+media/
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Type check / caches
+.mypy_cache/
+.pytype/
+
+# Misc
+.DS_Store
+django.log
+downloads/
+firebase_config.py
+static/data/*.bak
+*.bak
+*.log
