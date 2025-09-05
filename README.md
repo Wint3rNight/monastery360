@@ -82,6 +82,8 @@ Copy `.env.example` to `.env` and set values such as `SECRET_KEY`, `ALLOWED_HOST
 
 Important: never commit `.env` or other secret files. This repo's `.gitignore` already includes common local files (venv, .env, logs, backups).
 
+CI note: the GitHub Actions workflow installs the system `python3-gdal` package and excludes `GDAL` from the pip requirements to avoid building GDAL from source inside the runner; when contributing, install system GDAL (and GEOS/PROJ) locally if you use spatial features.
+
 ## Pushing to GitHub
 
 Create a remote and push (one-time):

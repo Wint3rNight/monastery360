@@ -48,9 +48,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          # Some binary packages (GDAL) require numpy available during install; preinstall it and prefer binary wheels
+          # Some binary packages (GDAL) require numpy available during install; preinstall it.
           python -m pip install numpy
-          pip install --prefer-binary -r requirements.txt
+          # Avoid building GDAL from source inside the runner's python environment.
+          # We installed the system package `python3-gdal` above; prevent pip from trying
+          # to build/install the GDAL wheel by creating a requirements file that excludes it.
+          grep -i -v '^gdal' requirements.txt > requirements_no_gdal.txt || true
+          pip install --prefer-binary -r requirements_no_gdal.txt
 
       - name: Run linting
         run: |
