@@ -27,7 +27,6 @@ htmlcov/
 db.sqlite3
 local_settings.py
 staticfiles/
-media/
 
 # IDEs and editors
 .vscode/
