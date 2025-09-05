@@ -44,4 +44,4 @@ static/data/*.bak
 *.bak
 *.log
 archive_backups/
-cleanup_temp.py
+cleanup_.py
