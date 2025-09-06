@@ -330,13 +330,33 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/geofence.js' %}"></script>
 
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration (robust) -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('{% url "service_worker" %}')
-                .then(registration => console.log('SW registered'))
-                .catch(error => console.log('SW registration failed'));
-        }
+        (function() {
+            if (!('serviceWorker' in navigator)) return;
+
+            // Listen for controller changes (when a new SW takes control)
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('ServiceWorker controllerchanged — reloading page to be controlled by new worker');
+                try { window.location.reload(true); } catch(e) { window.location.reload(); }
+            });
+
+            // Register and try to activate any waiting worker immediately
+            navigator.serviceWorker.register('{% url "service_worker" %}', { scope: '/' })
+                .then(async reg => {
+                    console.log('ServiceWorker registered with scope:', reg.scope);
+                    try { await reg.update(); console.log('ServiceWorker update() called'); } catch (e) { console.warn('update() failed', e); }
+
+                    // If there's a waiting worker, ask it to skip waiting (our SW listens for this message)
+                    if (reg.waiting) {
+                        try {
+                            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                            console.log('Sent SKIP_WAITING to waiting worker');
+                        } catch (e) { console.warn('postMessage to waiting worker failed', e); }
+                    }
+                })
+                .catch(err => console.warn('ServiceWorker registration failed:', err));
+        })();
     </script>
 
     <!-- Additional JavaScript -->
