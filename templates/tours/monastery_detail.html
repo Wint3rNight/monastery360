@@ -267,58 +267,195 @@
 
         // Panoramic Viewer Component
         const PanoramicViewer = ({ panoId, monasteryName }) => {
+          const [monasteryData, setMonasteryData] = useState(null);
+          const [currentViewIndex, setCurrentViewIndex] = useState(0);
           const [isLoaded, setIsLoaded] = useState(false);
           const [error, setError] = useState(false);
-          const [panoramaData, setPanoramaData] = useState(null);
+          const [audioPlaying, setAudioPlaying] = useState(false);
+          const [audioElement, setAudioElement] = useState(null);
 
           useEffect(() => {
             // Load panorama configuration from JSON
             fetch('/static/data/monastery_panoramas.json')
               .then(response => response.json())
               .then(data => {
-                const panorama = data.panoramas[panoId] || data.panoramas['default'];
-                setPanoramaData(panorama);
+                const monasteryConfig = data.monasteries[panoId];
                 
-                // Initialize Pannellum viewer with actual monastery panoramas
-                if (window.pannellum && panorama && !isLoaded) {
-                  try {
-                    window.pannellum.viewer('panorama', {
-                      type: panorama.type || 'equirectangular',
-                      panorama: panorama.url,
-                      autoLoad: true,
-                      autoRotate: -2,
-                      compass: true,
-                      showZoomCtrl: true,
-                      showFullscreenCtrl: true,
-                      mouseZoom: true,
-                      draggable: true,
-                      keyboardZoom: true,
-                      showControls: true,
-                      yaw: panorama.yaw || 0,
-                      pitch: panorama.pitch || 0,
-                      hfov: panorama.hfov || 110,
-                      title: panorama.title || `${monasteryName} - 360° Virtual Tour`,
-                      author: panorama.credit || 'Sikkim Monasteries',
-                      onLoad: () => {
-                        setIsLoaded(true);
-                        setError(false);
-                      },
-                      onError: () => {
-                        setError(true);
-                        setIsLoaded(false);
-                      }
-                    });
-                  } catch (err) {
-                    setError(true);
-                    console.error('Panoramic viewer error:', err);
-                  }
+                if (monasteryConfig && monasteryConfig.views) {
+                  setMonasteryData(monasteryConfig);
+                } else {
+                  // Create a single view from default
+                  setMonasteryData({
+                    name: monasteryName || 'Default Monastery View',
+                    views: [data.defaultView]
+                  });
                 }
               })
               .catch(err => {
                 console.error('Failed to load panorama data:', err);
                 setError(true);
               });
-          }, [panoId, monasteryName, isLoaded]);
+          }, [panoId, monasteryName]);
+
+          useEffect(() => {
+            if (monasteryData && monasteryData.views && monasteryData.views[currentViewIndex]) {
+              const currentView = monasteryData.views[currentViewIndex];
+              
+              try {
+                window.pannellum.viewer('panorama', {
+                  type: currentView.type || 'equirectangular',
+                  panorama: currentView.url,
+                  autoLoad: true,
+                  autoRotate: -2,
+                  compass: true,
+                  showZoomCtrl: true,
+                  showFullscreenCtrl: true,
+                  mouseZoom: true,
+                  draggable: true,
+                  keyboardZoom: true,
+                  showControls: true,
+                  yaw: currentView.yaw || 0,
+                  pitch: currentView.pitch || 0,
+                  hfov: currentView.hfov || 110,
+                  hotSpots: currentView.hotspots || [],
+                  title: currentView.title || `${monasteryName} - 360° Virtual Tour`,
+                  onLoad: () => {
+                    setIsLoaded(true);
+                    setError(false);
+                  },
+                  onError: () => {
+                    setError(true);
+                    setIsLoaded(false);
+                  }
+                });
+
+                // Setup audio if available
+                if (currentView.audio) {
+                  const audio = new Audio(currentView.audio);
+                  setAudioElement(audio);
+                  
+                  audio.addEventListener('ended', () => {
+                    setAudioPlaying(false);
+                  });
+                }
+              } catch (err) {
+                setError(true);
+                console.error('Panoramic viewer error:', err);
+              }
+            }
+          }, [monasteryData, currentViewIndex, monasteryName]);
+
+          const switchView = (index) => {
+            setCurrentViewIndex(index);
+            setIsLoaded(false);
+            if (audioElement) {
+              audioElement.pause();
+              audioElement.currentTime = 0;
+              setAudioPlaying(false);
+            }
+          };
+
+          const toggleAudio = () => {
+            if (audioElement) {
+              if (audioPlaying) {
+                audioElement.pause();
+                setAudioPlaying(false);
+              } else {
+                audioElement.play().then(() => {
+                  setAudioPlaying(true);
+                }).catch(err => {
+                  console.warn('Audio playback failed:', err);
+                });
+              }
+            }
+          };
+
+          if (error) {
+            return (
+              <div className="panorama-container flex items-center justify-center bg-gray-200">
+                <div className="text-center text-gray-600">
+                  <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  <p className="text-lg font-medium">360° View Currently Unavailable</p>
+                  <p className="text-sm mt-2">Please try again later</p>
+                </div>
+              </div>
+            );
+          }
+
+          const currentView = monasteryData?.views?.[currentViewIndex];
+
+          return (
+            <div className="panorama-container">
+              {/* View Navigation */}
+              {monasteryData && monasteryData.views && monasteryData.views.length > 1 && (
+                <div className="view-navigation mb-4">
+                  <h4 className="text-lg font-medium text-gray-800 mb-3">🏛️ Areas to Explore:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {monasteryData.views.map((view, index) => (
+                      <button
+                        key={index}
+                        className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                          index === currentViewIndex
+                            ? 'bg-orange-500 text-white shadow-lg'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                        onClick={() => switchView(index)}
+                      >
+                        {view.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Current View Info & Audio Control */}
+              {currentView && (
+                <div className="current-view-info bg-white p-4 rounded-lg shadow-md mb-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">{currentView.title}</h3>
+                      <p className="text-gray-600 mb-3">{currentView.description}</p>
+                    </div>
+                    
+                    {/* Audio Control */}
+                    {currentView.audio && (
+                      <div className="audio-control ml-4">
+                        <button
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                            audioPlaying
+                              ? 'bg-red-500 text-white hover:bg-red-600'
+                              : 'bg-blue-500 text-white hover:bg-blue-600'
+                          }`}
+                          onClick={toggleAudio}
+                        >
+                          <i className={`fas ${audioPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                          <span>
+                            {audioPlaying ? 'Pause Narration' : 'Play Narration'}
+                            {currentView.audioDuration && ` (${currentView.audioDuration}s)`}
+                          </span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div id="panorama" style={{ width: '100%', height: '500px', borderRadius: '10px' }}>
+                {!isLoaded && (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-lg">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                      <p className="text-gray-600">Loading 360° Virtual Tour...</p>
+                      {currentView && <p className="text-sm text-gray-500 mt-1">{currentView.title}</p>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
 
           if (error) {
             return (
