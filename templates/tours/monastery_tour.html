@@ -36,43 +36,76 @@
 
     <script>
         (function(){
-            // parse JSON data injected via json_script
+            // Parse JSON data injected via json_script
             const panoramaData = JSON.parse(document.getElementById('panorama-data').textContent || '[]');
             const poiData = JSON.parse(document.getElementById('poi-data').textContent || '[]');
+            
+            // Load panorama configuration from JSON
+            let panoramaConfig = {};
+            fetch('/static/data/monastery_panoramas.json')
+              .then(response => response.json())
+              .then(data => {
+                panoramaConfig = data.panoramas;
+                initializePanorama();
+              })
+              .catch(err => {
+                console.error('Failed to load panorama config:', err);
+                initializePanorama(); // Fallback to default
+              });
 
-            // choose first panorama
-            const first = panoramaData && panoramaData.length ? panoramaData[0] : null;
-            const placeholder = 'https://pannellum.org/images/alma.jpg';
+            function initializePanorama() {
+              // Choose first panorama or use monastery-specific panorama
+              const monasterySlug = "{{ monastery.slug }}";
+              const first = panoramaData && panoramaData.length ? panoramaData[0] : null;
+              
+              // Get monastery-specific panorama or use first available or fallback
+              let imageUrl = null;
+              let config = { initial_yaw: 0, initial_pitch: 0, hotspots: [] };
+              
+              if (first && first.image_url) {
+                imageUrl = first.image_url;
+                config.initial_yaw = first.initial_yaw || 0;
+                config.initial_pitch = first.initial_pitch || 0;
+                config.hotspots = first.hotspots_data || [];
+              } else if (panoramaConfig[monasterySlug]) {
+                const monasteryPano = panoramaConfig[monasterySlug];
+                imageUrl = monasteryPano.url;
+                config.initial_yaw = monasteryPano.yaw || 0;
+                config.initial_pitch = monasteryPano.pitch || 0;
+              } else if (panoramaConfig['default']) {
+                imageUrl = panoramaConfig['default'].url;
+              }
 
-            // create pannellum viewer instance and keep reference for switching
-            let viewer = null;
-            function createViewer(imageUrl, config={}){
+              // Create pannellum viewer instance and keep reference for switching
+              let viewer = null;
+              function createViewer(imageUrl, config={}){
                 const opts = Object.assign({
-                    type: 'equirectangular',
-                    panorama: imageUrl || placeholder,
-                    autoLoad: true,
-                    autoRotate: -2,
-                    showZoomCtrl: true,
-                    showFullscreenCtrl: true,
-                    pitch: config.initial_pitch || 0,
-                    yaw: config.initial_yaw || 0,
-                    hotSpots: config.hotspots || []
+                  type: 'equirectangular',
+                  panorama: imageUrl || 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop',
+                  autoLoad: true,
+                  autoRotate: -2,
+                  showZoomCtrl: true,
+                  showFullscreenCtrl: true,
+                  pitch: config.initial_pitch || 0,
+                  yaw: config.initial_yaw || 0,
+                  hotSpots: config.hotspots || []
                 }, config.extra || {});
 
-                // if a viewer already exists, destroy its container then recreate
+                // If a viewer already exists, destroy its container then recreate
                 if(viewer){
-                    try{ viewer.destroy(); } catch(e){}
+                  try{ viewer.destroy(); } catch(e){}
                 }
 
                 viewer = pannellum.viewer('panorama', opts);
                 return viewer;
-            }
+              }
 
-            try{
-                createViewer(first ? first.image_url : null, { initial_yaw: first ? first.initial_yaw : 0, initial_pitch: first ? first.initial_pitch : 0, hotspots: first ? (first.hotspots_data || []) : [] });
-            } catch (err) {
+              try{
+                createViewer(imageUrl, config);
+              } catch (err) {
                 console.warn('Panorama init error', err);
-                document.getElementById('panorama').innerHTML = '<div class="p-8 text-center text-gray-600">Panorama currently unavailable.</div>';
+                document.getElementById('panorama').innerHTML = '<div class="p-8 text-center text-gray-600">360° panorama currently unavailable.</div>';
+              }
             }
 
             // thumbnails (switch panorama in-page)

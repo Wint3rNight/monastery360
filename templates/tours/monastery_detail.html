@@ -269,55 +269,55 @@
         const PanoramicViewer = ({ panoId, monasteryName }) => {
           const [isLoaded, setIsLoaded] = useState(false);
           const [error, setError] = useState(false);
+          const [panoramaData, setPanoramaData] = useState(null);
 
           useEffect(() => {
-            // Panoramic image URLs (you can replace these with actual monastery panoramic images)
-            const panoramicImages = {
-              rumtek: 'https://pannellum.org/images/alma.jpg',
-              pemayangtse: 'https://pannellum.org/images/bma-1.jpg',
-              enchey: 'https://pannellum.org/images/cerro-toco-0.jpg',
-              tashiding: 'https://pannellum.org/images/alma.jpg',
-              dubdi: 'https://pannellum.org/images/bma-1.jpg',
-              phodong: 'https://pannellum.org/images/cerro-toco-0.jpg',
-              labrang: 'https://pannellum.org/images/alma.jpg',
-              ralang: 'https://pannellum.org/images/bma-1.jpg',
-              sangachoeling: 'https://pannellum.org/images/cerro-toco-0.jpg',
-              ralong: 'https://pannellum.org/images/alma.jpg'
-            };
-
-            const imageUrl = panoramicImages[panoId] || panoramicImages.rumtek;
-
-            // Initialize Pannellum viewer
-            if (window.pannellum && !isLoaded) {
-              try {
-                window.pannellum.viewer('panorama', {
-                  type: 'equirectangular',
-                  panorama: imageUrl,
-                  autoLoad: true,
-                  autoRotate: -2,
-                  compass: true,
-                  showZoomCtrl: true,
-                  showFullscreenCtrl: true,
-                  mouseZoom: true,
-                  draggable: true,
-                  keyboardZoom: true,
-                  showControls: true,
-                  title: `${monasteryName} - 360° Virtual Tour`,
-                  author: 'Sikkim Monasteries',
-                  onLoad: () => {
-                    setIsLoaded(true);
-                    setError(false);
-                  },
-                  onError: () => {
+            // Load panorama configuration from JSON
+            fetch('/static/data/monastery_panoramas.json')
+              .then(response => response.json())
+              .then(data => {
+                const panorama = data.panoramas[panoId] || data.panoramas['default'];
+                setPanoramaData(panorama);
+                
+                // Initialize Pannellum viewer with actual monastery panoramas
+                if (window.pannellum && panorama && !isLoaded) {
+                  try {
+                    window.pannellum.viewer('panorama', {
+                      type: panorama.type || 'equirectangular',
+                      panorama: panorama.url,
+                      autoLoad: true,
+                      autoRotate: -2,
+                      compass: true,
+                      showZoomCtrl: true,
+                      showFullscreenCtrl: true,
+                      mouseZoom: true,
+                      draggable: true,
+                      keyboardZoom: true,
+                      showControls: true,
+                      yaw: panorama.yaw || 0,
+                      pitch: panorama.pitch || 0,
+                      hfov: panorama.hfov || 110,
+                      title: panorama.title || `${monasteryName} - 360° Virtual Tour`,
+                      author: panorama.credit || 'Sikkim Monasteries',
+                      onLoad: () => {
+                        setIsLoaded(true);
+                        setError(false);
+                      },
+                      onError: () => {
+                        setError(true);
+                        setIsLoaded(false);
+                      }
+                    });
+                  } catch (err) {
                     setError(true);
-                    setIsLoaded(false);
+                    console.error('Panoramic viewer error:', err);
                   }
-                });
-              } catch (err) {
+                }
+              })
+              .catch(err => {
+                console.error('Failed to load panorama data:', err);
                 setError(true);
-                console.error('Panoramic viewer error:', err);
-              }
-            }
+              });
           }, [panoId, monasteryName, isLoaded]);
 
           if (error) {

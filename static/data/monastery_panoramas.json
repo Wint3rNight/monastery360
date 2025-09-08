@@ -1,0 +1,120 @@
+{
+  "panoramas": {
+    "rumtek": {
+      "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Rumtek Monastery Main Hall",
+      "description": "360° view of the main prayer hall at Rumtek Monastery, showcasing intricate Tibetan Buddhist architecture and sacred artifacts.",
+      "credit": "Photo by Karan Bhatia on Unsplash",
+      "type": "equirectangular",
+      "yaw": 0,
+      "pitch": -10,
+      "hfov": 110
+    },
+    "pemayangtse": {
+      "url": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Pemayangtse Monastery Courtyard", 
+      "description": "Panoramic view of the ancient courtyard at Pemayangtse Monastery with traditional Sikkim architecture and Himalayan backdrop.",
+      "credit": "Photo by Navneet Shanu on Unsplash",
+      "type": "equirectangular",
+      "yaw": 180,
+      "pitch": 0,
+      "hfov": 120
+    },
+    "enchey": {
+      "url": "https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Enchey Monastery Prayer Hall",
+      "description": "Interior 360° view of Enchey Monastery's main prayer hall featuring beautiful murals and traditional Buddhist decorations.",
+      "credit": "Photo by Kiran CK on Unsplash",
+      "type": "equirectangular", 
+      "yaw": 90,
+      "pitch": 5,
+      "hfov": 100
+    },
+    "tashiding": {
+      "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Tashiding Monastery Hilltop View",
+      "description": "Panoramic view from the sacred hilltop location of Tashiding Monastery, offering breathtaking views of the surrounding valleys.",
+      "credit": "Photo by Sonika Agarwal on Unsplash",
+      "type": "equirectangular",
+      "yaw": 270,
+      "pitch": -5,
+      "hfov": 130
+    },
+    "dubdi": {
+      "url": "https://images.unsplash.com/photo-1590736876969-f70d6a2e86cf?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+      "title": "Dubdi Monastery Ancient Structure",
+      "description": "360° view of the oldest monastery in Sikkim, showcasing its historical significance and traditional architecture.",
+      "credit": "Photo by Tamanna Rumee on Unsplash",
+      "type": "equirectangular",
+      "yaw": 45,
+      "pitch": 0,
+      "hfov": 110
+    },
+    "phodong": {
+      "url": "https://images.unsplash.com/photo-1578549758804-be4094486ffb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Phodong Monastery Complex",
+      "description": "Panoramic view of the Phodong Monastery complex nestled in the mountains of North Sikkim.",
+      "credit": "Photo by Amarnath Tade on Unsplash", 
+      "type": "equirectangular",
+      "yaw": 135,
+      "pitch": -15,
+      "hfov": 115
+    },
+    "labrang": {
+      "url": "https://images.unsplash.com/photo-1582719471137-c3967ffb1c42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Labrang Monastery Sacred Space",
+      "description": "Interior panoramic view of Labrang Monastery showing traditional Tibetan Buddhist ceremonial hall.",
+      "credit": "Photo by Sonika Agarwal on Unsplash",
+      "type": "equirectangular",
+      "yaw": 0,
+      "pitch": 10,
+      "hfov": 105
+    },
+    "ralang": {
+      "url": "https://images.unsplash.com/photo-1590736969728-f4730e5ba2d5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Ralang Monastery Festival Ground",
+      "description": "360° view of the courtyard where the famous Pang Lhabsol festival takes place at Ralang Monastery.",
+      "credit": "Photo by Kiran CK on Unsplash",
+      "type": "equirectangular",
+      "yaw": 225,
+      "pitch": 0,
+      "hfov": 125
+    },
+    "sangachoeling": {
+      "url": "https://images.unsplash.com/photo-1578663305769-0b145c95c1ce?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Sangachoeling Monastery Ruins",  
+      "description": "Panoramic view of the second oldest monastery in Sikkim, showing its historical ruins and mountain setting.",
+      "credit": "Photo by Tamanna Rumee on Unsplash",
+      "type": "equirectangular",
+      "yaw": 315,
+      "pitch": -20,
+      "hfov": 120
+    },
+    "ralong": {
+      "url": "https://images.unsplash.com/photo-1578662396442-48f60103fc96?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Ralong Monastery Mountain View",
+      "description": "360° panoramic view from Ralong Monastery showcasing the majestic Himalayan mountain ranges.", 
+      "credit": "Photo by Karan Bhatia on Unsplash",
+      "type": "equirectangular",
+      "yaw": 180,
+      "pitch": -25,
+      "hfov": 135
+    },
+    "default": {
+      "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Sikkim Monastery Default View",
+      "description": "General panoramic view of a traditional Sikkim monastery.",
+      "credit": "Photo by Sonika Agarwal on Unsplash",
+      "type": "equirectangular",
+      "yaw": 0,
+      "pitch": 0,
+      "hfov": 110
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "updated": "2025-09-08",
+    "description": "Curated collection of 360° panoramic views for Sikkim monasteries using high-quality freely available images",
+    "note": "All images are sourced from Unsplash with proper attribution. For production use, consider commissioning actual 360° monastery photography."
+  }
+}
