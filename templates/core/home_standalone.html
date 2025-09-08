@@ -638,5 +638,53 @@
         ReactDOM.render(<HomePage />, document.getElementById('root'));
         {% endverbatim %}
     </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        (async function() {
+            if (!('serviceWorker' in navigator)) {
+                console.log('Service Worker not supported');
+                return;
+            }
+
+            console.log('Registering service worker...');
+            
+            try {
+                // Register the service worker
+                const registration = await navigator.serviceWorker.register('/sw.js', { 
+                    scope: '/' 
+                });
+                
+                console.log('Service Worker registered successfully:', registration.scope);
+                
+                // Try to update the service worker
+                try {
+                    await registration.update();
+                    console.log('Service Worker update called');
+                } catch (updateError) {
+                    console.warn('Service Worker update failed:', updateError);
+                }
+
+                // If there's a waiting worker, activate it immediately
+                if (registration.waiting) {
+                    try {
+                        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                        console.log('Sent SKIP_WAITING message to waiting worker');
+                    } catch (messageError) {
+                        console.warn('Failed to send message to waiting worker:', messageError);
+                    }
+                }
+
+                // Listen for controller changes
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('Service Worker controller changed - reloading page');
+                    window.location.reload();
+                });
+
+            } catch (error) {
+                console.error('Service Worker registration failed:', error);
+            }
+        })();
+    </script>
 </body>
 </html>
