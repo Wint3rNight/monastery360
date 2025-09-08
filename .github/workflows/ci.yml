@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -50,11 +50,8 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           # Some binary packages (GDAL) require numpy available during install; preinstall it.
           python -m pip install numpy
-          # Avoid building GDAL from source inside the runner's python environment.
-          # We installed the system package `python3-gdal` above; prevent pip from trying
-          # to build/install the GDAL wheel by creating a requirements file that excludes it.
-          grep -i -v '^gdal' requirements.txt > requirements_no_gdal.txt || true
-          pip install --prefer-binary -r requirements_no_gdal.txt
+          # Use development requirements file that excludes GDAL and has compatible versions
+          pip install --prefer-binary -r requirements_dev.txt
 
       - name: Run linting
         run: |

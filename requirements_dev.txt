@@ -1,17 +1,19 @@
+# Development requirements without version conflicts
+# Use this for CI/CD environments
+
 # Django and Core Dependencies
 Django==4.2.5
 django-environ==0.11.2
 Pillow==10.0.0
 
-# GeoDjango Dependencies
+# Database (without GDAL for CI)
 psycopg2-binary==2.9.7
-GDAL==3.7.1
 
 # API and JSON handling
 djangorestframework==3.14.0
 django-cors-headers==4.2.0
 
-# Development and Testing
+# Development and Testing (compatible versions)
 black==23.7.0
 flake8==6.0.0
 isort==5.12.0
