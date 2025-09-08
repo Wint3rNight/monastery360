@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - {{ event.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .success-animation {
+            animation: successPulse 2s infinite;
+        }
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .slide-up {
+            animation: slideUpFade 0.8s ease-out;
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiDrop 3s ease-out infinite;
+        }
+        @keyframes confettiDrop {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const BookingConfirmation = () => {
+            const [showConfetti, setShowConfetti] = useState(true);
+
+            useEffect(() => {
+                // Hide confetti after 5 seconds
+                const timer = setTimeout(() => setShowConfetti(false), 5000);
+                return () => clearTimeout(timer);
+            }, []);
+
+            const bookingData = {
+                confirmationNumber: "{{ booking.confirmation_number }}",
+                customerName: "{{ booking.customer_name }}",
+                customerEmail: "{{ booking.customer_email }}",
+                customerPhone: "{{ booking.customer_phone }}",
+                numberOfPeople: {{ booking.number_of_people }},
+                numberOfAdults: {{ booking.number_of_adults }},
+                numberOfChildren: {{ booking.number_of_children }},
+                bookingDate: "{{ booking.booking_date|date:'F j, Y g:i A' }}",
+                totalAmount: "{{ booking.total_amount|default:'0.00' }}",
+                paymentStatus: "{{ booking.get_payment_status_display }}",
+                receiptNumber: "{{ booking.receipt_number }}",
+                specialRequirements: "{{ booking.special_requirements|default:'' }}",
+                accessibilityNeeds: "{{ booking.accessibility_needs|default:'' }}",
+                bookingNotes: "{{ booking.booking_notes|default:'' }}"
+            };
+
+            const eventData = {
+                title: "{{ event.title|escapejs }}",
+                shortDescription: "{{ event.short_description|escapejs }}",
+                startTime: "{{ event.start_time|date:'F j, Y' }}",
+                startTimeFormatted: "{{ event.start_time|time:'g:i A' }}",
+                eventType: "{{ event.get_event_type_display|escapejs }}",
+                entryFee: "{{ event.entry_fee|escapejs }}",
+                image: {% if event.image %}"{{ event.image.url }}"{% else %}""{% endif %}
+            };
+
+            const monasteryData = {
+                name: "{{ monastery.name|escapejs }}",
+                address: "{{ monastery.address|escapejs }}"
+            };
+
+            const createConfetti = () => {
+                const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-pink-500'];
+                return Array.from({ length: 50 }, (_, i) => (
+                    <div
+                        key={i}
+                        className={`confetti ${colors[Math.floor(Math.random() * colors.length)]}`}
+                        style={{
+                            left: Math.random() * 100 + '%',
+                            animationDelay: Math.random() * 3 + 's',
+                            animationDuration: (Math.random() * 2 + 2) + 's'
+                        }}
+                    />
+                ));
+            };
+
+            return (
+                <div className="min-h-screen py-8 relative overflow-hidden">
+                    {showConfetti && (
+                        <div className="fixed inset-0 pointer-events-none z-10">
+                            {createConfetti()}
+                        </div>
+                    )}
+
+                    <div className="max-w-4xl mx-auto px-4 relative z-20">
+                        {/* Success Header */}
+                        <div className="text-center mb-8 slide-up">
+                            <div className="success-animation inline-block bg-white rounded-full p-8 shadow-2xl mb-6">
+                                <div className="bg-green-100 rounded-full p-6">
+                                    <i className="fas fa-check-circle text-green-500 text-6xl"></i>
+                                </div>
+                            </div>
+                            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                                Booking Confirmed!
+                            </h1>
+                            <p className="text-xl text-gray-600 mb-2">
+                                Thank you for your booking, {bookingData.customerName}
+                            </p>
+                            <p className="text-lg text-gray-500">
+                                We've sent a confirmation email to {bookingData.customerEmail}
+                            </p>
+                        </div>
+
+                        {/* Confirmation Details Card */}
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 mb-8 slide-up">
+                            <div className="border-b border-gray-200 pb-6 mb-6">
+                                <div className="flex items-center justify-between flex-wrap gap-4">
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                                            Confirmation Details
+                                        </h2>
+                                        <p className="text-gray-600">Please save this information for your records</p>
+                                    </div>
+                                    <div className="bg-green-100 px-6 py-3 rounded-full">
+                                        <span className="text-green-800 font-bold text-lg">
+                                            {bookingData.paymentStatus}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                                <div className="space-y-6">
+                                    <div className="bg-blue-50 p-6 rounded-2xl">
+                                        <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                                            <i className="fas fa-ticket-alt text-blue-600 mr-3"></i>
+                                            Booking Information
+                                        </h3>
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Confirmation #:</span>
+                                                <span className="font-mono text-lg font-bold text-blue-600">
+                                                    {bookingData.confirmationNumber}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Receipt #:</span>
+                                                <span className="font-mono text-lg font-bold text-blue-600">
+                                                    {bookingData.receiptNumber}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Booking Date:</span>
+                                                <span className="text-gray-900">{bookingData.bookingDate}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Total People:</span>
+                                                <span className="text-gray-900">
+                                                    {bookingData.numberOfPeople} ({bookingData.numberOfAdults} adults, {bookingData.numberOfChildren} children)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-purple-50 p-6 rounded-2xl">
+                                        <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center">
+                                            <i className="fas fa-user text-purple-600 mr-3"></i>
+                                            Contact Information
+                                        </h3>
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Name:</span>
+                                                <span className="text-gray-900">{bookingData.customerName}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Email:</span>
+                                                <span className="text-gray-900">{bookingData.customerEmail}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-semibold text-gray-700">Phone:</span>
+                                                <span className="text-gray-900">{bookingData.customerPhone}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="bg-gradient-to-br from-orange-50 to-red-50 p-6 rounded-2xl border-2 border-orange-200">
+                                        <h3 className="text-lg font-bold text-orange-900 mb-4 flex items-center">
+                                            <i className="fas fa-calendar-alt text-orange-600 mr-3"></i>
+                                            Event Details
+                                        </h3>
+
+                                        {eventData.image && (
+                                            <img
+                                                src={eventData.image}
+                                                alt={eventData.title}
+                                                className="w-full h-40 object-cover rounded-xl mb-4"
+                                            />
+                                        )}
+
+                                        <div className="space-y-3">
+                                            <h4 className="text-xl font-bold text-gray-900">{eventData.title}</h4>
+                                            <p className="text-gray-600">{eventData.shortDescription}</p>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                                                <div className="bg-white p-3 rounded-lg">
+                                                    <div className="flex items-center">
+                                                        <i className="fas fa-calendar text-blue-500 mr-2"></i>
+                                                        <div>
+                                                            <p className="font-semibold text-gray-900 text-sm">{eventData.startTime}</p>
+                                                            <p className="text-gray-600 text-xs">Date</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-white p-3 rounded-lg">
+                                                    <div className="flex items-center">
+                                                        <i className="fas fa-clock text-green-500 mr-2"></i>
+                                                        <div>
+                                                            <p className="font-semibold text-gray-900 text-sm">{eventData.startTimeFormatted}</p>
+                                                            <p className="text-gray-600 text-xs">Time</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white p-3 rounded-lg">
+                                                <div className="flex items-start">
+                                                    <i className="fas fa-map-marker-alt text-red-500 mr-2 mt-1"></i>
+                                                    <div>
+                                                        <p className="font-semibold text-gray-900 text-sm">{monasteryData.name}</p>
+                                                        <p className="text-gray-600 text-xs">{monasteryData.address}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Special Requirements */}
+                            {(bookingData.specialRequirements || bookingData.accessibilityNeeds || bookingData.bookingNotes) && (
+                                <div className="border-t border-gray-200 pt-6">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                        <i className="fas fa-clipboard-list text-gray-600 mr-3"></i>
+                                        Special Requirements & Notes
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {bookingData.specialRequirements && (
+                                            <div className="bg-yellow-50 p-4 rounded-xl">
+                                                <h4 className="font-semibold text-yellow-800 mb-2">Dietary Requirements</h4>
+                                                <p className="text-yellow-700 text-sm">{bookingData.specialRequirements}</p>
+                                            </div>
+                                        )}
+                                        {bookingData.accessibilityNeeds && (
+                                            <div className="bg-blue-50 p-4 rounded-xl">
+                                                <h4 className="font-semibold text-blue-800 mb-2">Accessibility Needs</h4>
+                                                <p className="text-blue-700 text-sm">{bookingData.accessibilityNeeds}</p>
+                                            </div>
+                                        )}
+                                        {bookingData.bookingNotes && (
+                                            <div className="bg-green-50 p-4 rounded-xl">
+                                                <h4 className="font-semibold text-green-800 mb-2">Additional Notes</h4>
+                                                <p className="text-green-700 text-sm">{bookingData.bookingNotes}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 slide-up">
+                            <a href="{% url 'bookings:download_receipt' booking.confirmation_number %}"
+                               className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center">
+                                <i className="fas fa-download text-xl mr-3"></i>
+                                Download Receipt
+                            </a>
+
+                            <a href="{% url 'events:calendar' %}"
+                               className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center">
+                                <i className="fas fa-calendar text-xl mr-3"></i>
+                                Browse More Events
+                            </a>
+
+                            <a href="/"
+                               className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center">
+                                <i className="fas fa-home text-xl mr-3"></i>
+                                Back to Home
+                            </a>
+                        </div>
+
+                        {/* Important Information */}
+                        <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-8 slide-up">
+                            <div className="flex items-start">
+                                <div className="flex-shrink-0 bg-amber-100 p-3 rounded-full mr-6">
+                                    <i className="fas fa-info-circle text-amber-600 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-amber-800 mb-4">What's Next?</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-semibold text-amber-800 mb-2">Before the Event:</h4>
+                                            <ul className="space-y-2 text-amber-700">
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-check-circle text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Check your email for detailed instructions</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-check-circle text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Download and save your receipt</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-check-circle text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Prepare appropriate clothing (modest dress)</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-check-circle text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Plan to arrive 15 minutes early</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-amber-800 mb-2">Need Help?</h4>
+                                            <ul className="space-y-2 text-amber-700">
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-phone text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Call us for any questions or changes</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-envelope text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Reply to your confirmation email</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-calendar-times text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Cancellations: 24 hours advance notice</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <i className="fas fa-wheelchair text-amber-600 mr-2 mt-0.5 flex-shrink-0"></i>
+                                                    <span className="text-sm">Contact us for accessibility arrangements</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<BookingConfirmation />, document.getElementById('root'));
+    </script>
+</body>
+</html>

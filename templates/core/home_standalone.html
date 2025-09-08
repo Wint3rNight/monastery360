@@ -49,6 +49,45 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Hide all Google Translate elements completely */
+        #google_translate_element,
+        .goog-te-gadget,
+        .goog-te-gadget-simple,
+        .goog-te-gadget-icon,
+        .goog-te-banner-frame,
+        .goog-te-menu-frame,
+        .goog-te-ftab,
+        .skiptranslate,
+        body > .skiptranslate,
+        iframe.goog-te-menu-frame,
+        .goog-te-menu2,
+        .goog-te-combo {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+        }
+
+        /* Prevent Google Translate from modifying the page layout */
+        body.goog-te-rendered {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* Hide the top banner that Google Translate adds */
+        body > .skiptranslate {
+            display: none !important;
+        }
+
+        body.translated {
+            margin-top: 0 !important;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             transition: all 0.3s ease;
@@ -207,6 +246,54 @@
                       </a>
                     );
                   })}
+
+                  {/* Language Switcher */}
+                  <div className="language-switcher relative mr-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const menu = document.getElementById('languageMenu');
+                        if (menu) {
+                          menu.classList.toggle('hidden');
+                        }
+                      }}
+                      className="notranslate flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all duration-200 border border-emerald-500"
+                      translate="no"
+                    >
+                      <i className="fas fa-globe"></i>
+                      <span id="currentLanguage" className="notranslate" translate="no">English</span>
+                      <i className="fas fa-chevron-down text-xs"></i>
+                    </button>
+
+                    <div id="languageMenu" className="notranslate hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50" translate="no">
+                      <div className="py-2">
+                        <button
+                          onClick={() => changeLanguage('en', 'English')}
+                          className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                          translate="no"
+                        >
+                          <span className="w-6 text-center">🇺🇸</span>
+                          <span>English</span>
+                        </button>
+                        <button
+                          onClick={() => changeLanguage('hi', 'हिंदी')}
+                          className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                          translate="no"
+                        >
+                          <span className="w-6 text-center">🇮🇳</span>
+                          <span>हिंदी (Hindi)</span>
+                        </button>
+                        <button
+                          onClick={() => changeLanguage('ne', 'नेपाली')}
+                          className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                          translate="no"
+                        >
+                          <span className="w-6 text-center">🇳🇵</span>
+                          <span>नेपाली (Nepali)</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Authentication Buttons */}
                   {window.userAuthenticated ? (
@@ -685,6 +772,231 @@
                 console.error('Service Worker registration failed:', error);
             }
         })();
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdownMenu = document.getElementById('languageMenu');
+            const dropdownButton = e.target.closest('.language-switcher');
+
+            if (!dropdownButton && dropdownMenu) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+
+        // Change language function
+        window.changeLanguage = function(langCode, langName) {
+            console.log('Changing language to:', langCode, langName);
+
+            // Store the language preference in localStorage
+            localStorage.setItem('selectedLanguage', langCode);
+            localStorage.setItem('selectedLanguageName', langName);
+
+            // Store the original language name to prevent corruption
+            const originalLangName = langName;
+
+            // Update dropdown text immediately and lock it
+            const currentLanguage = document.getElementById('currentLanguage');
+            if (currentLanguage) {
+                currentLanguage.textContent = originalLangName;
+                // Add a class to prevent Google Translate from touching this element
+                currentLanguage.classList.add('notranslate');
+                currentLanguage.setAttribute('translate', 'no');
+            }
+
+            // Close dropdown
+            const dropdownMenu = document.getElementById('languageMenu');
+            if (dropdownMenu) {
+                dropdownMenu.classList.add('hidden');
+            }
+
+            // Trigger translation
+            translatePage(langCode);
+
+            // Ensure the dropdown text remains correct after translation
+            setTimeout(() => {
+                if (currentLanguage) {
+                    currentLanguage.textContent = originalLangName;
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                if (currentLanguage) {
+                    currentLanguage.textContent = originalLangName;
+                }
+            }, 3000);
+        };
+
+        // Function to update dropdown text based on language code
+        window.updateDropdownText = function(langCode) {
+            console.log('Updating dropdown text to:', langCode);
+            const currentLanguage = document.getElementById('currentLanguage');
+            if (!currentLanguage) {
+                console.log('currentLanguage element not found, retrying...');
+                setTimeout(() => updateDropdownText(langCode), 200);
+                return;
+            }
+
+            let langName;
+            switch(langCode) {
+                case 'hi':
+                    langName = 'हिंदी';
+                    break;
+                case 'ne':
+                    langName = 'नेपाली';
+                    break;
+                case 'en':
+                default:
+                    langName = 'English';
+                    break;
+            }
+
+            console.log('Setting dropdown text to:', langName);
+            currentLanguage.textContent = langName;
+            currentLanguage.classList.add('notranslate');
+            currentLanguage.setAttribute('translate', 'no');
+        };
+
+        // Function to restore language on page load
+        window.restoreLanguageOnLoad = function() {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            const savedLangName = localStorage.getItem('selectedLanguageName');
+
+            console.log('Restoring language:', savedLang, savedLangName);
+
+            if (savedLang && savedLangName) {
+                // ALWAYS update dropdown text immediately based on saved language
+                updateDropdownText(savedLang);
+
+                if (savedLang !== 'en') {
+                    // Trigger translation after a delay to ensure Google Translate is ready
+                    setTimeout(() => {
+                        translatePage(savedLang);
+                    }, 1000);
+                }
+            }
+
+            // Also run detection to catch any edge cases
+            setTimeout(() => {
+                detectCurrentLanguage();
+            }, 3000);
+        };
+
+        // Initialize language restoration on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            restoreLanguageOnLoad();
+        });
+
+        // Also try to restore immediately (before DOMContentLoaded)
+        (function() {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            if (savedLang) {
+                // Try to update dropdown immediately if it exists
+                setTimeout(() => {
+                    updateDropdownText(savedLang);
+                }, 100);
+            }
+        })();
+
+        // Function to trigger translation
+        window.translatePage = function(lang) {
+            console.log('Translating to:', lang);
+
+            setTimeout(function() {
+                const selectElement = document.querySelector('#google_translate_element select');
+                if (selectElement) {
+                    selectElement.value = lang;
+                    selectElement.dispatchEvent(new Event('change'));
+                } else {
+                    console.log('Google Translate not ready yet...');
+                    // Retry after a longer delay
+                    setTimeout(() => {
+                        const retrySelect = document.querySelector('#google_translate_element select');
+                        if (retrySelect) {
+                            retrySelect.value = lang;
+                            retrySelect.dispatchEvent(new Event('change'));
+                        }
+                    }, 2000);
+                }
+            }, 500);
+        };
+
+        // Initialize Google Translate
+        window.googleTranslateElementInit = function() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ne',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            // Detect current language after Google Translate loads
+            setTimeout(detectCurrentLanguage, 2000);
+        };
+
+        // Function to detect and set current language in dropdown
+        window.detectCurrentLanguage = function() {
+            // Check if Google Translate has translated the page
+            const body = document.body;
+            const isTranslated = body.classList.contains('translated-ltr') ||
+                               body.classList.contains('translated-rtl') ||
+                               document.querySelector('.goog-te-menu-value span') ||
+                               body.classList.contains('goog-te-rendered');
+
+            if (isTranslated) {
+                // Try to get the current language from Google Translate
+                const selectElement = document.querySelector('#google_translate_element select');
+                if (selectElement && selectElement.value) {
+                    const currentLang = selectElement.value;
+                    updateDropdownText(currentLang);
+                } else {
+                    // Fallback: check for language-specific elements or URL params
+                    checkForLanguageIndicators();
+                }
+            }
+
+            // Also check periodically in case translation happens later
+            setTimeout(detectCurrentLanguage, 5000);
+        };
+
+        // Function to check for language indicators in the page
+        window.checkForLanguageIndicators = function() {
+            const bodyText = document.body.innerText.toLowerCase();
+
+            // Check for Hindi text patterns
+            if (/[\u0900-\u097F]/.test(bodyText) || bodyText.includes('की') || bodyText.includes('है') || bodyText.includes('से')) {
+                updateDropdownText('hi');
+            }
+            // Check for Nepali text patterns
+            else if (/[\u0900-\u097F]/.test(bodyText) || bodyText.includes('को') || bodyText.includes('छ') || bodyText.includes('गर्न')) {
+                updateDropdownText('ne');
+            }
+        };
+
+        // Dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownButton = document.getElementById('languageDropdown');
+            const dropdownMenu = document.getElementById('languageMenu');
+
+            if (dropdownButton && dropdownMenu) {
+                dropdownButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                });
+            }
+        });
     </script>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display: none;"></div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

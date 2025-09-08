@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Calendar - Cultural Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .event-card {
+            transition: all 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .slide-in-1 { animation: slideIn 0.6s ease-out 0.1s both; }
+        .slide-in-2 { animation: slideIn 0.6s ease-out 0.2s both; }
+        .slide-in-3 { animation: slideIn 0.6s ease-out 0.3s both; }
+        .slide-in-4 { animation: slideIn 0.6s ease-out 0.4s both; }
+        .slide-in-5 { animation: slideIn 0.6s ease-out 0.5s both; }
+        .slide-in-6 { animation: slideIn 0.6s ease-out 0.6s both; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .search-focus {
+            transition: all 0.3s ease;
+        }
+        .search-focus:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const FullCalendar = () => {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [sortBy, setSortBy] = useState('date');
+            const [filterType, setFilterType] = useState('all');
+            const [currentPage, setCurrentPage] = useState(1);
+            const eventsPerPage = 6;
+
+            const events = [
+                {% for event in events %}
+                {
+                    id: {{ event.id }},
+                    title: "{{ event.title|escapejs }}",
+                    shortDescription: "{{ event.short_description|escapejs }}",
+                    startTime: new Date("{{ event.start_time|date:'c' }}"),
+                    startTimeFormatted: "{{ event.start_time|date:'F j, Y' }}",
+                    timeFormatted: "{{ event.start_time|time:'g:i A' }}",
+                    eventType: "{{ event.get_event_type_display|escapejs }}",
+                    entryFee: "{{ event.entry_fee|escapejs }}",
+                    image: {% if event.image %}"{{ event.image.url }}"{% else %}""{% endif %},
+                    monastery: {
+                        name: "{{ event.monastery.name|escapejs }}",
+                        address: "{{ event.monastery.address|escapejs }}"
+                    }
+                },
+                {% endfor %}
+            ];
+
+            const eventTypes = [...new Set(events.map(event => event.eventType))];
+
+            const filteredAndSortedEvents = useMemo(() => {
+                let filtered = events.filter(event => {
+                    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        event.shortDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        event.monastery.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+                    const matchesType = filterType === 'all' || event.eventType === filterType;
+
+                    return matchesSearch && matchesType;
+                });
+
+                filtered.sort((a, b) => {
+                    switch (sortBy) {
+                        case 'date':
+                            return a.startTime - b.startTime;
+                        case 'title':
+                            return a.title.localeCompare(b.title);
+                        case 'type':
+                            return a.eventType.localeCompare(b.eventType);
+                        default:
+                            return 0;
+                    }
+                });
+
+                return filtered;
+            }, [searchTerm, sortBy, filterType]);
+
+            const totalPages = Math.ceil(filteredAndSortedEvents.length / eventsPerPage);
+            const currentEvents = filteredAndSortedEvents.slice(
+                (currentPage - 1) * eventsPerPage,
+                currentPage * eventsPerPage
+            );
+
+            const getEventTypeColor = (type) => {
+                const colors = {
+                    'Festival': 'from-red-400 to-red-600',
+                    'Workshop': 'from-green-400 to-green-600',
+                    'Ceremony': 'from-blue-400 to-blue-600',
+                    'Meditation': 'from-purple-400 to-purple-600',
+                    'Teaching': 'from-yellow-400 to-yellow-600',
+                    'default': 'from-gray-400 to-gray-600'
+                };
+                return colors[type] || colors.default;
+            };
+
+            const getEventTypeIcon = (type) => {
+                const icons = {
+                    'Festival': 'fas fa-star',
+                    'Workshop': 'fas fa-tools',
+                    'Ceremony': 'fas fa-hands-praying',
+                    'Meditation': 'fas fa-leaf',
+                    'Teaching': 'fas fa-book-open',
+                    'default': 'fas fa-calendar-alt'
+                };
+                return icons[type] || icons.default;
+            };
+
+            const isEventPast = (eventDate) => {
+                return eventDate < new Date();
+            };
+
+            const formatTimeUntil = (eventDate) => {
+                const now = new Date();
+                const diff = eventDate - now;
+
+                if (diff < 0) return 'Past event';
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                if (days > 0) {
+                    return `In ${days} day${days > 1 ? 's' : ''}`;
+                } else if (hours > 0) {
+                    return `In ${hours} hour${hours > 1 ? 's' : ''}`;
+                } else {
+                    return 'Starting soon';
+                }
+            };
+
+            return (
+                <div className="min-h-screen py-8">
+                    <div className="max-w-7xl mx-auto px-4">
+                        {/* Header */}
+                        <div className="text-center mb-12 fade-in">
+                            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-6 shadow-lg">
+                                <i className="fas fa-calendar-alt text-white text-3xl"></i>
+                            </div>
+                            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                                Cultural Events Calendar
+                            </h1>
+                            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                                Discover and participate in meaningful cultural and spiritual events at our monasteries
+                            </p>
+                        </div>
+
+                        {/* Search and Filters */}
+                        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 slide-in">
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                                <div className="lg:col-span-2">
+                                    <label className="block text-sm font-bold text-gray-700 mb-3">
+                                        <i className="fas fa-search text-blue-500 mr-2"></i>
+                                        Search Events
+                                    </label>
+                                    <div className="search-focus relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Search by title, description, or monastery..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full px-6 py-4 pl-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all text-lg"
+                                        />
+                                        <i className="fas fa-search absolute left-4 top-4 text-gray-400 text-lg"></i>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-3">
+                                        <i className="fas fa-filter text-green-500 mr-2"></i>
+                                        Event Type
+                                    </label>
+                                    <select
+                                        value={filterType}
+                                        onChange={(e) => setFilterType(e.target.value)}
+                                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white text-lg"
+                                    >
+                                        <option value="all">All Types</option>
+                                        {eventTypes.map(type => (
+                                            <option key={type} value={type}>{type}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-3">
+                                        <i className="fas fa-sort text-purple-500 mr-2"></i>
+                                        Sort By
+                                    </label>
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value)}
+                                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white text-lg"
+                                    >
+                                        <option value="date">Date</option>
+                                        <option value="title">Title</option>
+                                        <option value="type">Type</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Results Summary */}
+                            <div className="mt-6 pt-6 border-t border-gray-200">
+                                <div className="flex items-center justify-between flex-wrap gap-4">
+                                    <p className="text-gray-600">
+                                        <span className="font-bold text-gray-900">{filteredAndSortedEvents.length}</span>
+                                        {filteredAndSortedEvents.length === 1 ? ' event' : ' events'} found
+                                        {searchTerm && ` for "${searchTerm}"`}
+                                        {filterType !== 'all' && ` in ${filterType}`}
+                                    </p>
+
+                                    {(searchTerm || filterType !== 'all') && (
+                                        <button
+                                            onClick={() => {
+                                                setSearchTerm('');
+                                                setFilterType('all');
+                                                setCurrentPage(1);
+                                            }}
+                                            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                                        >
+                                            <i className="fas fa-times mr-2"></i>
+                                            Clear Filters
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Events Grid */}
+                        {currentEvents.length > 0 ? (
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                                {currentEvents.map((event, index) => (
+                                    <div
+                                        key={event.id}
+                                        className={`event-card bg-white rounded-3xl shadow-xl overflow-hidden slide-in-${(index % 6) + 1}`}
+                                    >
+                                        <div className="relative">
+                                            {event.image ? (
+                                                <img
+                                                    src={event.image}
+                                                    alt={event.title}
+                                                    className="w-full h-64 object-cover"
+                                                />
+                                            ) : (
+                                                <div className={`w-full h-64 bg-gradient-to-br ${getEventTypeColor(event.eventType)} flex items-center justify-center`}>
+                                                    <i className={`${getEventTypeIcon(event.eventType)} text-white text-6xl opacity-80`}></i>
+                                                </div>
+                                            )}
+
+                                            {/* Event Type Badge */}
+                                            <div className="absolute top-4 left-4">
+                                                <span className={`inline-flex items-center px-4 py-2 rounded-full text-white font-bold shadow-lg bg-gradient-to-r ${getEventTypeColor(event.eventType)}`}>
+                                                    <i className={`${getEventTypeIcon(event.eventType)} mr-2`}></i>
+                                                    {event.eventType}
+                                                </span>
+                                            </div>
+
+                                            {/* Status Badge */}
+                                            <div className="absolute top-4 right-4">
+                                                {isEventPast(event.startTime) ? (
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-500 text-white">
+                                                        <i className="fas fa-clock mr-1"></i>
+                                                        Past Event
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+                                                        <i className="fas fa-circle mr-1 animate-pulse"></i>
+                                                        {formatTimeUntil(event.startTime)}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {/* Entry Fee Badge */}
+                                            <div className="absolute bottom-4 right-4">
+                                                <span className={`inline-flex items-center px-4 py-2 rounded-full font-bold shadow-lg ${
+                                                    event.entryFee === 'Free'
+                                                        ? 'bg-green-500 text-white'
+                                                        : 'bg-white text-gray-900'
+                                                }`}>
+                                                    <i className={`${event.entryFee === 'Free' ? 'fas fa-gift' : 'fas fa-tag'} mr-2`}></i>
+                                                    {event.entryFee === 'Free' ? 'FREE' : event.entryFee}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-8">
+                                            <h3 className="text-2xl font-bold text-gray-900 mb-3 line-clamp-2">
+                                                {event.title}
+                                            </h3>
+
+                                            <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                                                {event.shortDescription}
+                                            </p>
+
+                                            {/* Event Details */}
+                                            <div className="space-y-4 mb-6">
+                                                <div className="flex items-center bg-blue-50 p-4 rounded-xl">
+                                                    <div className="bg-blue-100 p-2 rounded-full mr-4">
+                                                        <i className="fas fa-calendar text-blue-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-gray-900">{event.startTimeFormatted}</p>
+                                                        <p className="text-sm text-gray-600">{event.timeFormatted}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-start bg-red-50 p-4 rounded-xl">
+                                                    <div className="bg-red-100 p-2 rounded-full mr-4 flex-shrink-0">
+                                                        <i className="fas fa-map-marker-alt text-red-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-gray-900">{event.monastery.name}</p>
+                                                        <p className="text-sm text-gray-600">{event.monastery.address}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <a href={`/events/event/${event.id}/`}
+                                                   className="inline-flex items-center justify-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                                                    <i className="fas fa-info-circle mr-2"></i>
+                                                    Learn More
+                                                </a>
+
+                                                {!isEventPast(event.startTime) && (
+                                                    <a href={`/bookings/event/${event.id}/`}
+                                                       className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-lg">
+                                                        <i className="fas fa-ticket-alt mr-2"></i>
+                                                        Book Now
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-16 fade-in">
+                                <div className="bg-white rounded-3xl shadow-xl p-12 max-w-2xl mx-auto">
+                                    <div className="bg-gray-100 rounded-full p-8 w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                                        <i className="fas fa-search text-gray-400 text-3xl"></i>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">No Events Found</h3>
+                                    <p className="text-gray-600 mb-6">
+                                        {searchTerm || filterType !== 'all'
+                                            ? "Try adjusting your search criteria or filters to find more events."
+                                            : "No events are currently scheduled. Please check back later!"
+                                        }
+                                    </p>
+
+                                    {(searchTerm || filterType !== 'all') && (
+                                        <button
+                                            onClick={() => {
+                                                setSearchTerm('');
+                                                setFilterType('all');
+                                                setCurrentPage(1);
+                                            }}
+                                            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg"
+                                        >
+                                            <i className="fas fa-refresh mr-3"></i>
+                                            Show All Events
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Pagination */}
+                        {totalPages > 1 && (
+                            <div className="flex justify-center items-center space-x-2 mb-8 fade-in">
+                                <button
+                                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                                    disabled={currentPage === 1}
+                                    className={`px-4 py-2 rounded-xl font-semibold transition-all ${
+                                        currentPage === 1
+                                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                            : 'bg-white text-blue-600 hover:bg-blue-50 shadow-md'
+                                    }`}
+                                >
+                                    <i className="fas fa-chevron-left mr-2"></i>
+                                    Previous
+                                </button>
+
+                                {[...Array(totalPages)].map((_, i) => (
+                                    <button
+                                        key={i + 1}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        className={`px-4 py-2 rounded-xl font-bold transition-all ${
+                                            currentPage === i + 1
+                                                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                                        }`}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+
+                                <button
+                                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                                    disabled={currentPage === totalPages}
+                                    className={`px-4 py-2 rounded-xl font-semibold transition-all ${
+                                        currentPage === totalPages
+                                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                            : 'bg-white text-blue-600 hover:bg-blue-50 shadow-md'
+                                    }`}
+                                >
+                                    Next
+                                    <i className="fas fa-chevron-right ml-2"></i>
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Back to Calendar Button */}
+                        <div className="text-center fade-in">
+                            <a href="{% url 'events:calendar' %}"
+                               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold rounded-2xl hover:from-purple-700 hover:to-purple-800 transition-all shadow-xl transform hover:scale-105">
+                                <i className="fas fa-arrow-left text-xl mr-3"></i>
+                                Back to Calendar View
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<FullCalendar />, document.getElementById('root'));
+    </script>
+</body>
+</html>

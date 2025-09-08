@@ -209,3 +209,61 @@ def get_event_color(event_type):
         'other': '#c8d6e5',        # Light Gray
     }
     return colors.get(event_type, '#c8d6e5')
+
+
+def full_calendar_view(request):
+    """
+    Full calendar view showing all events in a list format.
+    """
+    # Get all events (past and future) for React to handle filtering
+    events = Event.objects.filter(
+        is_public=True,
+        is_cancelled=False
+    ).select_related('monastery').order_by('start_time')
+
+    # Don't apply server-side filtering - let React handle it all
+    # This ensures the search and filter functions work properly
+
+    context = {
+        'events': events,  # Pass all events for React to handle
+        'event_types': Event.EVENT_TYPES,
+        'page_title': 'Full Calendar - All Events',
+    }
+
+    return render(request, 'events/full_calendar_enhanced.html', context)
+
+
+def event_detail_simple(request, event_id):
+    """
+    Simple event detail view without monastery slug.
+    """
+    event = get_object_or_404(Event, id=event_id, is_public=True)
+    monastery = event.monastery
+
+    # Get related events from the same monastery
+    related_events = Event.objects.filter(
+        monastery=monastery,
+        start_time__gte=timezone.now(),
+        is_public=True,
+        is_cancelled=False
+    ).exclude(id=event.id).select_related('monastery').order_by('start_time')[:3]
+
+    # Get similar events (same type)
+    similar_events = Event.objects.filter(
+        event_type=event.event_type,
+        start_time__gte=timezone.now(),
+        is_public=True,
+        is_cancelled=False
+    ).exclude(id=event.id).select_related('monastery').order_by('start_time')[:3]
+
+    context = {
+        'monastery': monastery,
+        'event': event,
+        'related_events': related_events,
+        'similar_events': similar_events,
+        'page_title': f'{event.title} - {monastery.name}',
+        'page_description': event.short_description,
+        'canonical_url': request.build_absolute_uri(event.get_absolute_url()),
+    }
+
+    return render(request, 'events/detail_enhanced.html', context)

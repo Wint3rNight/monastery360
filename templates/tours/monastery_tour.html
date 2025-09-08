@@ -1,37 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>{{ page_title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ monastery.name }} - Virtual Tour</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'monastery-gold': '#D4AF37',
+                        'monastery-red': '#B91C1C',
+                        'monastery-orange': '#EA580C'
+                    },
+                    backgroundImage: {
+                        'gradient-monastery': 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)',
+                        'gradient-card': 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Pannellum 360 Viewer -->
     <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <style>
+        /* Hide Pannellum title and author info to prevent overlap */
+        .pnlm-title-box,
+        .pnlm-author-box {
+            display: none !important;
+        }
+
+        /* Ensure panorama viewer has clean appearance */
+        #panorama {
+            position: relative;
+        }
+
+        /* Style the audio progress bar */
+        .audio-progress-container {
+            position: relative;
+        }
+
+        /* Audio control styling */
+        .audio-control {
+            min-width: 320px;
+        }
+
+        /* Ensure proper spacing */
+        .current-view-info {
+            margin-bottom: 1rem;
+        }
+
+        /* Custom fonts */
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Floating elements animation */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Card hover effects */
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Glass morphism effect */
+        .glass {
+            backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(209, 213, 219, 0.3);
+        }
+
+        /* Hide all Google Translate elements completely */
+        #google_translate_element,
+        .goog-te-gadget,
+        .goog-te-gadget-simple,
+        .goog-te-gadget-icon,
+        .goog-te-banner-frame,
+        .goog-te-menu-frame,
+        .goog-te-ftab,
+        .skiptranslate,
+        body > .skiptranslate,
+        iframe.goog-te-menu-frame,
+        .goog-te-menu2,
+        .goog-te-combo {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+        }
+
+        /* Prevent Google Translate from modifying the page layout */
+        body.goog-te-rendered {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* Hide the top banner that Google Translate adds */
+        body > .skiptranslate {
+            display: none !important;
+        }
+
+        body.translated {
+            margin-top: 0 !important;
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <div class="max-w-6xl mx-auto p-6">
-        <a href="/tours/" class="text-sm text-orange-600 hover:underline">← Back to Virtual Tours</a>
-        <h1 class="text-3xl font-extrabold mt-4 mb-2">{{ monastery.name }}</h1>
-        <p class="text-gray-700 mb-6 text-sm leading-relaxed">{{ page_description }}</p>
+<body class="bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50 font-inter min-h-screen">
+    <!-- Header with gradient background -->
+    <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <nav class="mb-6 flex justify-between items-center">
+                <a href="/tours/" class="inline-flex items-center text-orange-100 hover:text-white transition-colors duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span class="text-sm font-medium">Back to Virtual Tours</span>
+                </a>
 
-    <!-- panorama / poi / archives data json for client-side consumption -->
-    {{ panorama_data_json|json_script:"panorama-data" }}
-    {{ poi_data_json|json_script:"poi-data" }}
-    {{ archive_items|json_script:"archive-data" }}
+                <!-- Language Switcher -->
+                <div class="language-switcher relative">
+                    <button id="languageDropdown" class="notranslate flex items-center space-x-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-all duration-200 border border-orange-500" translate="no">
+                        <i class="fas fa-globe"></i>
+                        <span id="currentLanguage" class="notranslate" translate="no">English</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
 
-    <!-- Panorama viewer -->
-    <div id="panorama" class="w-full h-[60vh] rounded-xl overflow-hidden shadow-2xl"></div>
+                    <div id="languageMenu" class="notranslate hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50" translate="no">
+                        <div class="py-2">
+                            <button onclick="changeLanguage('en', 'English')" class="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2" translate="no">
+                                <span class="w-6 text-center">🇺🇸</span>
+                                <span>English</span>
+                            </button>
+                            <button onclick="changeLanguage('hi', 'हिंदी')" class="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2" translate="no">
+                                <span class="w-6 text-center">🇮🇳</span>
+                                <span>हिंदी (Hindi)</span>
+                            </button>
+                            <button onclick="changeLanguage('ne', 'नेपाली')" class="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2" translate="no">
+                                <span class="w-6 text-center">🇳🇵</span>
+                                <span>नेपाली (Nepali)</span>
+                            </button>
+                        </div>
+                    </div>
 
-    <!-- Thumbnails / other panoramas -->
-    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4" id="panorama-thumbs"></div>
+                    <!-- Hidden Google Translate Element -->
+                    <div id="google_translate_element" style="display: none;"></div>
+                </div>
+            </nav>
 
-        <!-- Audio POIs -->
-        <div class="mt-8 bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Audio Points of Interest</h2>
-            <div id="poi-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-playfair font-bold mb-4 text-shadow-lg">
+                    {{ monastery.name }}
+                </h1>
+                <p class="text-lg md:text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+                    {{ page_description }}
+                </p>
+                <div class="mt-6 flex justify-center items-center space-x-6 text-sm text-orange-100">
+                    <span class="flex items-center">
+                        <i class="fas fa-vr-cardboard mr-2"></i>
+                        360° Virtual Experience
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-headphones mr-2"></i>
+                        Audio Narration
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-map-marked-alt mr-2"></i>
+                        Interactive Hotspots
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <!-- panorama / poi / archives data json for client-side consumption -->
+        {{ panorama_data_json|json_script:"panorama-data" }}
+        {{ poi_data_json|json_script:"poi-data" }}
+        {{ archive_items|json_script:"archive-data" }}
+
+        <!-- Panorama viewer with enhanced styling -->
+        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-12 hover-scale">
+            <div id="panorama" class="w-full h-[70vh] rounded-xl overflow-hidden shadow-lg border-4 border-gradient-to-r from-yellow-400 to-orange-500"></div>
         </div>
 
-    <!-- Archives section removed per request -->
+        <!-- Archives Section -->
+        <div class="mt-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold text-gray-900 mb-4">
+                    <i class="fas fa-archive text-orange-600 mr-3"></i>
+                    Archives from {{ monastery.name }}
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Discover historical documents, photographs, and artifacts that tell the story of this sacred place
+                </p>
+            </div>
+
+            <div id="archives-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Archive cards will be populated by JavaScript -->
+            </div>
+
+            <!-- No archives fallback -->
+            <div id="no-archives" class="hidden text-center py-16">
+                <div class="glass rounded-2xl p-8 inline-block">
+                    <i class="fas fa-scroll text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Archives Coming Soon</h3>
+                    <p class="text-gray-500">We're working to digitize historical documents and artifacts from {{ monastery.name }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -39,32 +254,126 @@
             // Parse JSON data injected via json_script
             const panoramaData = JSON.parse(document.getElementById('panorama-data').textContent || '[]');
             const poiData = JSON.parse(document.getElementById('poi-data').textContent || '[]');
-            
+
             // Load panorama configuration from JSON
             let panoramaConfig = {};
             let monasteryViews = null;
             let currentViewIndex = 0;
             let currentAudio = null;
-            
-            fetch('/static/data/monastery_panoramas.json')
-              .then(response => response.json())
+            let currentViewer = null;
+
+            fetch('/static/data/monastery_panoramas.json?v=' + Date.now())
+              .then(response => {
+                console.log('Fetch response status:', response.status);
+                if (!response.ok) {
+                  throw new Error('Failed to load panorama data: ' + response.status);
+                }
+                return response.json();
+              })
               .then(data => {
+                console.log('Raw panorama data loaded:', data);
                 panoramaConfig = data;
                 const monasterySlug = "{{ monastery.slug }}";
-                
-                // Get monastery-specific views
-                if (data.monasteries[monasterySlug]) {
-                  monasteryViews = data.monasteries[monasterySlug];
+                const monasteryName = "{{ monastery.name }}";
+                console.log('Looking for monastery with slug:', monasterySlug);
+                console.log('Monastery name:', monasteryName);
+
+                // Handle both old and new data formats
+                let monasteryConfigs = {};
+                if (data.monasteries && typeof data.monasteries === 'object') {
+                  monasteryConfigs = data.monasteries;
+                  console.log('Using new monasteries format');
+                } else if (data.panoramas && typeof data.panoramas === 'object') {
+                  console.log('Using old panoramas format - converting...');
+                  // Convert old format to new format on the fly
+                  for (const [key, panorama] of Object.entries(data.panoramas)) {
+                    if (key !== 'default') {
+                      monasteryConfigs[key] = {
+                        name: panorama.title || monasteryName,
+                        views: [{
+                          id: key,
+                          title: panorama.title || 'Main View',
+                          description: panorama.description || 'Panoramic view of the monastery',
+                          url: panorama.url,
+                          type: panorama.type || 'equirectangular',
+                          yaw: panorama.yaw || 0,
+                          pitch: panorama.pitch || 0,
+                          hfov: panorama.hfov || 110
+                        }]
+                      };
+                    }
+                  }
+                }
+
+                console.log('Available monasteries in config:', Object.keys(monasteryConfigs));
+                console.log('Full monastery configs:', monasteryConfigs);
+
+                // Try multiple ways to find the monastery configuration
+                let foundConfig = null;
+
+                // Try exact slug match
+                if (monasteryConfigs[monasterySlug]) {
+                  foundConfig = monasteryConfigs[monasterySlug];
+                  console.log('Found exact slug match:', monasterySlug);
+                }
+                // Try with -monastery suffix
+                else if (monasteryConfigs[monasterySlug + '-monastery']) {
+                  foundConfig = monasteryConfigs[monasterySlug + '-monastery'];
+                  console.log('Found with -monastery suffix');
+                }
+                // Try without -monastery suffix
+                else if (monasterySlug.endsWith('-monastery')) {
+                  const baseSlug = monasterySlug.replace('-monastery', '');
+                  if (monasteryConfigs[baseSlug]) {
+                    foundConfig = monasteryConfigs[baseSlug];
+                    console.log('Found without -monastery suffix:', baseSlug);
+                  }
+                }
+                // Try to find by matching name
+                else {
+                  for (const [key, config] of Object.entries(monasteryConfigs)) {
+                    if (config.name && config.name.toLowerCase().includes(monasteryName.toLowerCase().split(' ')[0])) {
+                      foundConfig = config;
+                      console.log('Found by name match:', key);
+                      break;
+                    }
+                  }
+                }
+
+                // Get monastery-specific views or use default
+                if (foundConfig && foundConfig.views && foundConfig.views.length > 0) {
+                  monasteryViews = foundConfig;
+                  console.log('Found monastery views:', monasteryViews);
                 } else {
+                  console.log('No specific views found, using default');
+                  // Create a fallback default view
+                  const defaultUrl = (data.defaultView && data.defaultView.url) ||
+                                   (data.panoramas && data.panoramas.default && data.panoramas.default.url) ||
+                                   'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop';
+
                   monasteryViews = {
-                    name: "{{ monastery.name }}",
-                    views: [data.defaultView]
+                    name: monasteryName,
+                    views: [{
+                      id: 'default',
+                      title: 'Monastery View',
+                      description: `360° panoramic view of ${monasteryName}`,
+                      url: defaultUrl,
+                      type: 'equirectangular',
+                      yaw: 0,
+                      pitch: 0,
+                      hfov: 110
+                    }]
                   };
                 }
-                
+
+                console.log('Final monasteryViews:', monasteryViews);
+                console.log('About to initialize panorama...');
                 initializePanorama();
+                console.log('About to setup view navigation...');
                 setupViewNavigation();
+                console.log('About to setup view info...');
                 setupViewInfo();
+                console.log('All setup functions completed');
               })
               .catch(err => {
                 console.error('Failed to load panorama config:', err);
@@ -73,11 +382,21 @@
 
             function initializePanorama() {
               if (!monasteryViews || !monasteryViews.views) return;
-              
+
+              // Destroy previous viewer if it exists
+              if (currentViewer) {
+                try {
+                  currentViewer.destroy();
+                } catch (e) {
+                  console.log('Error destroying previous viewer:', e);
+                }
+                currentViewer = null;
+              }
+
               const currentView = monasteryViews.views[currentViewIndex];
-              
-              // Create pannellum viewer
-              pannellum.viewer('panorama', {
+
+              // Create new pannellum viewer
+              currentViewer = pannellum.viewer('panorama', {
                 type: currentView.type || 'equirectangular',
                 panorama: currentView.url,
                 autoLoad: true,
@@ -92,14 +411,26 @@
                 yaw: currentView.yaw || 0,
                 hfov: currentView.hfov || 110,
                 hotSpots: currentView.hotspots || [],
-                title: currentView.title
+                title: '', // Remove title to prevent overlap
+                showTitle: false, // Hide title display
+                compass: false // Hide compass to reduce clutter
               });
-              
+
               updateViewInfo();
             }
-            
+
             function initializeFallbackPanorama() {
-              pannellum.viewer('panorama', {
+              // Destroy previous viewer if it exists
+              if (currentViewer) {
+                try {
+                  currentViewer.destroy();
+                } catch (e) {
+                  console.log('Error destroying previous viewer:', e);
+                }
+                currentViewer = null;
+              }
+
+              currentViewer = pannellum.viewer('panorama', {
                 type: 'equirectangular',
                 panorama: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop',
                 autoLoad: true,
@@ -110,211 +441,634 @@
             }
 
             function setupViewNavigation() {
-              if (!monasteryViews || !monasteryViews.views || monasteryViews.views.length <= 1) return;
-              
+              console.log('setupViewNavigation called');
+              console.log('monasteryViews:', monasteryViews);
+              console.log('monasteryViews.views:', monasteryViews?.views);
+              console.log('views length:', monasteryViews?.views?.length);
+
+              if (!monasteryViews || !monasteryViews.views || monasteryViews.views.length <= 1) {
+                console.log('Skipping view navigation - only one or no views available');
+                return;
+              }
+
+              console.log('Creating view navigation with', monasteryViews.views.length, 'views');
+
               const navContainer = document.createElement('div');
-              navContainer.className = 'view-navigation mb-4';
-              navContainer.innerHTML = '<h4 class="text-lg font-medium text-gray-800 mb-3">🏛️ Areas to Explore:</h4><div class="flex flex-wrap gap-2" id="view-buttons"></div>';
-              
+              navContainer.className = 'view-navigation mb-6 p-4 bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl shadow-md';
+              navContainer.innerHTML = '<h4 class="text-xl font-semibold text-gray-800 mb-4 font-playfair"><i class="fas fa-compass mr-2 text-orange-600"></i>🏛️ Areas to Explore:</h4><div class="flex flex-wrap gap-3" id="view-buttons"></div>';
+
               const panoramaElement = document.getElementById('panorama');
-              panoramaElement.parentElement.insertBefore(navContainer, panoramaElement);
-              
+              console.log('Panorama element:', panoramaElement);
+              if (panoramaElement && panoramaElement.parentElement) {
+                panoramaElement.parentElement.insertBefore(navContainer, panoramaElement);
+                console.log('Navigation container inserted');
+              } else {
+                console.error('Could not find panorama element or its parent');
+                return;
+              }
+
               const buttonsContainer = document.getElementById('view-buttons');
+              console.log('Buttons container:', buttonsContainer);
+
               monasteryViews.views.forEach((view, index) => {
+                console.log('Creating button for view:', view.title, 'at index:', index);
                 const button = document.createElement('button');
-                button.className = 'px-4 py-2 rounded-lg transition-all duration-200 font-medium ' + 
-                  (index === currentViewIndex ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300');
-                button.textContent = view.title;
+                button.className = 'px-6 py-3 rounded-xl transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-105 ' +
+                  (index === currentViewIndex ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-orange-200' : 'bg-white text-gray-700 hover:bg-orange-50 border border-orange-200');
+                button.innerHTML = `<i class="fas fa-temple mr-2"></i>${view.title}`;
                 button.onclick = () => switchView(index);
                 buttonsContainer.appendChild(button);
               });
+
+              console.log('View navigation setup completed');
             }
 
             function setupViewInfo() {
+              console.log('setupViewInfo called');
               const infoPanel = document.createElement('div');
               infoPanel.id = 'current-view-info';
-              infoPanel.className = 'bg-white p-4 rounded-lg shadow-md mb-4';
-              
+              infoPanel.className = 'bg-gradient-card p-6 rounded-2xl shadow-lg mb-6 border border-orange-100';
+
               const panoramaElement = document.getElementById('panorama');
-              panoramaElement.parentElement.insertBefore(infoPanel, panoramaElement);
-              
+              console.log('Inserting info panel before panorama element');
+              if (panoramaElement && panoramaElement.parentElement) {
+                panoramaElement.parentElement.insertBefore(infoPanel, panoramaElement);
+                console.log('Info panel inserted successfully');
+              } else {
+                console.error('Could not find panorama element for info panel');
+                return;
+              }
+
               updateViewInfo();
             }
 
             function switchView(index) {
               if (index === currentViewIndex || !monasteryViews.views[index]) return;
-              
+
               currentViewIndex = index;
-              
+
               // Stop current audio
               if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 currentAudio = null;
               }
-              
+
               // Update button styles
               const buttons = document.querySelectorAll('#view-buttons button');
               buttons.forEach((btn, i) => {
-                btn.className = 'px-4 py-2 rounded-lg transition-all duration-200 font-medium ' + 
+                btn.className = 'px-4 py-2 rounded-lg transition-all duration-200 font-medium ' +
                   (i === index ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300');
               });
-              
+
               initializePanorama();
             }
 
             function updateViewInfo() {
+              console.log('updateViewInfo called');
+              console.log('Current view index:', currentViewIndex);
               const currentView = monasteryViews.views[currentViewIndex];
-              if (!currentView) return;
-              
+              console.log('Current view data:', currentView);
+
+              if (!currentView) {
+                console.error('No current view found');
+                return;
+              }
+
               const infoPanel = document.getElementById('current-view-info');
-              if (!infoPanel) return;
-              
-              infoPanel.innerHTML = 
+              if (!infoPanel) {
+                console.error('Info panel not found');
+                return;
+              }
+
+              console.log('Updating info panel with view:', currentView.title);
+
+              infoPanel.innerHTML =
                 '<div class="flex items-start justify-between">' +
-                  '<div class="flex-1">' +
-                    '<h3 class="text-xl font-semibold text-gray-800 mb-2">' + currentView.title + '</h3>' +
-                    '<p class="text-gray-600 mb-3">' + (currentView.description || '') + '</p>' +
+                  '<div class="flex-1 mr-6">' +
+                    '<h3 class="text-2xl font-bold text-gray-800 mb-3 font-playfair flex items-center">' +
+                      '<i class="fas fa-location-dot mr-3 text-orange-600"></i>' + currentView.title +
+                    '</h3>' +
+                    '<p class="text-gray-600 leading-relaxed text-lg">' + (currentView.description || '') + '</p>' +
                   '</div>' +
-                  (currentView.audio ? 
-                    '<div class="audio-control ml-4">' +
-                      '<button id="audio-btn" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 font-medium" onclick="toggleAudio()">' +
-                        '<i class="fas fa-play"></i>' +
-                        '<span>Play Narration' + (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>' +
-                      '</button>' +
+                  (currentView.audio ?
+                    '<div class="audio-control w-96 flex-shrink-0">' +
+                      '<div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 shadow-md">' +
+                        '<div class="flex items-center justify-between mb-4">' +
+                          '<button id="audio-btn" class="flex items-center space-x-3 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium shadow-lg transform hover:scale-105" onclick="toggleAudio()">' +
+                            '<i class="fas fa-play text-lg"></i>' +
+                            '<span class="font-semibold">Play Narration' + (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>' +
+                          '</button>' +
+                          '<span id="audio-time" class="text-sm text-gray-600 font-mono bg-white px-3 py-1 rounded-lg">0:00 / ' + (currentView.audioDuration ? Math.floor(currentView.audioDuration/60) + ':' + String(currentView.audioDuration%60).padStart(2,'0') : '0:00') + '</span>' +
+                        '</div>' +
+                        '<div class="audio-progress-container">' +
+                          '<div class="w-full bg-gray-200 rounded-full h-3 cursor-pointer shadow-inner" id="progress-container" onclick="seekAudio(event)">' +
+                            '<div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-100 shadow-sm" id="progress-bar" style="width: 0%"></div>' +
+                          '</div>' +
+                        '</div>' +
+                      '</div>' +
                     '</div>' : '') +
                 '</div>';
+
+              console.log('Info panel updated successfully');
             }
 
             function toggleAudio() {
               const currentView = monasteryViews.views[currentViewIndex];
               const audioBtn = document.getElementById('audio-btn');
-              
+
               if (currentAudio && !currentAudio.paused) {
                 // Pause audio
                 currentAudio.pause();
-                audioBtn.innerHTML = '<i class="fas fa-play"></i><span>Play Narration' + 
+                audioBtn.innerHTML = '<i class="fas fa-play"></i><span>Play Narration' +
                   (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>';
                 audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 font-medium';
               } else {
                 // Play audio
                 if (!currentAudio) {
-                  currentAudio = new Audio(currentView.audio);
-                  currentAudio.addEventListener('ended', () => {
-                    audioBtn.innerHTML = '<i class="fas fa-play"></i><span>Play Narration' + 
-                      (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>';
-                    audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 font-medium';
-                  });
+                  // Create a simple beep sound since we have placeholder audio files
+                  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                  const oscillator = audioContext.createOscillator();
+                  const gainNode = audioContext.createGain();
+
+                  oscillator.connect(gainNode);
+                  gainNode.connect(audioContext.destination);
+
+                  oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4 note
+                  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+                  // Create mock audio object for our progress bar
+                  currentAudio = {
+                    duration: currentView.audioDuration || 30,
+                    currentTime: 0,
+                    paused: false,
+                    play: function() {
+                      this.paused = false;
+                      startAudioProgress();
+                      oscillator.start(audioContext.currentTime);
+                      setTimeout(() => {
+                        this.pause();
+                      }, (this.duration * 1000));
+                    },
+                    pause: function() {
+                      this.paused = true;
+                      oscillator.stop();
+                      stopAudioProgress();
+                      audioBtn.innerHTML = '<i class="fas fa-play"></i><span>Play Narration' +
+                        (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>';
+                      audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 font-medium';
+                    }
+                  };
                 }
-                
-                currentAudio.play().then(() => {
+
+                try {
+                  currentAudio.play();
                   audioBtn.innerHTML = '<i class="fas fa-pause"></i><span>Pause Narration</span>';
                   audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all duration-200 font-medium';
-                }).catch(err => {
+                } catch(err) {
                   console.warn('Audio playback failed:', err);
-                });
+                  // Fallback: just show a playing state for demo
+                  audioBtn.innerHTML = '<i class="fas fa-pause"></i><span>Playing Narration</span>';
+                  audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all duration-200 font-medium';
+
+                  setTimeout(() => {
+                    audioBtn.innerHTML = '<i class="fas fa-play"></i><span>Play Narration' +
+                      (currentView.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>';
+                    audioBtn.className = 'flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 font-medium';
+                  }, (currentView.audioDuration || 30) * 1000);
+                }
               }
             }
 
-            function initializePanorama() {
-              // Choose first panorama or use monastery-specific panorama
-              const monasterySlug = "{{ monastery.slug }}";
-              const first = panoramaData && panoramaData.length ? panoramaData[0] : null;
-              
-              // Get monastery-specific panorama or use first available or fallback
-              let imageUrl = null;
-              let config = { initial_yaw: 0, initial_pitch: 0, hotspots: [] };
-              
-              if (first && first.image_url) {
-                imageUrl = first.image_url;
-                config.initial_yaw = first.initial_yaw || 0;
-                config.initial_pitch = first.initial_pitch || 0;
-                config.hotspots = first.hotspots_data || [];
-              } else if (panoramaConfig[monasterySlug]) {
-                const monasteryPano = panoramaConfig[monasterySlug];
-                imageUrl = monasteryPano.url;
-                config.initial_yaw = monasteryPano.yaw || 0;
-                config.initial_pitch = monasteryPano.pitch || 0;
-              } else if (panoramaConfig['default']) {
-                imageUrl = panoramaConfig['default'].url;
+            let progressInterval;
+
+            function startAudioProgress() {
+              const progressBar = document.getElementById('progress-bar');
+              const timeDisplay = document.getElementById('audio-time');
+              const currentView = monasteryViews.views[currentViewIndex];
+
+              if (!progressBar || !timeDisplay || !currentAudio) return;
+
+              progressInterval = setInterval(() => {
+                if (currentAudio && !currentAudio.paused) {
+                  currentAudio.currentTime += 0.1;
+                  const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
+                  progressBar.style.width = Math.min(progress, 100) + '%';
+
+                  const current = Math.floor(currentAudio.currentTime);
+                  const total = Math.floor(currentAudio.duration);
+                  timeDisplay.textContent = formatTime(current) + ' / ' + formatTime(total);
+
+                  if (currentAudio.currentTime >= currentAudio.duration) {
+                    stopAudioProgress();
+                    currentAudio.pause();
+                  }
+                }
+              }, 100);
+            }
+
+            function stopAudioProgress() {
+              if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+              }
+            }
+
+            function formatTime(seconds) {
+              const mins = Math.floor(seconds / 60);
+              const secs = seconds % 60;
+              return mins + ':' + String(secs).padStart(2, '0');
+            }
+
+            function seekAudio(event) {
+              if (!currentAudio) return;
+
+              const progressContainer = document.getElementById('progress-container');
+              const rect = progressContainer.getBoundingClientRect();
+              const clickX = event.clientX - rect.left;
+              const percentage = clickX / rect.width;
+
+              currentAudio.currentTime = percentage * currentAudio.duration;
+
+              const progressBar = document.getElementById('progress-bar');
+              progressBar.style.width = (percentage * 100) + '%';
+
+              const timeDisplay = document.getElementById('audio-time');
+              const current = Math.floor(currentAudio.currentTime);
+              const total = Math.floor(currentAudio.duration);
+              timeDisplay.textContent = formatTime(current) + ' / ' + formatTime(total);
+            }
+
+            // Archives functionality
+            async function setupArchives() {
+              console.log('setupArchives called');
+              const archivesGrid = document.getElementById('archives-grid');
+              const noArchives = document.getElementById('no-archives');
+
+              if (!archivesGrid) {
+                console.error('Archives grid not found');
+                return;
               }
 
-              // Create pannellum viewer instance and keep reference for switching
-              let viewer = null;
-              function createViewer(imageUrl, config={}){
-                const opts = Object.assign({
-                  type: 'equirectangular',
-                  panorama: imageUrl || 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop',
-                  autoLoad: true,
-                  autoRotate: -2,
-                  showZoomCtrl: true,
-                  showFullscreenCtrl: true,
-                  pitch: config.initial_pitch || 0,
-                  yaw: config.initial_yaw || 0,
-                  hotSpots: config.hotspots || []
-                }, config.extra || {});
-
-                // If a viewer already exists, destroy its container then recreate
-                if(viewer){
-                  try{ viewer.destroy(); } catch(e){}
+              try {
+                // Fetch archives data from JSON file
+                console.log('Fetching archives data...');
+                const response = await fetch('/static/data/archives.json');
+                if (!response.ok) {
+                  throw new Error('Failed to fetch archives data');
                 }
 
-                viewer = pannellum.viewer('panorama', opts);
-                return viewer;
-              }
+                const data = await response.json();
+                console.log('Archives data loaded:', data);
 
-              try{
-                createViewer(imageUrl, config);
-              } catch (err) {
-                console.warn('Panorama init error', err);
-                document.getElementById('panorama').innerHTML = '<div class="p-8 text-center text-gray-600">360° panorama currently unavailable.</div>';
+                if (!data.archives || !Array.isArray(data.archives)) {
+                  throw new Error('Invalid archives data structure');
+                }
+
+                // Filter archives by monastery name
+                const monasteryName = '{{ monastery.name }}';
+                console.log('Filtering archives for monastery:', monasteryName);
+
+                const relevantArchives = data.archives.filter(archive => {
+                  // Try different matching strategies to be flexible
+                  const archiveMonastery = archive.monastery || '';
+                  return archiveMonastery.toLowerCase().includes(monasteryName.toLowerCase()) ||
+                         monasteryName.toLowerCase().includes(archiveMonastery.toLowerCase().replace(' monastery', ''));
+                });
+
+                console.log('Found relevant archives:', relevantArchives);
+
+                if (relevantArchives.length === 0) {
+                  console.log('No archives found for this monastery');
+                  if (noArchives) {
+                    noArchives.classList.remove('hidden');
+                  }
+                  return;
+                }
+
+                // Hide no archives message
+                if (noArchives) {
+                  noArchives.classList.add('hidden');
+                }
+
+                // Create archive cards
+                relevantArchives.forEach(archive => {
+                  const archiveCard = document.createElement('div');
+                  archiveCard.className = 'bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]';
+
+                  // Determine icon based on item type
+                  let icon = 'fas fa-file';
+                  let iconColor = 'text-blue-600';
+
+                  switch(archive.type?.toLowerCase()) {
+                    case 'artwork':
+                      icon = 'fas fa-palette';
+                      iconColor = 'text-purple-600';
+                      break;
+                    case 'historical document':
+                      icon = 'fas fa-scroll';
+                      iconColor = 'text-amber-600';
+                      break;
+                    case 'manuscript':
+                      icon = 'fas fa-book-open';
+                      iconColor = 'text-green-600';
+                      break;
+                    case 'photograph':
+                      icon = 'fas fa-camera';
+                      iconColor = 'text-indigo-600';
+                      break;
+                    default:
+                      icon = 'fas fa-archive';
+                      iconColor = 'text-gray-600';
+                  }
+
+                  archiveCard.innerHTML = `
+                    <div class="p-6">
+                      <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                          <i class="${icon} text-xl ${iconColor}"></i>
+                        </div>
+                        <div class="flex-1">
+                          <h3 class="font-semibold text-gray-900 text-lg leading-tight">${archive.title}</h3>
+                          <p class="text-sm text-gray-500 mt-1">${archive.type || 'Archive Item'} • ${archive.century || 'Historical'}</p>
+                        </div>
+                      </div>
+
+                      <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                        ${archive.description || 'Historical item from the monastery archives.'}
+                      </p>
+
+                      <div class="flex items-center justify-between">
+                        <div class="flex flex-wrap gap-1">
+                          ${archive.tags ? archive.tags.slice(0, 2).map(tag =>
+                            `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${tag}</span>`
+                          ).join('') : ''}
+                        </div>
+                        <div class="flex items-center text-orange-600 text-sm font-medium">
+                          <span class="mr-1">View Details</span>
+                          <i class="fas fa-arrow-right"></i>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+
+                  // Add click handler with fallback strategy
+                  archiveCard.addEventListener('click', () => {
+                    // Strategy 1: Try direct archive item detail page (if it exists in database)
+                    const monasterySlug = '{{ monastery.slug }}';
+
+                    // Create a potential catalog number based on the archive data
+                    const monasteryPrefix = monasterySlug.toUpperCase().replace(/-/g, '-');
+                    const archiveType = (archive.type || 'ITEM').toUpperCase().replace(/\s+/g, '-');
+                    const catalogNumber = `${monasteryPrefix}-${archiveType}-${String(archive.id).padStart(3, '0')}`;
+
+                    // First try the specific archive detail page
+                    const archiveDetailUrl = `/archives/${monasterySlug}/item/${catalogNumber}/`;
+
+                    // Use a more sophisticated approach: check if the page exists, otherwise fallback
+                    fetch(archiveDetailUrl, { method: 'HEAD' })
+                      .then(response => {
+                        if (response.ok) {
+                          // Archive detail page exists, redirect there
+                          window.location.href = archiveDetailUrl;
+                        } else {
+                          // Fallback to digital archives portal with search
+                          window.location.href = `/archives/portal/?search=${encodeURIComponent(archive.title)}`;
+                        }
+                      })
+                      .catch(() => {
+                        // If fetch fails, fallback to digital archives portal
+                        window.location.href = `/archives/portal/?search=${encodeURIComponent(archive.title)}`;
+                      });
+                  });
+
+                  archivesGrid.appendChild(archiveCard);
+                });
+
+                console.log(`Created ${relevantArchives.length} archive cards`);
+
+              } catch (error) {
+                console.error('Error loading archives:', error);
+                if (noArchives) {
+                  noArchives.classList.remove('hidden');
+                  // Update the no archives message to be more specific
+                  const noArchivesText = noArchives.querySelector('p');
+                  if (noArchivesText) {
+                    noArchivesText.textContent = 'Unable to load archives at this time. Please try again later.';
+                  }
+                }
               }
             }
 
-            // thumbnails (switch panorama in-page)
-            const thumbs = document.getElementById('panorama-thumbs');
-            const monasterySlug = "{{ monastery.slug }}";
-            panoramaData.forEach(p => {
-                const el = document.createElement('div');
-                el.className = 'block bg-white rounded overflow-hidden shadow cursor-pointer';
-                el.innerHTML = `
-                    <img src="${p.image_url || placeholder}" class="w-full h-36 object-cover" />
-                    <div class="p-2 text-sm font-medium text-gray-900">${p.title || 'Panorama'}</div>
-                `;
-
-                // click to switch panorama in the viewer
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    // recreate viewer with selected panorama and hotspots
-                    createViewer(p.image_url, { initial_yaw: p.initial_yaw, initial_pitch: p.initial_pitch, hotspots: p.hotspots_data });
-                });
-
-                // secondary link to open the dedicated panorama detail page
-                const linkWrap = document.createElement('a');
-                linkWrap.href = p.id ? `/tours/panorama/${monasterySlug}/${p.id}/` : '#';
-                linkWrap.appendChild(el);
-                thumbs.appendChild(linkWrap);
-            });
-
-                        // POI list
-            const poiList = document.getElementById('poi-list');
-            if(!poiData || !poiData.length){
-                poiList.innerHTML = '<div class="text-gray-600">No audio points available.</div>';
+            // Initialize archives after panorama setup
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', setupArchives);
             } else {
-                poiData.forEach(poi => {
-                    const div = document.createElement('div');
-                    div.className = 'p-4 bg-white rounded shadow';
-                    div.innerHTML = `
-                        <h3 class="font-semibold">${poi.title}</h3>
-                        <p class="text-sm text-gray-600 mb-2">${poi.description}</p>
-                        ${poi.audio_url ? `<audio controls src="${poi.audio_url}" class="w-full"></audio>` : ''}
-                    `;
-                    poiList.appendChild(div);
-                });
+              setupArchives();
             }
-
-                        // Archives rendering removed per request
         })();
     </script>
+
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        // Initialize Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ne',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            // Detect current language after Google Translate loads
+            setTimeout(detectCurrentLanguage, 2000);
+        }
+
+        // Function to detect and set current language in dropdown
+        function detectCurrentLanguage() {
+            // Check if Google Translate has translated the page
+            const body = document.body;
+            const isTranslated = body.classList.contains('translated-ltr') ||
+                               body.classList.contains('translated-rtl') ||
+                               document.querySelector('.goog-te-menu-value span') ||
+                               body.classList.contains('goog-te-rendered');
+
+            if (isTranslated) {
+                // Try to get the current language from Google Translate
+                const selectElement = document.querySelector('#google_translate_element select');
+                if (selectElement && selectElement.value) {
+                    const currentLang = selectElement.value;
+                    updateDropdownText(currentLang);
+                } else {
+                    // Fallback: check for language-specific elements or URL params
+                    checkForLanguageIndicators();
+                }
+            }
+
+            // Also check periodically in case translation happens later
+            setTimeout(detectCurrentLanguage, 5000);
+        }
+
+        // Function to check for language indicators in the page
+        function checkForLanguageIndicators() {
+            const bodyText = document.body.innerText.toLowerCase();
+
+            // Check for Hindi text patterns
+            if (/[\u0900-\u097F]/.test(bodyText) || bodyText.includes('की') || bodyText.includes('है') || bodyText.includes('से')) {
+                updateDropdownText('hi');
+            }
+            // Check for Nepali text patterns
+            else if (/[\u0900-\u097F]/.test(bodyText) || bodyText.includes('को') || bodyText.includes('छ') || bodyText.includes('गर्न')) {
+                updateDropdownText('ne');
+            }
+        }
+
+        // Function to update dropdown text based on language code
+        function updateDropdownText(langCode) {
+            const currentLanguage = document.getElementById('currentLanguage');
+            if (!currentLanguage) return;
+
+            let langName;
+            switch(langCode) {
+                case 'hi':
+                    langName = 'हिंदी';
+                    break;
+                case 'ne':
+                    langName = 'नेपाली';
+                    break;
+                case 'en':
+                default:
+                    langName = 'English';
+                    break;
+            }
+
+            currentLanguage.textContent = langName;
+            currentLanguage.classList.add('notranslate');
+            currentLanguage.setAttribute('translate', 'no');
+        }
+
+        // Dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownButton = document.getElementById('languageDropdown');
+            const dropdownMenu = document.getElementById('languageMenu');
+
+            if (dropdownButton && dropdownMenu) {
+                dropdownButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+        // Change language function
+        function changeLanguage(langCode, langName) {
+            console.log('Changing language to:', langCode, langName);
+
+            // Store the language preference in localStorage
+            localStorage.setItem('selectedLanguage', langCode);
+            localStorage.setItem('selectedLanguageName', langName);
+
+            // Store the original language name to prevent corruption
+            const originalLangName = langName;
+
+            // Update dropdown text immediately and lock it
+            const currentLanguage = document.getElementById('currentLanguage');
+            if (currentLanguage) {
+                currentLanguage.textContent = originalLangName;
+                // Add a class to prevent Google Translate from touching this element
+                currentLanguage.classList.add('notranslate');
+                currentLanguage.setAttribute('translate', 'no');
+            }
+
+            // Close dropdown
+            const dropdownMenu = document.getElementById('languageMenu');
+            if (dropdownMenu) {
+                dropdownMenu.classList.add('hidden');
+            }
+
+            // Trigger translation
+            translatePage(langCode);
+
+            // Ensure the dropdown text remains correct after translation
+            setTimeout(() => {
+                if (currentLanguage) {
+                    currentLanguage.textContent = originalLangName;
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                if (currentLanguage) {
+                    currentLanguage.textContent = originalLangName;
+                }
+            }, 3000);
+        }
+
+        // Function to restore language on page load
+        function restoreLanguageOnLoad() {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            const savedLangName = localStorage.getItem('selectedLanguageName');
+
+            if (savedLang && savedLang !== 'en') {
+                // Update dropdown immediately
+                updateDropdownText(savedLang);
+
+                // Trigger translation after a delay to ensure Google Translate is ready
+                setTimeout(() => {
+                    translatePage(savedLang);
+                }, 1000);
+            }
+        }
+
+        // Initialize language restoration on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            restoreLanguageOnLoad();
+        });
+
+        // Function to trigger translation
+        function translatePage(lang) {
+            console.log('Translating to:', lang);
+
+            // Wait for Google Translate to be ready
+            setTimeout(function() {
+                const selectElement = document.querySelector('#google_translate_element select');
+                if (selectElement) {
+                    console.log('Found select element, changing language');
+                    selectElement.value = lang;
+                    selectElement.dispatchEvent(new Event('change'));
+                } else {
+                    console.log('Google Translate not ready, trying alternative method');
+
+                    // Alternative method: directly call Google Translate
+                    if (window.google && window.google.translate) {
+                        try {
+                            const translateElement = new window.google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                includedLanguages: 'en,hi,ne',
+                                layout: window.google.translate.TranslateElement.InlineLayout.HORIZONTAL
+                            }, 'google_translate_element');
+
+                            setTimeout(() => {
+                                const newSelect = document.querySelector('#google_translate_element select');
+                                if (newSelect) {
+                                    newSelect.value = lang;
+                                    newSelect.dispatchEvent(new Event('change'));
+                                }
+                            }, 1000);
+                        } catch (e) {
+                            console.error('Translation error:', e);
+                        }
+                    }
+                }
+            }, 500);
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

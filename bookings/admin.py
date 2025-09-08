@@ -5,7 +5,7 @@ Django admin configuration for bookings models.
 from django.contrib import admin
 from django.utils import timezone
 
-from .models import Booking
+from .models import Booking, EventBooking
 
 
 @admin.register(Booking)
@@ -134,3 +134,97 @@ class BookingAdmin(admin.ModelAdmin):
             f'Reminders marked as sent for {updated} booking(s).'
         )
     send_reminders.short_description = "Mark reminders as sent"
+
+
+@admin.register(EventBooking)
+class EventBookingAdmin(admin.ModelAdmin):
+    """Admin configuration for EventBooking model."""
+
+    list_display = [
+        'confirmation_number', 'customer_name', 'event', 'created_at',
+        'number_of_people', 'payment_status', 'total_amount'
+    ]
+    list_filter = [
+        'event', 'payment_status', 'created_at', 'payment_date',
+        'number_of_people', 'event__event_type'
+    ]
+    search_fields = [
+        'customer_name', 'customer_email', 'customer_phone',
+        'confirmation_number', 'event__title', 'transaction_id'
+    ]
+    autocomplete_fields = ['event']
+    readonly_fields = [
+        'confirmation_number', 'created_at', 'updated_at'
+    ]
+    date_hierarchy = 'created_at'
+
+    fieldsets = (
+        ('Booking Information', {
+            'fields': (
+                'confirmation_number', 'event', 'booking_type'
+            )
+        }),
+        ('Customer Details', {
+            'fields': (
+                'customer_name', 'customer_email', 'customer_phone'
+            )
+        }),
+        ('Group Information', {
+            'fields': (
+                'number_of_people', 'number_of_adults', 'number_of_children'
+            )
+        }),
+        ('Payment Information', {
+            'fields': (
+                'total_amount', 'currency', 'payment_status', 'payment_method',
+                'transaction_id', 'payment_date'
+            )
+        }),
+        ('Special Requirements', {
+            'fields': (
+                'special_requirements', 'accessibility_needs', 'booking_notes', 'admin_notes'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': (
+                'created_at', 'updated_at'
+            ),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        """Optimize queryset with select_related."""
+        return super().get_queryset(request).select_related('event', 'event__monastery')
+
+    actions = [
+        'mark_as_paid', 'mark_as_confirmed', 'export_bookings'
+    ]
+
+    def mark_as_paid(self, request, queryset):
+        """Mark selected bookings as paid."""
+        updated = queryset.update(payment_status='paid')
+        self.message_user(
+            request,
+            f'{updated} booking(s) marked as paid.'
+        )
+    mark_as_paid.short_description = "Mark as paid"
+
+    def mark_as_confirmed(self, request, queryset):
+        """Mark selected bookings as confirmed."""
+        updated = queryset.update(payment_status='confirmed')
+        self.message_user(
+            request,
+            f'{updated} booking(s) marked as confirmed.'
+        )
+    mark_as_confirmed.short_description = "Mark as confirmed"
+
+    def export_bookings(self, request, queryset):
+        """Export selected bookings (placeholder)."""
+        count = queryset.count()
+        self.message_user(
+            request,
+            f'{count} booking(s) selected for export.'
+        )
+    export_bookings.short_description = "Export bookings"

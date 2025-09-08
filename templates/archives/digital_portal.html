@@ -20,6 +20,45 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        /* Hide all Google Translate elements completely */
+        #google_translate_element,
+        .goog-te-gadget,
+        .goog-te-gadget-simple,
+        .goog-te-gadget-icon,
+        .goog-te-banner-frame,
+        .goog-te-menu-frame,
+        .goog-te-ftab,
+        .skiptranslate,
+        body > .skiptranslate,
+        iframe.goog-te-menu-frame,
+        .goog-te-menu2,
+        .goog-te-combo {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+        }
+
+        /* Prevent Google Translate from modifying the page layout */
+        body.goog-te-rendered {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* Hide the top banner that Google Translate adds */
+        body > .skiptranslate {
+            display: none !important;
+        }
+
+        body.translated {
+            margin-top: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -49,6 +88,69 @@
         // Shared Navigation Component (exact copy from tours page)
         const SharedNavigation = ({ currentPage = "", theme = "dark" }) => {
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+          const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+          const [currentLanguage, setCurrentLanguage] = useState('English');
+          const dropdownRef = React.useRef(null);
+
+          // Close dropdown when clicking outside
+          React.useEffect(() => {
+            const handleClickOutside = (event) => {
+              if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsLanguageDropdownOpen(false);
+              }
+            };
+
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+              document.removeEventListener('mousedown', handleClickOutside);
+            };
+          }, []);
+
+          // Restore language on component mount
+          React.useEffect(() => {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            const savedLangName = localStorage.getItem('selectedLanguageName');
+
+            if (savedLang && savedLang !== 'en' && savedLangName) {
+              setCurrentLanguage(savedLangName);
+
+              // Trigger translation after a delay to ensure Google Translate is ready
+              setTimeout(() => {
+                if (window.translatePage) {
+                  window.translatePage(savedLang);
+                }
+              }, 1000);
+            }
+          }, []);
+
+          // Change language function
+          const handleLanguageChange = (langCode, langName) => {
+            console.log('Changing language to:', langCode, langName);
+
+            // Store the language preference in localStorage
+            localStorage.setItem('selectedLanguage', langCode);
+            localStorage.setItem('selectedLanguageName', langName);
+
+            // Store the original language name to prevent corruption
+            const originalLangName = langName;
+
+            setCurrentLanguage(originalLangName);
+            setIsLanguageDropdownOpen(false);
+
+            // Trigger translation
+            if (window.translatePage) {
+              window.translatePage(langCode);
+            }
+
+            // Ensure the dropdown text remains correct after translation
+            setTimeout(() => {
+              setCurrentLanguage(originalLangName);
+            }, 1000);
+
+            setTimeout(() => {
+              setCurrentLanguage(originalLangName);
+            }, 3000);
+          };
 
           // Navigation items with their routes and icons
           const navItems = [
@@ -178,6 +280,50 @@
                       </a>
                     );
                   })}
+
+                  {/* Language Switcher */}
+                  <div className="language-switcher relative mr-4" ref={dropdownRef}>
+                    <button
+                      onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                      className="notranslate flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 border border-purple-500"
+                      translate="no"
+                    >
+                      <i className="fas fa-globe"></i>
+                      <span className="notranslate" translate="no">{currentLanguage}</span>
+                      <i className="fas fa-chevron-down text-xs"></i>
+                    </button>
+
+                    {!isLanguageDropdownOpen ? null : (
+                      <div className="notranslate absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50" translate="no">
+                        <div className="py-2">
+                          <button
+                            onClick={() => handleLanguageChange('en', 'English')}
+                            className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                            translate="no"
+                          >
+                            <span className="w-6 text-center">🇺🇸</span>
+                            <span>English</span>
+                          </button>
+                          <button
+                            onClick={() => handleLanguageChange('hi', 'हिंदी')}
+                            className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                            translate="no"
+                          >
+                            <span className="w-6 text-center">🇮🇳</span>
+                            <span>हिंदी (Hindi)</span>
+                          </button>
+                          <button
+                            onClick={() => handleLanguageChange('ne', 'नेपाली')}
+                            className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                            translate="no"
+                          >
+                            <span className="w-6 text-center">🇳🇵</span>
+                            <span>नेपाली (Nepali)</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Authentication Buttons */}
                   {window.userAuthenticated ? (
@@ -656,6 +802,45 @@
 
         // Render the app
         ReactDOM.render(<DigitalArchivesPortal />, document.getElementById('root'));
+
+        // Function to trigger translation
+        window.translatePage = function(lang) {
+            console.log('Translating to:', lang);
+
+            setTimeout(function() {
+                const selectElement = document.querySelector('#google_translate_element select');
+                if (selectElement) {
+                    selectElement.value = lang;
+                    selectElement.dispatchEvent(new Event('change'));
+                } else {
+                    console.log('Google Translate not ready yet...');
+                    // Retry after a longer delay
+                    setTimeout(() => {
+                        const retrySelect = document.querySelector('#google_translate_element select');
+                        if (retrySelect) {
+                            retrySelect.value = lang;
+                            retrySelect.dispatchEvent(new Event('change'));
+                        }
+                    }, 2000);
+                }
+            }, 500);
+        };
+
+        // Initialize Google Translate
+        window.googleTranslateElementInit = function() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ne',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+            }, 'google_translate_element');
+        };
     </script>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display: none;"></div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

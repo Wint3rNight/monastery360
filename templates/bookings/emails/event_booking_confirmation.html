@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .header { background-color: #3b82f6; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .booking-details { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .footer { background-color: #f1f5f9; padding: 15px; text-align: center; color: #64748b; }
+        .success { color: #10b981; font-weight: bold; }
+        .important { background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✅ Booking Confirmed!</h1>
+        <p>{{ event.title }}</p>
+    </div>
+
+    <div class="content">
+        <p>Dear {{ booking.customer_name }},</p>
+
+        <p>Thank you for booking <strong>{{ event.title }}</strong>! Your booking has been confirmed.</p>
+
+        <div class="booking-details">
+            <h3>📅 Event Details</h3>
+            <p><strong>Confirmation Number:</strong> {{ booking.confirmation_number }}</p>
+            <p><strong>Event:</strong> {{ event.title }}</p>
+            <p><strong>Date:</strong> {{ event.start_time|date:"F j, Y" }}</p>
+            <p><strong>Time:</strong> {{ event.start_time|time:"g:i A" }}</p>
+            <p><strong>Location:</strong> {{ monastery.name }}</p>
+            <p><strong>Address:</strong> {{ monastery.address }}</p>
+
+            <hr style="margin: 15px 0;">
+
+            <h3>👤 Customer Details</h3>
+            <p><strong>Name:</strong> {{ booking.customer_name }}</p>
+            <p><strong>Email:</strong> {{ booking.customer_email }}</p>
+            <p><strong>Phone:</strong> {{ booking.customer_phone }}</p>
+            <p><strong>Number of People:</strong> {{ booking.number_of_people }} ({{ booking.number_of_adults }} adults, {{ booking.number_of_children }} children)</p>
+
+            {% if booking.special_requirements %}
+            <p><strong>Special Requirements:</strong> {{ booking.special_requirements }}</p>
+            {% endif %}
+
+            {% if booking.accessibility_needs %}
+            <p><strong>Accessibility Requirements:</strong> {{ booking.accessibility_needs }}</p>
+            {% endif %}
+
+            <hr style="margin: 15px 0;">
+
+            <h3>💰 Payment Details</h3>
+            <p><strong>Total Amount:</strong> {% if booking.total_amount > 0 %}₹{{ booking.total_amount }}{% else %}Free{% endif %}</p>
+            <p><strong>Payment Status:</strong> <span class="success">{{ booking.get_payment_status_display }}</span></p>
+        </div>
+
+        <div class="important">
+            <h3>⚠️ Important Information</h3>
+            <ul>
+                <li>Please arrive 15 minutes before the scheduled time</li>
+                <li>Bring a printed copy of this confirmation or show it on your mobile device</li>
+                <li>Modest dress code is required</li>
+                <li>Photography may be restricted in certain areas</li>
+                <li>For any changes or cancellations, contact us at least 24 hours in advance</li>
+            </ul>
+
+            {% if monastery.phone or monastery.email %}
+            <p><strong>Contact Information:</strong></p>
+            {% if monastery.phone %}<p>📞 Phone: {{ monastery.phone }}</p>{% endif %}
+            {% if monastery.email %}<p>📧 Email: {{ monastery.email }}</p>{% endif %}
+            {% endif %}
+        </div>
+
+        <p>Thank you for your interest in our cultural events!</p>
+
+        <p>Best regards,<br>
+        {{ monastery.name }}<br>
+        <strong>Monastery360 Team</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>This is an automated confirmation email. Please keep this for your records.</p>
+        <p>© 2025 Monastery360 - Discover Sacred Monasteries of Sikkim</p>
+    </div>
+</body>
+</html>

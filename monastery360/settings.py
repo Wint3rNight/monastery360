@@ -181,6 +181,11 @@ X_FRAME_OPTIONS = 'DENY'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@monastery360.com'
 
+# Authentication settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Firebase Configuration
 FIREBASE_API_KEY = env('FIREBASE_API_KEY', default='')
 FIREBASE_AUTH_DOMAIN = env('FIREBASE_AUTH_DOMAIN', default='')
@@ -217,3 +222,9 @@ LOGGING = {
         },
     },
 }
+
+
+# Authentication settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

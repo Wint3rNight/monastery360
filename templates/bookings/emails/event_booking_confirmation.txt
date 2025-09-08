@@ -1,0 +1,50 @@
+Subject: Event Booking Confirmation - {{ booking.confirmation_number }}
+
+Dear {{ booking.customer_name }},
+
+Thank you for booking {{ event.title }}! Your booking has been confirmed.
+
+BOOKING DETAILS
+===============
+Confirmation Number: {{ booking.confirmation_number }}
+Event: {{ event.title }}
+Date: {{ event.start_time|date:"F j, Y" }}
+Time: {{ event.start_time|time:"g:i A" }}
+Location: {{ monastery.name }}
+Address: {{ monastery.address }}
+
+CUSTOMER DETAILS
+================
+Name: {{ booking.customer_name }}
+Email: {{ booking.customer_email }}
+Phone: {{ booking.customer_phone }}
+Number of People: {{ booking.number_of_people }} ({{ booking.number_of_adults }} adults, {{ booking.number_of_children }} children)
+
+{% if booking.special_requirements %}
+SPECIAL REQUIREMENTS
+===================
+{{ booking.special_requirements }}
+{% endif %}
+
+{% if booking.accessibility_needs %}
+ACCESSIBILITY REQUIREMENTS
+=========================
+{{ booking.accessibility_needs }}
+{% endif %}
+
+IMPORTANT INFORMATION
+====================
+- Please arrive 15 minutes before the scheduled time
+- Bring a printed copy of this confirmation or show it on your mobile device
+- Modest dress code is required
+- Photography may be restricted in certain areas
+- For any changes or cancellations, contact us at least 24 hours in advance
+
+{% if monastery.phone %}Contact: {{ monastery.phone }}{% endif %}
+{% if monastery.email %}Email: {{ monastery.email }}{% endif %}
+
+Thank you for your interest in our cultural events!
+
+Best regards,
+{{ monastery.name }}
+Monastery360 Team

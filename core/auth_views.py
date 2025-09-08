@@ -28,6 +28,20 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ("username", "first_name", "last_name", "email", "password1", "password2")
 
+    def clean_email(self):
+        """Ensure email is unique."""
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            raise ValidationError("A user with this email already exists.")
+        return email
+
+    def clean_username(self):
+        """Ensure username is unique and valid."""
+        username = self.cleaned_data.get('username')
+        if username and User.objects.filter(username=username).exists():
+            raise ValidationError("A user with this username already exists.")
+        return username
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
@@ -42,16 +56,20 @@ class CustomAuthenticationForm(AuthenticationForm):
     """Custom authentication form that allows login with email or username."""
 
     def clean_username(self):
-        username = self.cleaned_data['username']
+        username = self.cleaned_data.get('username')
+        if not username:
+            return username
 
         # Check if the input is an email
         if '@' in username:
             try:
                 # Try to find user by email
                 user = User.objects.get(email=username)
-                username = user.username
+                return user.username
             except User.DoesNotExist:
-                pass  # Let the normal authentication handle the error
+                # If no user found with this email, return the original input
+                # Django's authenticate will handle the failure
+                return username
 
         return username
 
@@ -59,6 +77,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 def login_view(request):
     """Handle user login and registration."""
 
+    # If user is already authenticated, redirect them
     if request.user.is_authenticated:
         return redirect('core:home')
 
@@ -72,8 +91,10 @@ def login_view(request):
             if login_form.is_valid():
                 username = login_form.cleaned_data['username']
                 password = login_form.cleaned_data['password']
+
+                # Authenticate user
                 user = authenticate(request, username=username, password=password)
-                if user is not None:
+                if user is not None and user.is_active:
                     login(request, user)
                     messages.success(request, f'Welcome back, {user.first_name or user.username}!')
                     next_url = request.GET.get('next', reverse('core:home'))
@@ -87,12 +108,33 @@ def login_view(request):
             # Handle signup
             signup_form = CustomUserCreationForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
-                login(request, user)
-                messages.success(request, f'Welcome to Monastery360, {user.first_name}!')
-                return redirect('core:home')
+                try:
+                    # Ensure we're not already logged in
+                    if request.user.is_authenticated:
+                        logout(request)
+
+                    # Create the user
+                    user = signup_form.save()
+
+                    # Verify the user was created correctly
+                    if user and user.pk:
+                        # Double check the user exists and get fresh instance
+                        created_user = User.objects.get(pk=user.pk)
+
+                        # Log the newly created user in
+                        login(request, created_user)
+                        messages.success(request, f'Welcome to Monastery360, {created_user.first_name}! Your account "{created_user.username}" has been created successfully.')
+                        return redirect('core:home')
+                    else:
+                        messages.error(request, 'Account creation failed. Please try again.')
+                except Exception as e:
+                    messages.error(request, f'Account creation failed: {str(e)}')
             else:
-                messages.error(request, 'Please correct the errors below.')
+                # Show specific form errors
+                for field, errors in signup_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field.title()}: {error}')
+                messages.error(request, 'Please correct the errors above.')
 
     return render(request, 'auth/login_test.html', {
         'login_form': login_form,
@@ -116,9 +158,17 @@ def signup_redirect(request):
 
 @login_required
 def profile_view(request):
-    """User profile view."""
+    """User profile view with bookings."""
+    from bookings.models import EventBooking
+
+    # Get user's event bookings
+    user_bookings = EventBooking.objects.filter(
+        customer_email=request.user.email
+    ).select_related('event', 'event__monastery').order_by('-created_at')
+
     return render(request, 'auth/profile.html', {
         'user': request.user,
+        'bookings': user_bookings,
     })
 
 

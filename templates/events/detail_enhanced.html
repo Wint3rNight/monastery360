@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.title }} - {{ monastery.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const EventDetailPage = () => {
+            const [isLoaded, setIsLoaded] = useState(false);
+
+            useEffect(() => {
+                setIsLoaded(true);
+            }, []);
+
+            const eventData = {
+                id: {{ event.id }},
+                title: "{{ event.title|escapejs }}",
+                description: "{{ event.description|escapejs }}",
+                shortDescription: "{{ event.short_description|escapejs }}",
+                eventType: "{{ event.get_event_type_display|escapejs }}",
+                startTime: "{{ event.start_time|date:'F j, Y' }}",
+                startTimeFormatted: "{{ event.start_time|time:'g:i A' }}",
+                endTime: "{{ event.end_time|date:'F j, Y' }}",
+                endTimeFormatted: "{{ event.end_time|time:'g:i A' }}",
+                isAllDay: {{ event.is_all_day|yesno:"true,false" }},
+                entryFee: "{{ event.entry_fee|escapejs }}",
+                language: "{{ event.language|escapejs }}",
+                requiresRegistration: {{ event.requires_registration|yesno:"true,false" }},
+                maxParticipants: {{ event.max_participants|default:"null" }},
+                locationDetails: "{{ event.location_details|escapejs }}",
+                specialInstructions: "{{ event.special_instructions|escapejs }}",
+                dressCode: "{{ event.dress_code|escapejs }}",
+                contactPerson: "{{ event.contact_person|escapejs }}",
+                contactPhone: "{{ event.contact_phone|escapejs }}",
+                contactEmail: "{{ event.contact_email|escapejs }}",
+                image: {% if event.image %}"{{ event.image.url }}"{% else %}""{% endif %},
+                status: "{{ event.status }}"
+            };
+
+            const monasteryData = {
+                name: "{{ monastery.name|escapejs }}",
+                address: "{{ monastery.address|escapejs }}",
+                phone: "{{ monastery.phone|escapejs }}",
+                email: "{{ monastery.email|escapejs }}",
+                website: "{{ monastery.website|escapejs }}",
+                description: "{{ monastery.description|escapejs }}"
+            };
+
+            return (
+                <div className={`min-h-screen bg-gray-50 ${isLoaded ? 'animate-fade-in' : ''}`}>
+                    {/* Hero Section */}
+                    <div className="gradient-bg text-white">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                                {/* Event Image */}
+                                <div className="lg:col-span-1">
+                                    {eventData.image ? (
+                                        <img
+                                            src={eventData.image}
+                                            alt={eventData.title}
+                                            className="w-full h-72 lg:h-96 object-cover rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-72 lg:h-96 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+                                            <div className="text-center">
+                                                <i className="fas fa-calendar-alt text-8xl text-white/70 mb-4"></i>
+                                                <p className="text-white/80 text-lg font-medium">{eventData.eventType}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Event Details */}
+                                <div className="lg:col-span-2 space-y-8">
+                                    <div>
+                                        <div className="flex flex-wrap items-center gap-3 mb-6">
+                                            <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm">
+                                                {eventData.eventType}
+                                            </span>
+                                            <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                                                eventData.status === 'upcoming' ? 'bg-green-100 text-green-800' :
+                                                eventData.status === 'ongoing' ? 'bg-blue-100 text-blue-800' :
+                                                'bg-gray-100 text-gray-800'
+                                            }`}>
+                                                {eventData.status.charAt(0).toUpperCase() + eventData.status.slice(1)}
+                                            </span>
+                                        </div>
+
+                                        <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                                            {eventData.title}
+                                        </h1>
+
+                                        <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
+                                            {eventData.shortDescription}
+                                        </p>
+                                    </div>
+
+                                    {/* Event Meta Info */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+                                            <div className="flex items-center mb-3">
+                                                <i className="fas fa-calendar-alt text-white/70 text-xl mr-4"></i>
+                                                <span className="text-white/70 text-sm font-medium">Date</span>
+                                            </div>
+                                            <p className="font-semibold text-lg">
+                                                {eventData.startTime}
+                                                {eventData.startTime !== eventData.endTime && ` - ${eventData.endTime}`}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+                                            <div className="flex items-center mb-3">
+                                                <i className="fas fa-clock text-white/70 text-xl mr-4"></i>
+                                                <span className="text-white/70 text-sm font-medium">Time</span>
+                                            </div>
+                                            <p className="font-semibold text-lg">
+                                                {eventData.isAllDay ? 'All Day' :
+                                                `${eventData.startTimeFormatted} - ${eventData.endTimeFormatted}`}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+                                            <div className="flex items-center mb-3">
+                                                <i className="fas fa-map-marker-alt text-white/70 text-xl mr-4"></i>
+                                                <span className="text-white/70 text-sm font-medium">Location</span>
+                                            </div>
+                                            <p className="font-semibold text-lg">{monasteryData.name}</p>
+                                            <p className="text-sm text-white/70 mt-1">{monasteryData.address}</p>
+                                        </div>
+
+                                        <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+                                            <div className="flex items-center mb-3">
+                                                <i className="fas fa-tag text-white/70 text-xl mr-4"></i>
+                                                <span className="text-white/70 text-sm font-medium">Entry Fee</span>
+                                            </div>
+                                            <p className="font-semibold text-lg">{eventData.entryFee}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        {eventData.requiresRegistration && (
+                                            <a href={`/bookings/event/${eventData.id}/`}
+                                               className="inline-flex items-center justify-center px-10 py-5 bg-white text-purple-600 font-bold text-lg rounded-2xl hover:bg-gray-100 hover:scale-105 transition-all shadow-xl">
+                                                <i className="fas fa-calendar-check text-2xl mr-4"></i>
+                                                Book Now
+                                            </a>
+                                        )}
+
+                                        <button
+                                            onClick={() => window.history.back()}
+                                            className="inline-flex items-center justify-center px-10 py-5 bg-white/20 text-white font-semibold text-lg rounded-2xl hover:bg-white/30 transition-all backdrop-blur-sm border border-white/20">
+                                            <i className="fas fa-arrow-left text-xl mr-4"></i>
+                                            Back to Calendar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                            {/* Event Description */}
+                            <div className="lg:col-span-2 space-y-8">
+                                <div className="bg-white rounded-3xl shadow-xl p-10 card-hover">
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                                        <i className="fas fa-info-circle text-blue-500 mr-4"></i>
+                                        About This Event
+                                    </h2>
+                                    <div className="prose prose-xl max-w-none text-gray-700 leading-relaxed">
+                                        {eventData.description.split('\n').map((paragraph, index) => (
+                                            paragraph.trim() && (
+                                                <p key={index} className="mb-6 text-lg">{paragraph}</p>
+                                            )
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Special Instructions */}
+                                {eventData.specialInstructions && (
+                                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-3xl p-10 shadow-lg">
+                                        <div className="flex items-start">
+                                            <div className="flex-shrink-0 bg-amber-100 p-4 rounded-full">
+                                                <i className="fas fa-exclamation-triangle text-amber-600 text-2xl"></i>
+                                            </div>
+                                            <div className="ml-6">
+                                                <h3 className="text-2xl font-bold text-amber-800 mb-4">
+                                                    Special Instructions
+                                                </h3>
+                                                <p className="text-amber-700 text-lg leading-relaxed">
+                                                    {eventData.specialInstructions}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Additional Details */}
+                                <div className="bg-white rounded-3xl shadow-xl p-10 card-hover">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+                                        <i className="fas fa-list-ul text-green-500 mr-4"></i>
+                                        Event Details
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-6">
+                                            {eventData.language && (
+                                                <div className="p-4 bg-blue-50 rounded-xl">
+                                                    <dt className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Language</dt>
+                                                    <dd className="mt-2 text-lg text-blue-900 font-medium">{eventData.language}</dd>
+                                                </div>
+                                            )}
+
+                                            {eventData.dressCode && (
+                                                <div className="p-4 bg-purple-50 rounded-xl">
+                                                    <dt className="text-sm font-semibold text-purple-600 uppercase tracking-wide">Dress Code</dt>
+                                                    <dd className="mt-2 text-lg text-purple-900 font-medium">{eventData.dressCode}</dd>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            {eventData.maxParticipants && (
+                                                <div className="p-4 bg-green-50 rounded-xl">
+                                                    <dt className="text-sm font-semibold text-green-600 uppercase tracking-wide">Max Participants</dt>
+                                                    <dd className="mt-2 text-lg text-green-900 font-medium">{eventData.maxParticipants} people</dd>
+                                                </div>
+                                            )}
+
+                                            {eventData.locationDetails && (
+                                                <div className="p-4 bg-indigo-50 rounded-xl">
+                                                    <dt className="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Specific Location</dt>
+                                                    <dd className="mt-2 text-lg text-indigo-900 font-medium">{eventData.locationDetails}</dd>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sidebar */}
+                            <div className="lg:col-span-1 space-y-8">
+                                {/* Monastery Information */}
+                                <div className="bg-white rounded-3xl shadow-xl p-8 card-hover">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <i className="fas fa-map-marker-alt text-red-500 mr-3"></i>
+                                        Venue Information
+                                    </h3>
+                                    <div className="space-y-6">
+                                        <div className="border-l-4 border-blue-500 pl-6">
+                                            <h4 className="font-bold text-xl text-gray-900">{monasteryData.name}</h4>
+                                            <p className="text-gray-600 mt-2 leading-relaxed">{monasteryData.address}</p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            {monasteryData.phone && (
+                                                <div className="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                    <i className="fas fa-phone text-blue-500 text-lg w-6"></i>
+                                                    <a href={`tel:${monasteryData.phone}`}
+                                                       className="ml-4 text-blue-600 hover:underline font-medium">
+                                                        {monasteryData.phone}
+                                                    </a>
+                                                </div>
+                                            )}
+
+                                            {monasteryData.email && (
+                                                <div className="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                    <i className="fas fa-envelope text-green-500 text-lg w-6"></i>
+                                                    <a href={`mailto:${monasteryData.email}`}
+                                                       className="ml-4 text-green-600 hover:underline font-medium">
+                                                        {monasteryData.email}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Contact Information */}
+                                {(eventData.contactPerson || eventData.contactPhone || eventData.contactEmail) && (
+                                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100">
+                                        <h3 className="text-xl font-bold text-blue-900 mb-6 flex items-center">
+                                            <i className="fas fa-address-book text-blue-600 mr-3"></i>
+                                            Contact Information
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {eventData.contactPerson && (
+                                                <div className="p-4 bg-white rounded-xl shadow-sm">
+                                                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Contact Person</span>
+                                                    <p className="text-blue-900 font-medium mt-1">{eventData.contactPerson}</p>
+                                                </div>
+                                            )}
+
+                                            {eventData.contactPhone && (
+                                                <div className="p-4 bg-white rounded-xl shadow-sm">
+                                                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Phone</span>
+                                                    <p className="mt-1">
+                                                        <a href={`tel:${eventData.contactPhone}`}
+                                                           className="text-blue-600 hover:underline font-medium">
+                                                            {eventData.contactPhone}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {eventData.contactEmail && (
+                                                <div className="p-4 bg-white rounded-xl shadow-sm">
+                                                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Email</span>
+                                                    <p className="mt-1">
+                                                        <a href={`mailto:${eventData.contactEmail}`}
+                                                           className="text-blue-600 hover:underline font-medium">
+                                                            {eventData.contactEmail}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Quick Actions */}
+                                <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-8">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <i className="fas fa-bolt text-yellow-500 mr-3"></i>
+                                        Quick Actions
+                                    </h3>
+                                    <div className="space-y-4">
+                                        <a href="/events/full-calendar/"
+                                           className="w-full inline-flex items-center justify-center px-6 py-4 bg-white text-gray-700 rounded-xl hover:bg-gray-50 hover:scale-105 transition-all shadow-md font-medium">
+                                            <i className="fas fa-calendar text-blue-500 mr-3"></i>
+                                            View All Events
+                                        </a>
+
+                                        <button onClick={() => window.print()}
+                                                className="w-full inline-flex items-center justify-center px-6 py-4 bg-white text-gray-700 rounded-xl hover:bg-gray-50 hover:scale-105 transition-all shadow-md font-medium">
+                                            <i className="fas fa-print text-green-500 mr-3"></i>
+                                            Print Event Details
+                                        </button>
+
+                                        <button onClick={() => {
+                                                    const shareData = {
+                                                        title: eventData.title,
+                                                        text: eventData.shortDescription,
+                                                        url: window.location.href
+                                                    };
+                                                    if (navigator.share) {
+                                                        navigator.share(shareData);
+                                                    } else {
+                                                        navigator.clipboard.writeText(window.location.href);
+                                                        alert('Event link copied to clipboard!');
+                                                    }
+                                                }}
+                                                className="w-full inline-flex items-center justify-center px-6 py-4 bg-white text-gray-700 rounded-xl hover:bg-gray-50 hover:scale-105 transition-all shadow-md font-medium">
+                                            <i className="fas fa-share text-purple-500 mr-3"></i>
+                                            Share Event
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<EventDetailPage />, document.getElementById('root'));
+    </script>
+</body>
+</html>

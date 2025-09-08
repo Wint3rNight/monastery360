@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Event - {{ event.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <!-- Header -->
+        <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+            <div class="text-center">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                    <i class="fas fa-ticket-alt text-white text-3xl"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Book Your Spot</h1>
+                <h2 class="text-2xl text-gray-700 mb-2">{{ event.title }}</h2>
+                <p class="text-gray-600">{{ event.short_description }}</p>
+            </div>
+
+            <!-- Event Info -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-blue-50 p-6 rounded-2xl text-center">
+                    <i class="fas fa-calendar text-blue-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-900 mb-2">Date</h3>
+                    <p class="text-gray-700">{{ event.start_time|date:"F j, Y" }}</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-2xl text-center">
+                    <i class="fas fa-clock text-green-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-900 mb-2">Time</h3>
+                    <p class="text-gray-700">{{ event.start_time|time:"g:i A" }}</p>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-2xl text-center">
+                    <i class="fas fa-map-marker-alt text-purple-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-900 mb-2">Location</h3>
+                    <p class="text-gray-700">{{ monastery.name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">
+                <i class="fas fa-user-edit text-blue-600 mr-3"></i>
+                Your Details
+            </h3>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Personal Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="customer_name" class="block text-sm font-bold text-gray-700 mb-2">
+                            Full Name <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input
+                                type="text"
+                                id="customer_name"
+                                name="customer_name"
+                                required
+                                class="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all"
+                                placeholder="Enter your full name"
+                            />
+                            <i class="fas fa-user absolute left-4 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="customer_email" class="block text-sm font-bold text-gray-700 mb-2">
+                            Email Address <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input
+                                type="email"
+                                id="customer_email"
+                                name="customer_email"
+                                required
+                                class="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all"
+                                placeholder="your.email@example.com"
+                            />
+                            <i class="fas fa-envelope absolute left-4 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="customer_phone" class="block text-sm font-bold text-gray-700 mb-2">
+                        Phone Number <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input
+                            type="tel"
+                            id="customer_phone"
+                            name="customer_phone"
+                            required
+                            class="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all"
+                            placeholder="+91 12345 67890"
+                        />
+                        <i class="fas fa-phone absolute left-4 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Group Details -->
+                <div class="bg-gray-50 p-6 rounded-2xl">
+                    <h4 class="text-lg font-bold text-gray-900 mb-4">
+                        <i class="fas fa-users text-green-600 mr-2"></i>
+                        Group Details
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="number_of_people" class="block text-sm font-bold text-gray-700 mb-2">
+                                Total People <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                id="number_of_people"
+                                name="number_of_people"
+                                required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white"
+                            >
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="3">3 People</option>
+                                <option value="4">4 People</option>
+                                <option value="5">5 People</option>
+                                <option value="6">6 People</option>
+                                <option value="7">7 People</option>
+                                <option value="8">8 People</option>
+                                <option value="9">9 People</option>
+                                <option value="10">10 People</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="number_of_adults" class="block text-sm font-bold text-gray-700 mb-2">
+                                Adults
+                            </label>
+                            <select
+                                id="number_of_adults"
+                                name="number_of_adults"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white"
+                            >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="number_of_children" class="block text-sm font-bold text-gray-700 mb-2">
+                                Children
+                            </label>
+                            <select
+                                id="number_of_children"
+                                name="number_of_children"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white"
+                            >
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Requirements -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="special_requirements" class="block text-sm font-bold text-gray-700 mb-2">
+                            <i class="fas fa-clipboard-list text-orange-600 mr-2"></i>
+                            Dietary Requirements
+                        </label>
+                        <textarea
+                            id="special_requirements"
+                            name="special_requirements"
+                            rows="4"
+                            placeholder="Any dietary restrictions, allergies, or special needs..."
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all resize-none"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label for="accessibility_needs" class="block text-sm font-bold text-gray-700 mb-2">
+                            <i class="fas fa-wheelchair text-blue-600 mr-2"></i>
+                            Accessibility Requirements
+                        </label>
+                        <textarea
+                            id="accessibility_needs"
+                            name="accessibility_needs"
+                            rows="4"
+                            placeholder="Wheelchair access, mobility assistance, etc..."
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all resize-none"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="booking_notes" class="block text-sm font-bold text-gray-700 mb-2">
+                        <i class="fas fa-sticky-note text-purple-600 mr-2"></i>
+                        Additional Notes
+                    </label>
+                    <textarea
+                        id="booking_notes"
+                        name="booking_notes"
+                        rows="3"
+                        placeholder="Any additional information, questions, or special requests..."
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Booking Summary -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
+                    <h4 class="text-lg font-bold text-gray-900 mb-4">
+                        <i class="fas fa-receipt text-blue-600 mr-2"></i>
+                        Booking Summary
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex justify-between py-2 border-b border-blue-200">
+                                <span class="font-semibold text-gray-700">Event:</span>
+                                <span class="text-gray-900">{{ event.title }}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-blue-200">
+                                <span class="font-semibold text-gray-700">Date:</span>
+                                <span class="text-gray-900">{{ event.start_time|date:"F j, Y" }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between py-2 border-b border-blue-200">
+                                <span class="font-semibold text-gray-700">Time:</span>
+                                <span class="text-gray-900">{{ event.start_time|time:"g:i A" }}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-blue-200">
+                                <span class="font-semibold text-gray-700">Fee:</span>
+                                <span class="text-gray-900 font-bold text-lg">
+                                    {% if event.entry_fee == 'Free' %}
+                                        <span class="text-green-600">FREE</span>
+                                    {% else %}
+                                        {{ event.entry_fee }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6">
+                    <a href="{% url 'events:calendar' %}"
+                       class="inline-flex items-center px-8 py-4 border-2 border-gray-300 rounded-2xl shadow-sm text-lg font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all">
+                        <i class="fas fa-arrow-left text-xl mr-3"></i>
+                        Back to Events
+                    </a>
+
+                    <button type="submit"
+                            class="inline-flex items-center px-12 py-5 border border-transparent text-xl font-bold rounded-2xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-2xl transition-all transform hover:scale-105">
+                        <i class="fas fa-calendar-check text-2xl mr-4"></i>
+                        Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

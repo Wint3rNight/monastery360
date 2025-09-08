@@ -48,14 +48,91 @@
         {
           "id": "rumtek_exterior",
           "title": "Monastery Exterior",
-          "description": "The stunning exterior architecture of Rumtek Monastery set against the Himalayan backdrop.",
-          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "description": "The stunning exterior architecture showcasing traditional Tibetan monastery design.",
+          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
-          "yaw": 270,
-          "pitch": -5,
-          "hfov": 130,
+          "yaw": 90,
+          "pitch": 5,
+          "hfov": 100,
           "audio": "/static/audio/rumtek_exterior.mp3",
-          "audioDuration": 42
+          "audioDuration": 42,
+          "hotspots": [
+            {
+              "pitch": 0,
+              "yaw": 180,
+              "type": "info",
+              "text": "Golden Roof",
+              "description": "Traditional golden roof design typical of Tibetan monasteries"
+            }
+          ]
+        }
+      ]
+    },
+    "rumtek-monastery": {
+      "name": "Rumtek Monastery",
+      "views": [
+        {
+          "id": "rumtek_main_hall",
+          "title": "Main Prayer Hall",
+          "description": "The magnificent main prayer hall of Rumtek Monastery with intricate Tibetan Buddhist artwork and sacred artifacts.",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": -10,
+          "hfov": 110,
+          "audio": "/static/audio/rumtek_main_hall.mp3",
+          "audioDuration": 45,
+          "hotspots": [
+            {
+              "pitch": -2,
+              "yaw": 45,
+              "type": "info",
+              "text": "Sacred Buddha Statue",
+              "description": "This golden Buddha statue is over 300 years old"
+            }
+          ]
+        },
+        {
+          "id": "rumtek_courtyard",
+          "title": "Monastery Courtyard",
+          "description": "The central courtyard where monks gather for ceremonies and daily prayers.",
+          "url": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "type": "equirectangular",
+          "yaw": 180,
+          "pitch": 0,
+          "hfov": 120,
+          "audio": "/static/audio/rumtek_courtyard.mp3",
+          "audioDuration": 38,
+          "hotspots": [
+            {
+              "pitch": 10,
+              "yaw": 90,
+              "type": "info",
+              "text": "Prayer Wheels",
+              "description": "Ancient prayer wheels containing sacred mantras"
+            }
+          ]
+        },
+        {
+          "id": "rumtek_exterior",
+          "title": "Monastery Exterior",
+          "description": "The stunning exterior architecture showcasing traditional Tibetan monastery design.",
+          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 90,
+          "pitch": 5,
+          "hfov": 100,
+          "audio": "/static/audio/rumtek_exterior.mp3",
+          "audioDuration": 42,
+          "hotspots": [
+            {
+              "pitch": 0,
+              "yaw": 180,
+              "type": "info",
+              "text": "Golden Roof",
+              "description": "Traditional golden roof design typical of Tibetan monasteries"
+            }
+          ]
         }
       ]
     },
@@ -64,39 +141,92 @@
       "views": [
         {
           "id": "pemayangtse_main_hall",
-          "title": "Main Prayer Hall",
-          "description": "The ancient prayer hall of Pemayangtse, one of Sikkim's most important monasteries.",
-          "url": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "title": "Main Assembly Hall",
+          "description": "The grand assembly hall of Pemayangtse, one of Sikkim's oldest and most revered monasteries.",
+          "url": "https://images.unsplash.com/photo-1564149504326-bb1ee6ba8013?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
-          "yaw": 180,
-          "pitch": 0,
-          "hfov": 120,
+          "yaw": 0,
+          "pitch": -5,
+          "hfov": 115,
           "audio": "/static/audio/pemayangtse_main_hall.mp3",
-          "audioDuration": 52
+          "audioDuration": 50,
+          "hotspots": [
+            {
+              "pitch": 5,
+              "yaw": 0,
+              "type": "info",
+              "text": "Ancient Thangkas",
+              "description": "Rare 17th-century Buddhist paintings depicting the life of Buddha"
+            }
+          ]
         },
         {
-          "id": "pemayangtse_meditation_hall",
-          "title": "Meditation Hall",
-          "description": "The serene meditation hall where monks practice daily contemplation.",
-          "url": "https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "id": "pemayangtse_sculpture",
+          "title": "Seven-Story Sculpture",
+          "description": "The famous seven-story wooden sculpture representing the heavenly palace of Guru Rinpoche.",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
-          "yaw": 90,
-          "pitch": 5,
-          "hfov": 100,
-          "audio": "/static/audio/pemayangtse_meditation.mp3",
-          "audioDuration": 35
+          "yaw": 45,
+          "pitch": 10,
+          "hfov": 90,
+          "audio": "/static/audio/pemayangtse_sculpture.mp3",
+          "audioDuration": 55,
+          "hotspots": [
+            {
+              "pitch": 15,
+              "yaw": 0,
+              "type": "info",
+              "text": "Heavenly Palace",
+              "description": "Intricate wooden carving depicting celestial realms"
+            }
+          ]
+        }
+      ]
+    },
+    "pemayangtse-monastery": {
+      "name": "Pemayangtse Monastery",
+      "views": [
+        {
+          "id": "pemayangtse_main_hall",
+          "title": "Main Assembly Hall",
+          "description": "The grand assembly hall of Pemayangtse, one of Sikkim's oldest and most revered monasteries.",
+          "url": "https://images.unsplash.com/photo-1564149504326-bb1ee6ba8013?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": -5,
+          "hfov": 115,
+          "audio": "/static/audio/pemayangtse_main_hall.mp3",
+          "audioDuration": 50,
+          "hotspots": [
+            {
+              "pitch": 5,
+              "yaw": 0,
+              "type": "info",
+              "text": "Ancient Thangkas",
+              "description": "Rare 17th-century Buddhist paintings depicting the life of Buddha"
+            }
+          ]
         },
         {
-          "id": "pemayangtse_view",
-          "title": "Himalayan View",
-          "description": "Breathtaking panoramic view of the Himalayas from Pemayangtse Monastery.",
-          "url": "https://images.unsplash.com/photo-1578549758804-be4094486ffb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "id": "pemayangtse_sculpture",
+          "title": "Seven-Story Sculpture",
+          "description": "The famous seven-story wooden sculpture representing the heavenly palace of Guru Rinpoche.",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
-          "yaw": 225,
-          "pitch": -15,
-          "hfov": 135,
-          "audio": "/static/audio/pemayangtse_view.mp3",
-          "audioDuration": 28
+          "yaw": 45,
+          "pitch": 10,
+          "hfov": 90,
+          "audio": "/static/audio/pemayangtse_sculpture.mp3",
+          "audioDuration": 55,
+          "hotspots": [
+            {
+              "pitch": 15,
+              "yaw": 0,
+              "type": "info",
+              "text": "Heavenly Palace",
+              "description": "Intricate wooden carving depicting celestial realms"
+            }
+          ]
         }
       ]
     },
@@ -104,44 +234,293 @@
       "name": "Enchey Monastery",
       "views": [
         {
-          "id": "enchey_prayer_hall",
-          "title": "Prayer Hall with Murals",
-          "description": "The beautiful prayer hall featuring traditional Buddhist murals and artwork.",
-          "url": "https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "id": "enchey_main_hall",
+          "title": "Main Prayer Hall",
+          "description": "The sacred prayer hall of Enchey Monastery, built in 1909, overlooking Gangtok city.",
+          "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
-          "yaw": 90,
-          "pitch": 5,
-          "hfov": 100,
-          "audio": "/static/audio/enchey_prayer_hall.mp3",
-          "audioDuration": 48
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/enchey_main_hall.mp3",
+          "audioDuration": 40,
+          "hotspots": [
+            {
+              "pitch": -5,
+              "yaw": 0,
+              "type": "info",
+              "text": "Guru Lhakhang",
+              "description": "Sacred shrine dedicated to Guru Padmasambhava"
+            }
+          ]
         },
         {
-          "id": "enchey_dance_ground",
-          "title": "Cham Dance Ground",
-          "description": "The sacred ground where the annual Cham dance festival takes place.",
-          "url": "https://images.unsplash.com/photo-1582719471137-c3967ffb1c42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "id": "enchey_viewpoint",
+          "title": "City Viewpoint",
+          "description": "Panoramic view of Gangtok city from the monastery premises.",
+          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 180,
+          "pitch": -10,
+          "hfov": 130,
+          "audio": "/static/audio/enchey_viewpoint.mp3",
+          "audioDuration": 35,
+          "hotspots": [
+            {
+              "pitch": -15,
+              "yaw": 90,
+              "type": "info",
+              "text": "Gangtok Valley",
+              "description": "Spectacular view of the capital city nestled in the mountains"
+            }
+          ]
+        }
+      ]
+    },
+    "enchey-monastery": {
+      "name": "Enchey Monastery",
+      "views": [
+        {
+          "id": "enchey_main_hall",
+          "title": "Main Prayer Hall",
+          "description": "The sacred prayer hall of Enchey Monastery, built in 1909, overlooking Gangtok city.",
+          "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/enchey_main_hall.mp3",
+          "audioDuration": 40,
+          "hotspots": [
+            {
+              "pitch": -5,
+              "yaw": 0,
+              "type": "info",
+              "text": "Guru Lhakhang",
+              "description": "Sacred shrine dedicated to Guru Padmasambhava"
+            }
+          ]
+        },
+        {
+          "id": "enchey_viewpoint",
+          "title": "City Viewpoint",
+          "description": "Panoramic view of Gangtok city from the monastery premises.",
+          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 180,
+          "pitch": -10,
+          "hfov": 130,
+          "audio": "/static/audio/enchey_viewpoint.mp3",
+          "audioDuration": 35,
+          "hotspots": [
+            {
+              "pitch": -15,
+              "yaw": 90,
+              "type": "info",
+              "text": "Gangtok Valley",
+              "description": "Spectacular view of the capital city nestled in the mountains"
+            }
+          ]
+        }
+      ]
+    },
+    "dubdi-monastery": {
+      "name": "Dubdi Monastery",
+      "views": [
+        {
+          "id": "dubdi_main_hall",
+          "title": "Historic Prayer Hall",
+          "description": "The ancient prayer hall of Dubdi, Sikkim's oldest monastery founded in 1701.",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/dubdi_main_hall.mp3",
+          "audioDuration": 48,
+          "hotspots": [
+            {
+              "pitch": 0,
+              "yaw": 45,
+              "type": "info",
+              "text": "Founding Relics",
+              "description": "Original artifacts from the monastery's founding in 1701"
+            }
+          ]
+        },
+        {
+          "id": "dubdi_meditation",
+          "title": "Meditation Cave",
+          "description": "The sacred meditation cave where Lhatsun Chempo practiced.",
+          "url": "https://images.unsplash.com/photo-1564149504326-bb1ee6ba8013?q=80&w=2070&auto=format&fit=crop",
           "type": "equirectangular",
           "yaw": 0,
           "pitch": 10,
-          "hfov": 105,
-          "audio": "/static/audio/enchey_dance_ground.mp3",
-          "audioDuration": 33
+          "hfov": 100,
+          "audio": "/static/audio/dubdi_meditation.mp3",
+          "audioDuration": 52,
+          "hotspots": [
+            {
+              "pitch": 5,
+              "yaw": 0,
+              "type": "info",
+              "text": "Sacred Cave",
+              "description": "Natural cave used for meditation by the monastery's founder"
+            }
+          ]
+        }
+      ]
+    },
+    "tashiding-monastery": {
+      "name": "Tashiding Monastery",
+      "views": [
+        {
+          "id": "tashiding_main_hall",
+          "title": "Sacred Assembly Hall",
+          "description": "The holy assembly hall of Tashiding, one of the most sacred Nyingma monasteries.",
+          "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 115,
+          "audio": "/static/audio/tashiding_main_hall.mp3",
+          "audioDuration": 45,
+          "hotspots": [
+            {
+              "pitch": -5,
+              "yaw": 30,
+              "type": "info",
+              "text": "Sacred Chortens",
+              "description": "Holy stupas containing blessed artifacts"
+            }
+          ]
+        },
+        {
+          "id": "tashiding_courtyard",
+          "title": "Festival Courtyard",
+          "description": "The courtyard where the famous Bumchu festival takes place annually.",
+          "url": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 180,
+          "pitch": 0,
+          "hfov": 120,
+          "audio": "/static/audio/tashiding_courtyard.mp3",
+          "audioDuration": 42,
+          "hotspots": [
+            {
+              "pitch": 0,
+              "yaw": 90,
+              "type": "info",
+              "text": "Bumchu Vessel",
+              "description": "Sacred vessel used in the holy water ceremony"
+            }
+          ]
+        }
+      ]
+    },
+    "ralang-monastery": {
+      "name": "Ralang Monastery",
+      "views": [
+        {
+          "id": "ralang_main_hall",
+          "title": "Main Prayer Hall",
+          "description": "The serene prayer hall of Ralang Monastery, known for its peaceful atmosphere.",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/ralang_main_hall.mp3",
+          "audioDuration": 40,
+          "hotspots": [
+            {
+              "pitch": -2,
+              "yaw": 0,
+              "type": "info",
+              "text": "Buddha Statue",
+              "description": "Magnificent Buddha statue in meditation pose"
+            }
+          ]
+        },
+        {
+          "id": "ralang_garden",
+          "title": "Monastery Garden",
+          "description": "Beautiful gardens surrounding the monastery complex.",
+          "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 90,
+          "pitch": -5,
+          "hfov": 125,
+          "audio": "/static/audio/ralang_garden.mp3",
+          "audioDuration": 38,
+          "hotspots": [
+            {
+              "pitch": -10,
+              "yaw": 45,
+              "type": "info",
+              "text": "Sacred Flowers",
+              "description": "Traditional flowers used in Buddhist ceremonies"
+            }
+          ]
+        }
+      ]
+    },
+    "phensang-monastery": {
+      "name": "Phensang Monastery",
+      "views": [
+        {
+          "id": "phensang_main_hall",
+          "title": "Prayer Hall",
+          "description": "The tranquil prayer hall of Phensang Monastery.",
+          "url": "https://images.unsplash.com/photo-1564149504326-bb1ee6ba8013?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/phensang_main_hall.mp3",
+          "audioDuration": 43,
+          "hotspots": [
+            {
+              "pitch": 0,
+              "yaw": 45,
+              "type": "info",
+              "text": "Prayer Wheels",
+              "description": "Traditional prayer wheels for meditation"
+            }
+          ]
+        }
+      ]
+    },
+    "sanga-choeling-monastery": {
+      "name": "Sanga Choeling Monastery",
+      "views": [
+        {
+          "id": "sanga_main_hall",
+          "title": "Ancient Prayer Hall",
+          "description": "The historic prayer hall of Sanga Choeling, built in the 17th century.",
+          "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
+          "type": "equirectangular",
+          "yaw": 0,
+          "pitch": 0,
+          "hfov": 110,
+          "audio": "/static/audio/sanga_main_hall.mp3",
+          "audioDuration": 47,
+          "hotspots": [
+            {
+              "pitch": 5,
+              "yaw": 30,
+              "type": "info",
+              "text": "Historic Murals",
+              "description": "17th-century Buddhist murals depicting religious stories"
+            }
+          ]
         }
       ]
     }
   },
-  "defaultView": {
-    "title": "Sikkim Monastery View",
-    "description": "General panoramic view of a traditional Sikkim monastery.",
-    "url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "type": "equirectangular",
-    "yaw": 0,
-    "pitch": 0,
-    "hfov": 110
-  },
   "metadata": {
     "version": "2.0",
     "updated": "2025-09-08",
-    "description": "Multi-view panoramic system for Sikkim monasteries with audio narration"
+    "description": "Multi-view panoramic system for all Sikkim monasteries with audio narration"
   }
 }

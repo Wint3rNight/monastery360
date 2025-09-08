@@ -161,28 +161,35 @@
                     </div>
                 </form>
 
-                <!-- Language switcher -->
-                <div class="dropdown">
+                <!-- Language switcher with Google Translate -->
+                <div class="dropdown me-2">
                     <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
                             id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
                         <i class="fas fa-globe me-1" aria-hidden="true"></i>
-                        {% get_current_language as CURRENT_LANGUAGE %}
-                        {{ CURRENT_LANGUAGE|upper }}
+                        <span id="current-language">English</span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-                        {% get_available_languages as LANGUAGES %}
-                        {% for language_code, language_name in LANGUAGES %}
-                            <li>
-                                <form action="{% url 'set_language' %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:'2:' }}">
-                                    <input name="language" type="hidden" value="{{ language_code }}">
-                                    <button type="submit" class="dropdown-item{% if language_code == CURRENT_LANGUAGE %} active{% endif %}">
-                                        {{ language_name }}
-                                    </button>
-                                </form>
-                            </li>
-                        {% endfor %}
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                            <button class="dropdown-item language-option" data-lang="en" data-name="English">
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i>English
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item language-option" data-lang="hi" data-name="हिन्दी">
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i>हिन्दी (Hindi)
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item language-option" data-lang="ne" data-name="नेपाली">
+                                <i class="fas fa-flag me-2" aria-hidden="true"></i>नेपाली (Nepali)
+                            </button>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <button class="dropdown-item" id="reset-translation">
+                                <i class="fas fa-undo me-2" aria-hidden="true"></i>Reset to Original
+                            </button>
+                        </li>
                     </ul>
                 </div>
 
@@ -357,6 +364,198 @@
                 })
                 .catch(err => console.warn('ServiceWorker registration failed:', err));
         })();
+    </script>
+
+    <!-- Google Translate Integration -->
+    <script>
+        // Google Translate configuration and functionality
+        let googleTranslateLoaded = false;
+        let currentLanguage = 'en';
+
+        // Load Google Translate API
+        function loadGoogleTranslateAPI() {
+            if (googleTranslateLoaded) return Promise.resolve();
+
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.onerror = reject;
+                script.onload = () => {
+                    googleTranslateLoaded = true;
+                    resolve();
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Initialize Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ne',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false,
+                multilanguagePage: false
+            }, 'google_translate_element');
+
+            // Hide the default Google Translate widget
+            setTimeout(() => {
+                const widget = document.getElementById('google_translate_element');
+                if (widget) {
+                    widget.style.display = 'none';
+                }
+
+                // Hide Google Translate toolbar if it appears
+                const toolbar = document.querySelector('.goog-te-banner-frame');
+                if (toolbar) {
+                    toolbar.style.display = 'none';
+                }
+
+                // Remove top margin added by Google Translate
+                document.body.style.marginTop = '0px';
+            }, 100);
+        }
+
+        // Translate page to specified language
+        function translatePage(targetLanguage) {
+            if (!googleTranslateLoaded) {
+                showTranslationLoading(true);
+                loadGoogleTranslateAPI().then(() => {
+                    setTimeout(() => {
+                        doTranslate(targetLanguage);
+                    }, 500);
+                }).catch(() => {
+                    showTranslationError();
+                });
+            } else {
+                doTranslate(targetLanguage);
+            }
+        }
+
+        function doTranslate(targetLanguage) {
+            const selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+                selectElement.value = targetLanguage;
+                selectElement.dispatchEvent(new Event('change'));
+                currentLanguage = targetLanguage;
+                updateCurrentLanguageDisplay();
+                showTranslationLoading(false);
+
+                // Store language preference
+                localStorage.setItem('preferred_language', targetLanguage);
+            } else {
+                console.error('Google Translate element not found');
+                showTranslationError();
+            }
+        }
+
+        // Reset translation
+        function resetTranslation() {
+            const selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+                selectElement.value = 'en';
+                selectElement.dispatchEvent(new Event('change'));
+                currentLanguage = 'en';
+                updateCurrentLanguageDisplay();
+                localStorage.removeItem('preferred_language');
+            }
+        }
+
+        // Update the displayed current language
+        function updateCurrentLanguageDisplay() {
+            const currentLangSpan = document.getElementById('current-language');
+            const languageNames = {
+                'en': 'English',
+                'hi': 'हिन्दी',
+                'ne': 'नेपाली'
+            };
+            if (currentLangSpan) {
+                currentLangSpan.textContent = languageNames[currentLanguage] || 'English';
+            }
+        }
+
+        // Show loading state
+        function showTranslationLoading(show) {
+            const currentLangSpan = document.getElementById('current-language');
+            if (currentLangSpan) {
+                if (show) {
+                    currentLangSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating...';
+                } else {
+                    updateCurrentLanguageDisplay();
+                }
+            }
+        }
+
+        // Show translation error
+        function showTranslationError() {
+            const currentLangSpan = document.getElementById('current-language');
+            if (currentLangSpan) {
+                currentLangSpan.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                setTimeout(updateCurrentLanguageDisplay, 2000);
+            }
+        }
+
+        // Initialize language switcher
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create hidden Google Translate element
+            const translateDiv = document.createElement('div');
+            translateDiv.id = 'google_translate_element';
+            translateDiv.style.display = 'none';
+            document.body.appendChild(translateDiv);
+
+            // Add event listeners to language options
+            document.querySelectorAll('.language-option').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetLang = this.getAttribute('data-lang');
+                    translatePage(targetLang);
+                });
+            });
+
+            // Add event listener to reset button
+            document.getElementById('reset-translation').addEventListener('click', function(e) {
+                e.preventDefault();
+                resetTranslation();
+            });
+
+            // Load saved language preference
+            const savedLanguage = localStorage.getItem('preferred_language');
+            if (savedLanguage && savedLanguage !== 'en') {
+                setTimeout(() => {
+                    translatePage(savedLanguage);
+                }, 1000);
+            }
+
+            // Preload Google Translate API
+            setTimeout(() => {
+                loadGoogleTranslateAPI().catch(console.warn);
+            }, 2000);
+        });
+
+        // Clean up Google Translate styling issues
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    // Hide Google Translate toolbar
+                    const toolbar = document.querySelector('.goog-te-banner-frame');
+                    if (toolbar) {
+                        toolbar.style.display = 'none';
+                        document.body.style.marginTop = '0px';
+                    }
+
+                    // Style the translate select dropdown if visible
+                    const combo = document.querySelector('.goog-te-combo');
+                    if (combo) {
+                        combo.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     </script>
 
     <!-- Additional JavaScript -->
