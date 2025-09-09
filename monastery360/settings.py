@@ -242,7 +242,11 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
     # Static files compression and caching
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 # WhiteNoise configuration
 WHITENOISE_USE_FINDERS = True
