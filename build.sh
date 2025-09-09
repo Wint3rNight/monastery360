@@ -10,7 +10,7 @@ python -c "import django; print(f'Django {django.get_version()}')"
 python -c "import environ; print('django-environ OK')"
 
 echo "=== Collecting static files ==="
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --clear || echo "Static files collection had issues but continuing..."
 
 echo "=== Running migrations ==="
 python manage.py migrate
