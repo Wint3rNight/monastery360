@@ -13,18 +13,18 @@ class BookingAdmin(admin.ModelAdmin):
     """Admin configuration for Booking model."""
 
     list_display = [
-        'confirmation_number', 'name', 'monastery', 'visit_date',
+        'confirmation_number', 'name', 'user', 'monastery', 'visit_date',
         'number_of_visitors', 'status', 'visit_type', 'created_at'
     ]
     list_filter = [
-        'monastery', 'status', 'visit_type', 'visit_date',
+        'monastery', 'status', 'visit_type', 'visit_date', 'user',
         'transportation_needed', 'accommodation_needed', 'created_at'
     ]
     search_fields = [
         'name', 'email', 'phone', 'confirmation_number',
-        'monastery__name', 'organization'
+        'monastery__name', 'organization', 'user__username', 'user__email'
     ]
-    autocomplete_fields = ['monastery']
+    autocomplete_fields = ['monastery', 'user']
     readonly_fields = [
         'confirmation_number', 'created_at', 'updated_at'
     ]
@@ -141,18 +141,19 @@ class EventBookingAdmin(admin.ModelAdmin):
     """Admin configuration for EventBooking model."""
 
     list_display = [
-        'confirmation_number', 'customer_name', 'event', 'created_at',
+        'confirmation_number', 'customer_name', 'user', 'event', 'created_at',
         'number_of_people', 'payment_status', 'total_amount'
     ]
     list_filter = [
-        'event', 'payment_status', 'created_at', 'payment_date',
+        'event', 'payment_status', 'created_at', 'payment_date', 'user',
         'number_of_people', 'event__event_type'
     ]
     search_fields = [
         'customer_name', 'customer_email', 'customer_phone',
-        'confirmation_number', 'event__title', 'transaction_id'
+        'confirmation_number', 'event__title', 'transaction_id',
+        'user__username', 'user__email'
     ]
-    autocomplete_fields = ['event']
+    autocomplete_fields = ['event', 'user']
     readonly_fields = [
         'confirmation_number', 'created_at', 'updated_at'
     ]

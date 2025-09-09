@@ -7,6 +7,7 @@ Handles visitor booking creation, confirmation, and management.
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -32,7 +33,20 @@ def booking_form(request, monastery_slug=None):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            booking = form.save()
+            booking = form.save(commit=False)
+            
+            # SECURITY FIX: Always link booking to logged-in user if authenticated
+            if request.user.is_authenticated:
+                booking.user = request.user
+                # For logged-in users, use their profile info as default
+                if not booking.email or booking.email != request.user.email:
+                    booking.email = request.user.email
+                if not booking.name and (request.user.first_name or request.user.last_name):
+                    booking.name = f"{request.user.first_name} {request.user.last_name}".strip()
+                    if not booking.name:  # If no first/last name, use username
+                        booking.name = request.user.username
+            
+            booking.save()
 
             # Send confirmation email
             try:
@@ -234,7 +248,17 @@ def event_booking_form(request, event_id):
             booking_notes=booking_notes,
             total_amount=total_amount,
             payment_status='confirmed' if total_amount == 0 else 'pending',
+            user=request.user if request.user.is_authenticated else None,  # SECURITY FIX
         )
+        
+        # SECURITY FIX: For logged-in users, enforce their email
+        if request.user.is_authenticated:
+            booking.customer_email = request.user.email
+            if not booking.customer_name and (request.user.first_name or request.user.last_name):
+                booking.customer_name = f"{request.user.first_name} {request.user.last_name}".strip()
+                if not booking.customer_name:
+                    booking.customer_name = request.user.username
+            booking.save()
 
         # Send confirmation email
         try:
@@ -476,3 +500,24 @@ Best regards,
         recipient_list=[booking.customer_email],
         fail_silently=False,
     )
+
+
+@login_required
+def user_bookings_dashboard(request):
+    """
+    User dashboard showing all their bookings and event bookings.
+    """
+    # Get user's regular bookings
+    user_bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Get user's event bookings
+    user_event_bookings = EventBooking.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'user_bookings': user_bookings,
+        'user_event_bookings': user_event_bookings,
+        'page_title': 'My Bookings - Monastery360',
+        'page_description': 'View and manage all your monastery visit bookings and event registrations',
+    }
+    
+    return render(request, 'bookings/user_dashboard.html', context)

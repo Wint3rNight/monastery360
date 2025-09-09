@@ -4,6 +4,7 @@ Bookings models for Monastery360.
 This module defines models for visitor bookings and appointment scheduling.
 """
 
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
@@ -46,6 +47,16 @@ class Booking(models.Model):
         on_delete=models.CASCADE,
         related_name='bookings',
         help_text="The monastery being visited"
+    )
+
+    # User who made the booking (for logged-in users)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bookings',
+        null=True,
+        blank=True,
+        help_text="User who made this booking (if logged in)"
     )
 
     # Visitor information
@@ -282,6 +293,16 @@ class EventBooking(models.Model):
         on_delete=models.CASCADE,
         related_name='bookings',
         help_text="The event being booked"
+    )
+
+    # User who made the booking (for logged-in users)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='event_bookings',
+        null=True,
+        blank=True,
+        help_text="User who made this booking (if logged in)"
     )
 
     # Customer information
