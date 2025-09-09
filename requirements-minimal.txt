@@ -1,6 +1,13 @@
-# Minimal requirements for Render deployment
 Django==4.2.5
+django-environ==0.11.2
 dj-database-url==2.1.0
 psycopg2-binary==2.9.7
 gunicorn==22.0.0
 whitenoise==6.4.0
+Pillow==10.0.0
+djangorestframework==3.14.0
+django-cors-headers==4.2.0
+django-crispy-forms==2.0
+crispy-bootstrap5==0.7
+python-slugify==8.0.1
+django-admin-interface==0.26.0
