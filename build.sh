@@ -18,6 +18,12 @@ python manage.py collectstatic --noinput --clear || echo "Static files collectio
 echo "=== Running migrations ==="
 python manage.py migrate
 
+echo "=== Loading production data ==="
+python manage.py load_production_data
+
+echo "=== Creating superuser if needed ==="
+python manage.py create_superuser || echo "Superuser creation skipped (may already exist)"
+
 echo "=== Checking if User model works ==="
 python -c "
 import django

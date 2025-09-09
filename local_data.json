@@ -1,0 +1,802 @@
+[
+{
+  "model": "core.monastery",
+  "pk": 33,
+  "fields": {
+    "name": "Rumtek Monastery",
+    "slug": "rumtek-monastery",
+    "established_year": 1966,
+    "description": "The Rumtek Monastery, also called the Dharmachakra Centre, is a gompa located in the Indian state of Sikkim near the capital Gangtok. It is the largest monastery in Sikkim and is the seat-in-exile of the Gyalwa Karmapa, inaugurated in 1966 by the 16th Karmapa. Built in the 1960s, it is modeled after the Karma Kagyu monastery of Tsurphu in Tibet.",
+    "short_description": "The largest monastery in Sikkim and seat-in-exile of the Gyalwa Karmapa",
+    "latitude": 27.3133,
+    "longitude": 88.5478,
+    "address": "East Sikkim",
+    "district": "East Sikkim",
+    "altitude": 1547,
+    "image": "",
+    "image_alt": "",
+    "phone": "+91-3592-252023",
+    "email": "",
+    "website": "http://www.rumtek.org",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": true,
+    "pano_id": "rumtek",
+    "created_at": "2025-09-01T23:15:36.060Z",
+    "updated_at": "2025-09-01T23:15:36.060Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 34,
+  "fields": {
+    "name": "Enchey Monastery",
+    "slug": "enchey-monastery",
+    "established_year": 1909,
+    "description": "Enchey Monastery is an important monastery of the Nyingma sect located in Gangtok, the capital city of Sikkim. Built in 1909, it was established by Lama Druptob Karpo, a famous Sikkimese mystic known for his flying powers. The monastery houses images of gods, goddesses, and other religious artifacts.",
+    "short_description": "Historic Nyingma monastery in Gangtok built by the famous flying lama",
+    "latitude": 27.3314,
+    "longitude": 88.6138,
+    "address": "East Sikkim",
+    "district": "East Sikkim",
+    "altitude": 1830,
+    "image": "",
+    "image_alt": "",
+    "phone": "+91-3592-202123",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": true,
+    "pano_id": "enchey",
+    "created_at": "2025-09-01T23:15:36.065Z",
+    "updated_at": "2025-09-01T23:15:36.065Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 35,
+  "fields": {
+    "name": "Tashiding Monastery",
+    "slug": "tashiding-monastery",
+    "established_year": 1641,
+    "description": "Tashiding Monastery is a Buddhist monastery of the Nyingma sect located on top of a hill between the Rathong and Rangeet rivers in Tashiding, Sikkim. Founded in 1641, it is one of the most sacred monasteries in Sikkim. The monastery is famous for its holy water (Bum Chu) ceremony during Losar.",
+    "short_description": "One of the most sacred Nyingma monasteries, famous for the holy water ceremony",
+    "latitude": 27.3472,
+    "longitude": 88.275,
+    "address": "West Sikkim",
+    "district": "West Sikkim",
+    "altitude": 1465,
+    "image": "",
+    "image_alt": "",
+    "phone": "+91-3595-242015",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": true,
+    "pano_id": "tashiding",
+    "created_at": "2025-09-01T23:15:36.070Z",
+    "updated_at": "2025-09-01T23:15:36.070Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 36,
+  "fields": {
+    "name": "Pemayangtse Monastery",
+    "slug": "pemayangtse-monastery",
+    "established_year": 1705,
+    "description": "Pemayangtse Monastery is a Buddhist monastery in Pemayangtse, near Pelling in the northeastern Indian state of Sikkim. Planned, designed and founded by Lama Lhatsun Chempo in 1705, it is one of the oldest and premier monasteries of Sikkim, also holding the distinction of being the head monastery of the Nyingma sect.",
+    "short_description": "Premier Nyingma monastery and one of the oldest in Sikkim",
+    "latitude": 27.2956,
+    "longitude": 88.2131,
+    "address": "West Sikkim",
+    "district": "West Sikkim",
+    "altitude": 2085,
+    "image": "",
+    "image_alt": "",
+    "phone": "+91-3595-250221",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": true,
+    "pano_id": "pemayangtse",
+    "created_at": "2025-09-01T23:15:36.074Z",
+    "updated_at": "2025-09-01T23:15:36.074Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 37,
+  "fields": {
+    "name": "Dubdi Monastery",
+    "slug": "dubdi-monastery",
+    "established_year": 1701,
+    "description": "Dubdi Monastery, also known as Yuksom Monastery, is a Buddhist monastery of the Nyingma sect located near Yuksom in Sikkim. Built in 1701, it is the oldest monastery in Sikkim and holds great historical significance as it was here that the first Chogyal was crowned.",
+    "short_description": "The oldest monastery in Sikkim where the first Chogyal was crowned",
+    "latitude": 27.3628,
+    "longitude": 88.2297,
+    "address": "West Sikkim",
+    "district": "West Sikkim",
+    "altitude": 2100,
+    "image": "",
+    "image_alt": "",
+    "phone": "",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": false,
+    "pano_id": "dubdi",
+    "created_at": "2025-09-01T23:15:36.079Z",
+    "updated_at": "2025-09-01T23:15:36.079Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 38,
+  "fields": {
+    "name": "Ralang Monastery",
+    "slug": "ralang-monastery",
+    "established_year": 1730,
+    "description": "Ralang Monastery is a Buddhist monastery of the Kagyu sect in South Sikkim, built in 1730. It is famous for its annual Pang Lhabsol festival and houses several ancient relics and manuscripts. The monastery offers stunning views of Mount Kanchenjunga.",
+    "short_description": "Historic Kagyu monastery famous for Pang Lhabsol festival",
+    "latitude": 27.2889,
+    "longitude": 88.4167,
+    "address": "South Sikkim",
+    "district": "South Sikkim",
+    "altitude": 1200,
+    "image": "",
+    "image_alt": "",
+    "phone": "",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": false,
+    "pano_id": "ralang",
+    "created_at": "2025-09-01T23:15:36.084Z",
+    "updated_at": "2025-09-01T23:15:36.084Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 39,
+  "fields": {
+    "name": "Phensang Monastery",
+    "slug": "phensang-monastery",
+    "established_year": 1640,
+    "description": "Phensang Monastery is a Nyingma monastery located in North Sikkim. Founded in the 17th century, it is known for its remote location and pristine mountain environment. The monastery serves as an important meditation retreat center.",
+    "short_description": "Remote Nyingma monastery serving as a meditation retreat center",
+    "latitude": 27.6833,
+    "longitude": 88.5333,
+    "address": "North Sikkim",
+    "district": "North Sikkim",
+    "altitude": 2800,
+    "image": "",
+    "image_alt": "",
+    "phone": "",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": false,
+    "pano_id": "phensang",
+    "created_at": "2025-09-01T23:15:36.088Z",
+    "updated_at": "2025-09-01T23:15:36.088Z"
+  }
+},
+{
+  "model": "core.monastery",
+  "pk": 40,
+  "fields": {
+    "name": "Sanga Choeling Monastery",
+    "slug": "sanga-choeling-monastery",
+    "established_year": 1697,
+    "description": "Sanga Choeling Monastery is one of the oldest monasteries in Sikkim, built in 1697. Located on a ridge above Pelling, it offers panoramic views of the Himalayas including Kanchenjunga. The monastery is reached by a moderate trek through beautiful forests.",
+    "short_description": "One of Sikkim's oldest monasteries with panoramic Himalayan views",
+    "latitude": 27.3167,
+    "longitude": 88.2167,
+    "address": "West Sikkim",
+    "district": "West Sikkim",
+    "altitude": 2100,
+    "image": "",
+    "image_alt": "",
+    "phone": "",
+    "email": "",
+    "website": "",
+    "visiting_hours": "6:00 AM - 6:00 PM",
+    "entry_fee": "Free",
+    "is_active": true,
+    "is_featured": false,
+    "pano_id": "unknown",
+    "created_at": "2025-09-01T23:15:36.092Z",
+    "updated_at": "2025-09-01T23:15:36.092Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 17,
+  "fields": {
+    "monastery": 33,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.31330273746102,
+    "longitude": 88.54763763776036,
+    "audio_file": "",
+    "audio_duration": 86,
+    "audio_transcript": "Welcome to Rumtek Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.097Z",
+    "updated_at": "2025-09-01T23:15:36.097Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 18,
+  "fields": {
+    "monastery": 33,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.312470462212076,
+    "longitude": 88.54756093878038,
+    "audio_file": "",
+    "audio_duration": 132,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.101Z",
+    "updated_at": "2025-09-01T23:15:36.101Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 19,
+  "fields": {
+    "monastery": 33,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.313173300663724,
+    "longitude": 88.54691088008279,
+    "audio_file": "",
+    "audio_duration": 140,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.106Z",
+    "updated_at": "2025-09-01T23:15:36.106Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 20,
+  "fields": {
+    "monastery": 33,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.313683990975097,
+    "longitude": 88.54745685284759,
+    "audio_file": "",
+    "audio_duration": 70,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.110Z",
+    "updated_at": "2025-09-01T23:15:36.110Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 21,
+  "fields": {
+    "monastery": 34,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.331524205619058,
+    "longitude": 88.61310924957027,
+    "audio_file": "",
+    "audio_duration": 90,
+    "audio_transcript": "Welcome to Enchey Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.189Z",
+    "updated_at": "2025-09-01T23:15:36.189Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 22,
+  "fields": {
+    "monastery": 34,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.33088498241046,
+    "longitude": 88.61341700110741,
+    "audio_file": "",
+    "audio_duration": 74,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.194Z",
+    "updated_at": "2025-09-01T23:15:36.194Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 23,
+  "fields": {
+    "monastery": 34,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.331343903370414,
+    "longitude": 88.61444502907774,
+    "audio_file": "",
+    "audio_duration": 123,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.199Z",
+    "updated_at": "2025-09-01T23:15:36.199Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 24,
+  "fields": {
+    "monastery": 34,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.3316295695087,
+    "longitude": 88.61292297736587,
+    "audio_file": "",
+    "audio_duration": 72,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.204Z",
+    "updated_at": "2025-09-01T23:15:36.204Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 25,
+  "fields": {
+    "monastery": 35,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.347990612999524,
+    "longitude": 88.27415418352284,
+    "audio_file": "",
+    "audio_duration": 153,
+    "audio_transcript": "Welcome to Tashiding Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.279Z",
+    "updated_at": "2025-09-01T23:15:36.280Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 26,
+  "fields": {
+    "monastery": 35,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.34814907636396,
+    "longitude": 88.27577943906476,
+    "audio_file": "",
+    "audio_duration": 119,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.283Z",
+    "updated_at": "2025-09-01T23:15:36.283Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 27,
+  "fields": {
+    "monastery": 35,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.348112910487785,
+    "longitude": 88.2757097859124,
+    "audio_file": "",
+    "audio_duration": 101,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.288Z",
+    "updated_at": "2025-09-01T23:15:36.288Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 28,
+  "fields": {
+    "monastery": 35,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.34725961675093,
+    "longitude": 88.2747166566492,
+    "audio_file": "",
+    "audio_duration": 172,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.292Z",
+    "updated_at": "2025-09-01T23:15:36.293Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 29,
+  "fields": {
+    "monastery": 36,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.29544868542773,
+    "longitude": 88.21299714703252,
+    "audio_file": "",
+    "audio_duration": 68,
+    "audio_transcript": "Welcome to Pemayangtse Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.369Z",
+    "updated_at": "2025-09-01T23:15:36.369Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 30,
+  "fields": {
+    "monastery": 36,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.29559050943882,
+    "longitude": 88.21394320878993,
+    "audio_file": "",
+    "audio_duration": 167,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.375Z",
+    "updated_at": "2025-09-01T23:15:36.375Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 31,
+  "fields": {
+    "monastery": 36,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.295528353142902,
+    "longitude": 88.21350508375114,
+    "audio_file": "",
+    "audio_duration": 104,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.379Z",
+    "updated_at": "2025-09-01T23:15:36.379Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 32,
+  "fields": {
+    "monastery": 36,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.295011541159536,
+    "longitude": 88.21395978067035,
+    "audio_file": "",
+    "audio_duration": 102,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.383Z",
+    "updated_at": "2025-09-01T23:15:36.383Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 33,
+  "fields": {
+    "monastery": 37,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.363336831861073,
+    "longitude": 88.23018202815673,
+    "audio_file": "",
+    "audio_duration": 161,
+    "audio_transcript": "Welcome to Dubdi Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.453Z",
+    "updated_at": "2025-09-01T23:15:36.453Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 34,
+  "fields": {
+    "monastery": 37,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.362676863835663,
+    "longitude": 88.22956165866363,
+    "audio_file": "",
+    "audio_duration": 150,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.458Z",
+    "updated_at": "2025-09-01T23:15:36.458Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 35,
+  "fields": {
+    "monastery": 37,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.362529147471975,
+    "longitude": 88.22986074782119,
+    "audio_file": "",
+    "audio_duration": 173,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.462Z",
+    "updated_at": "2025-09-01T23:15:36.462Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 36,
+  "fields": {
+    "monastery": 37,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.363362725746473,
+    "longitude": 88.229259271096,
+    "audio_file": "",
+    "audio_duration": 89,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.467Z",
+    "updated_at": "2025-09-01T23:15:36.467Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 37,
+  "fields": {
+    "monastery": 38,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.288936437072152,
+    "longitude": 88.41742629738158,
+    "audio_file": "",
+    "audio_duration": 60,
+    "audio_transcript": "Welcome to Ralang Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.538Z",
+    "updated_at": "2025-09-01T23:15:36.538Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 38,
+  "fields": {
+    "monastery": 38,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.28975037430927,
+    "longitude": 88.41684295938722,
+    "audio_file": "",
+    "audio_duration": 118,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.542Z",
+    "updated_at": "2025-09-01T23:15:36.542Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 39,
+  "fields": {
+    "monastery": 38,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.288781955463797,
+    "longitude": 88.41767981942179,
+    "audio_file": "",
+    "audio_duration": 85,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.547Z",
+    "updated_at": "2025-09-01T23:15:36.547Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 40,
+  "fields": {
+    "monastery": 38,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.287956297348597,
+    "longitude": 88.41599212616089,
+    "audio_file": "",
+    "audio_duration": 106,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.550Z",
+    "updated_at": "2025-09-01T23:15:36.550Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 41,
+  "fields": {
+    "monastery": 39,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.68352767163066,
+    "longitude": 88.53331095368782,
+    "audio_file": "",
+    "audio_duration": 144,
+    "audio_transcript": "Welcome to Phensang Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.626Z",
+    "updated_at": "2025-09-01T23:15:36.626Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 42,
+  "fields": {
+    "monastery": 39,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.684062397286393,
+    "longitude": 88.53339045171317,
+    "audio_file": "",
+    "audio_duration": 92,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.630Z",
+    "updated_at": "2025-09-01T23:15:36.630Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 43,
+  "fields": {
+    "monastery": 39,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.683743576205398,
+    "longitude": 88.53414466362149,
+    "audio_file": "",
+    "audio_duration": 115,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.634Z",
+    "updated_at": "2025-09-01T23:15:36.634Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 44,
+  "fields": {
+    "monastery": 39,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.68284622968173,
+    "longitude": 88.5323065270637,
+    "audio_file": "",
+    "audio_duration": 171,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.637Z",
+    "updated_at": "2025-09-01T23:15:36.637Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 45,
+  "fields": {
+    "monastery": 40,
+    "title": "Main Entrance",
+    "description": "Welcome to the sacred grounds. Listen to the history and significance of this entrance.",
+    "latitude": 27.317544190264925,
+    "longitude": 88.21665105233427,
+    "audio_file": "",
+    "audio_duration": 146,
+    "audio_transcript": "Welcome to Sanga Choeling Monastery. This sacred entrance has welcomed pilgrims for centuries...",
+    "order": 1,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.715Z",
+    "updated_at": "2025-09-01T23:15:36.715Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 46,
+  "fields": {
+    "monastery": 40,
+    "title": "Prayer Hall",
+    "description": "Experience the main prayer hall where monks gather for daily prayers.",
+    "latitude": 27.315976749837997,
+    "longitude": 88.21737451001769,
+    "audio_file": "",
+    "audio_duration": 170,
+    "audio_transcript": "The main prayer hall is the heart of monastic life. Here, monks gather at dawn and dusk...",
+    "order": 2,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.719Z",
+    "updated_at": "2025-09-01T23:15:36.719Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 47,
+  "fields": {
+    "monastery": 40,
+    "title": "Buddha Statue",
+    "description": "Learn about the magnificent Buddha statue and its spiritual significance.",
+    "latitude": 27.317141811860104,
+    "longitude": 88.21693514054085,
+    "audio_file": "",
+    "audio_duration": 112,
+    "audio_transcript": "This ancient Buddha statue represents the enlightened mind. Crafted with devotion...",
+    "order": 3,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.723Z",
+    "updated_at": "2025-09-01T23:15:36.723Z"
+  }
+},
+{
+  "model": "core.audiopoi",
+  "pk": 48,
+  "fields": {
+    "monastery": 40,
+    "title": "Prayer Wheels",
+    "description": "Discover the meaning behind the spinning prayer wheels.",
+    "latitude": 27.31599704031364,
+    "longitude": 88.21703979402974,
+    "audio_file": "",
+    "audio_duration": 140,
+    "audio_transcript": "Each turn of these prayer wheels sends mantras into the universe, creating merit...",
+    "order": 4,
+    "is_active": true,
+    "created_at": "2025-09-01T23:15:36.727Z",
+    "updated_at": "2025-09-01T23:15:36.727Z"
+  }
+}
+]

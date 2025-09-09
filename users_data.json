@@ -1,0 +1,53 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$p7tLUaoFkz27WJd3z7RIRp$Vnj9boRnVneDeE3K9D2SU7aXnAts3b1VbACEQINlFuM=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@monastery360.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-09-01T23:12:39.911Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$rMIdIZlXK3T99hul5wmoau$CzYFN/nwY0Fec32EqBAed3QV9tRy8FtitPgwN8k4+1A=",
+    "last_login": "2025-09-09T18:27:37.413Z",
+    "is_superuser": true,
+    "username": "winter",
+    "first_name": "Pratap",
+    "last_name": "Singh",
+    "email": "pratap2003singh@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-09-02T09:28:37.815Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$dXY6EeeeVr59fz6BiENhf0$9uDq5XIdeSoKjgcpOLc2f8hmyc/Ljk1Gd0Fhl67IwQ4=",
+    "last_login": "2025-09-09T18:16:36.634Z",
+    "is_superuser": false,
+    "username": "yuv",
+    "first_name": "Nigga",
+    "last_name": "Singh",
+    "email": "winterforcod@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-09-08T18:17:02.811Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
