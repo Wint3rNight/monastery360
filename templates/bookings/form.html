@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book a Visit - Monastery360{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+        <div class="text-center">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <i class="fas fa-calendar-check text-white text-3xl"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Book Your Visit</h1>
+            {% if monastery %}
+                <h2 class="text-2xl text-gray-700 mb-2">{{ monastery.name }}</h2>
+                <p class="text-gray-600">{{ monastery.short_description }}</p>
+            {% else %}
+                <p class="text-gray-600">Schedule your visit to any monastery in Sikkim</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- User Info for Logged-in Users -->
+    {% if user.is_authenticated %}
+    <div class="bg-green-50 border-l-4 border-green-400 p-6 rounded-lg mb-8">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i class="fas fa-user-check text-green-400 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-green-800">
+                    Welcome back, {{ user.first_name|default:user.username }}!
+                </h3>
+                <p class="mt-2 text-sm text-green-700">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Your booking confirmation will be sent to: <strong>{{ user.email }}</strong>
+                </p>
+                <p class="mt-1 text-sm text-green-600">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    No need to enter your email - we'll use your registered email address.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Booking Form -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">
+            <i class="fas fa-edit text-blue-600 mr-3"></i>
+            Booking Details
+        </h3>
+
+        {% crispy form %}
+    </div>
+</div>
+
+<style>
+/* Enhance crispy forms styling */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    @apply px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all;
+}
+
+.btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl;
+}
+
+fieldset {
+    @apply border-t-2 border-gray-100 pt-6 mt-6;
+}
+
+fieldset:first-child {
+    @apply border-t-0 pt-0 mt-0;
+}
+
+legend {
+    @apply text-lg font-bold text-gray-700 mb-4;
+}
+
+.alert-info {
+    @apply bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg;
+}
+</style>
+{% endblock %}

@@ -69,6 +69,8 @@
                         </div>
                     </div>
 
+                    <!-- Email field hidden for logged-in users -->
+                    {% if not user.is_authenticated %}
                     <div>
                         <label for="customer_email" class="block text-sm font-bold text-gray-700 mb-2">
                             Email Address <span class="text-red-500">*</span>
@@ -85,6 +87,18 @@
                             <i class="fas fa-envelope absolute left-4 top-3 text-gray-400"></i>
                         </div>
                     </div>
+                    {% else %}
+                    <!-- For logged-in users, show email info but don't allow editing -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            <i class="fas fa-envelope text-green-600 mr-2"></i>Email (from your account)
+                        </label>
+                        <div class="bg-green-50 border-2 border-green-200 rounded-xl px-4 py-3 text-green-800">
+                            {{ user.email }}
+                        </div>
+                        <input type="hidden" name="customer_email" value="{{ user.email }}">
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div>
