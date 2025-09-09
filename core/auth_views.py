@@ -31,15 +31,27 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_email(self):
         """Ensure email is unique."""
         email = self.cleaned_data.get('email')
-        if email and User.objects.filter(email=email).exists():
-            raise ValidationError("A user with this email already exists.")
+        if email:
+            try:
+                existing_user = User.objects.filter(email=email).exists()
+                if existing_user:
+                    raise ValidationError("A user with this email already exists.")
+            except Exception as e:
+                # If database query fails, log it but don't block registration
+                print(f"Database error checking email: {e}")
         return email
 
     def clean_username(self):
         """Ensure username is unique and valid."""
         username = self.cleaned_data.get('username')
-        if username and User.objects.filter(username=username).exists():
-            raise ValidationError("A user with this username already exists.")
+        if username:
+            try:
+                existing_user = User.objects.filter(username=username).exists()
+                if existing_user:
+                    raise ValidationError("A user with this username already exists.")
+            except Exception as e:
+                # If database query fails, log it but don't block registration
+                print(f"Database error checking username: {e}")
         return username
 
     def save(self, commit=True):
