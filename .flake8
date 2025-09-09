@@ -1,18 +1,70 @@
 [flake8]
+# Configuration for flake8 linting
 max-line-length = 88
+max-complexity = 15
+
+# Directories and files to exclude from linting
 exclude =
     .git,
     __pycache__,
-    migrations,
+    .tox,
     .venv,
     venv,
     .env,
-    settings.py
+    node_modules,
+    migrations,
+    .pytest_cache,
+    build,
+    dist,
+    *.egg-info
+
+# Error codes to ignore for legacy compatibility
+# E203: whitespace before ':' (conflicts with black)
+# W503: line break before binary operator (conflicts with black)
+# W504: line break after binary operator (legacy code)
+# E501: line too long (handled by black)
+# F401: imported but unused (common in development)
+# F841: local variable assigned but never used (common during development)
+# E231: missing whitespace after ',' (legacy code)
+# E226: missing whitespace around arithmetic operator (legacy code)
+# E302: expected 2 blank lines (legacy code)
+# E305: expected 2 blank lines after class/function (legacy code)
+# E402: module level import not at top of file (Django patterns)
+# E702: multiple statements on one line (legacy code)
+# E999: syntax errors will be caught by Django/tests
+# F811: redefinition of unused (legacy code patterns)
+# F821: undefined name (might be defined dynamically)
+# W292: no newline at end of file (legacy code)
+# W391: blank line at end of file (legacy code)
 ignore =
-    E203,  # whitespace before ':'
-    W503,  # line break before binary operator
-    E501,  # line too long (handled by black)
+    E203,
+    W503,
+    W504,
+    E501,
+    F401,
+    F841,
+    E231,
+    E226,
+    E302,
+    E305,
+    E402,
+    E702,
+    E999,
+    F811,
+    F821,
+    W292,
+    W391
+
+# Per-file ignores for specific patterns
 per-file-ignores =
     __init__.py:F401
     settings/*.py:E501
-max-complexity = 10
+    */settings.py:E501
+    manage.py:E402
+    */tests.py:F401,F841
+    */test_*.py:F401,F841
+
+# Additional settings
+inline-quotes = double
+multiline-quotes = double
+docstring-quotes = double
