@@ -28,18 +28,31 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'monastery360.settings')
 django.setup()
 from core.models import Monastery
-count = Monastery.objects.count()
-print(f'Current monastery count: {count}')
-if count == 0:
-    print('Loading data...')
+from bookings.models import Booking
+from tours.models import Panorama
+from events.models import Event
+
+monastery_count = Monastery.objects.count()
+booking_count = Booking.objects.count()
+tour_count = Panorama.objects.count()
+event_count = Event.objects.count()
+
+print(f'Current data counts:')
+print(f'- Monasteries: {monastery_count}')
+print(f'- Events: {event_count}')  
+print(f'- Tours: {tour_count}')
+print(f'- Bookings: {booking_count}')
+
+if monastery_count == 0 or event_count == 0 or tour_count == 0:
+    print('Missing data detected, loading from fixtures...')
     from django.core.management import call_command
     try:
-        call_command('loaddata', 'local_data.json')
-        print('Data loaded successfully!')
+        call_command('load_production_data')
+        print('✅ All data loaded successfully!')
     except Exception as e:
-        print(f'Data loading failed: {e}')
+        print(f'❌ Data loading failed: {e}')
 else:
-    print('Data already exists, skipping...')
+    print('✅ Data already exists, skipping data load...')
 "
 
 echo "=== Checking if User model works ==="

@@ -1,0 +1,962 @@
+[
+{
+  "model": "tours.panorama",
+  "pk": 10,
+  "fields": {
+    "monastery": 33,
+    "title": "Rumtek Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 4,
+        "yaw": 283,
+        "type": "info",
+        "text": "Learn about this sacred area of Rumtek Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -17,
+        "yaw": 302,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.116Z",
+    "updated_at": "2025-09-01T23:15:36.116Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 11,
+  "fields": {
+    "monastery": 33,
+    "title": "Rumtek Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": 6,
+        "yaw": 106,
+        "type": "info",
+        "text": "Learn about this sacred area of Rumtek Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": -7,
+        "yaw": 115,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.121Z",
+    "updated_at": "2025-09-01T23:15:36.121Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 12,
+  "fields": {
+    "monastery": 33,
+    "title": "Rumtek Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -18,
+        "yaw": 233,
+        "type": "info",
+        "text": "Learn about this sacred area of Rumtek Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": 2,
+        "yaw": 216,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.125Z",
+    "updated_at": "2025-09-01T23:15:36.125Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 13,
+  "fields": {
+    "monastery": 34,
+    "title": "Enchey Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": -18,
+        "yaw": 219,
+        "type": "info",
+        "text": "Learn about this sacred area of Enchey Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -3,
+        "yaw": 38,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.209Z",
+    "updated_at": "2025-09-01T23:15:36.209Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 14,
+  "fields": {
+    "monastery": 34,
+    "title": "Enchey Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": 7,
+        "yaw": 305,
+        "type": "info",
+        "text": "Learn about this sacred area of Enchey Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": 13,
+        "yaw": 11,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.215Z",
+    "updated_at": "2025-09-01T23:15:36.215Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 15,
+  "fields": {
+    "monastery": 34,
+    "title": "Enchey Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -16,
+        "yaw": 167,
+        "type": "info",
+        "text": "Learn about this sacred area of Enchey Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": 5,
+        "yaw": 266,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.219Z",
+    "updated_at": "2025-09-01T23:15:36.219Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 16,
+  "fields": {
+    "monastery": 35,
+    "title": "Tashiding Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 3,
+        "yaw": 215,
+        "type": "info",
+        "text": "Learn about this sacred area of Tashiding Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -6,
+        "yaw": 257,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.298Z",
+    "updated_at": "2025-09-01T23:15:36.298Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 17,
+  "fields": {
+    "monastery": 35,
+    "title": "Tashiding Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": -17,
+        "yaw": 259,
+        "type": "info",
+        "text": "Learn about this sacred area of Tashiding Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": -13,
+        "yaw": 51,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.303Z",
+    "updated_at": "2025-09-01T23:15:36.303Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 18,
+  "fields": {
+    "monastery": 35,
+    "title": "Tashiding Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -10,
+        "yaw": 336,
+        "type": "info",
+        "text": "Learn about this sacred area of Tashiding Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": -19,
+        "yaw": 113,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.308Z",
+    "updated_at": "2025-09-01T23:15:36.308Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 19,
+  "fields": {
+    "monastery": 36,
+    "title": "Pemayangtse Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 13,
+        "yaw": 274,
+        "type": "info",
+        "text": "Learn about this sacred area of Pemayangtse Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": 16,
+        "yaw": 243,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.388Z",
+    "updated_at": "2025-09-01T23:15:36.388Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 20,
+  "fields": {
+    "monastery": 36,
+    "title": "Pemayangtse Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": -5,
+        "yaw": 239,
+        "type": "info",
+        "text": "Learn about this sacred area of Pemayangtse Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": -15,
+        "yaw": 79,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.393Z",
+    "updated_at": "2025-09-01T23:15:36.393Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 21,
+  "fields": {
+    "monastery": 36,
+    "title": "Pemayangtse Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": 19,
+        "yaw": 288,
+        "type": "info",
+        "text": "Learn about this sacred area of Pemayangtse Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": -15,
+        "yaw": 70,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.397Z",
+    "updated_at": "2025-09-01T23:15:36.397Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 22,
+  "fields": {
+    "monastery": 37,
+    "title": "Dubdi Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 20,
+        "yaw": 34,
+        "type": "info",
+        "text": "Learn about this sacred area of Dubdi Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": 10,
+        "yaw": 313,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.471Z",
+    "updated_at": "2025-09-01T23:15:36.471Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 23,
+  "fields": {
+    "monastery": 37,
+    "title": "Dubdi Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": 20,
+        "yaw": 309,
+        "type": "info",
+        "text": "Learn about this sacred area of Dubdi Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": -16,
+        "yaw": 280,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.475Z",
+    "updated_at": "2025-09-01T23:15:36.475Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 24,
+  "fields": {
+    "monastery": 37,
+    "title": "Dubdi Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -1,
+        "yaw": 261,
+        "type": "info",
+        "text": "Learn about this sacred area of Dubdi Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": -5,
+        "yaw": 144,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.480Z",
+    "updated_at": "2025-09-01T23:15:36.480Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 25,
+  "fields": {
+    "monastery": 38,
+    "title": "Ralang Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 19,
+        "yaw": 154,
+        "type": "info",
+        "text": "Learn about this sacred area of Ralang Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -8,
+        "yaw": 85,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.554Z",
+    "updated_at": "2025-09-01T23:15:36.554Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 26,
+  "fields": {
+    "monastery": 38,
+    "title": "Ralang Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": -7,
+        "yaw": 244,
+        "type": "info",
+        "text": "Learn about this sacred area of Ralang Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": 0,
+        "yaw": 173,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.558Z",
+    "updated_at": "2025-09-01T23:15:36.558Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 27,
+  "fields": {
+    "monastery": 38,
+    "title": "Ralang Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -5,
+        "yaw": 85,
+        "type": "info",
+        "text": "Learn about this sacred area of Ralang Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": 18,
+        "yaw": 134,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.562Z",
+    "updated_at": "2025-09-01T23:15:36.562Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 28,
+  "fields": {
+    "monastery": 39,
+    "title": "Phensang Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": 18,
+        "yaw": 281,
+        "type": "info",
+        "text": "Learn about this sacred area of Phensang Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -1,
+        "yaw": 33,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.641Z",
+    "updated_at": "2025-09-01T23:15:36.641Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 29,
+  "fields": {
+    "monastery": 39,
+    "title": "Phensang Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": 11,
+        "yaw": 318,
+        "type": "info",
+        "text": "Learn about this sacred area of Phensang Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": 0,
+        "yaw": 68,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.646Z",
+    "updated_at": "2025-09-01T23:15:36.646Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 30,
+  "fields": {
+    "monastery": 39,
+    "title": "Phensang Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": 20,
+        "yaw": 201,
+        "type": "info",
+        "text": "Learn about this sacred area of Phensang Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": -19,
+        "yaw": 96,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.650Z",
+    "updated_at": "2025-09-01T23:15:36.650Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 31,
+  "fields": {
+    "monastery": 40,
+    "title": "Sanga Choeling Monastery - Main View",
+    "description": "Panoramic view of the main monastery complex",
+    "location_name": "main_hall",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_1_1",
+        "pitch": -20,
+        "yaw": 115,
+        "type": "info",
+        "text": "Learn about this sacred area of Sanga Choeling Monastery"
+      },
+      {
+        "id": "hotspot_1_2",
+        "pitch": -19,
+        "yaw": 74,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 1,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.731Z",
+    "updated_at": "2025-09-01T23:15:36.731Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 32,
+  "fields": {
+    "monastery": 40,
+    "title": "Sanga Choeling Monastery - Courtyard",
+    "description": "Central courtyard where ceremonies take place",
+    "location_name": "courtyard",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_2_1",
+        "pitch": -10,
+        "yaw": 42,
+        "type": "info",
+        "text": "Learn about this sacred area of Sanga Choeling Monastery"
+      },
+      {
+        "id": "hotspot_2_2",
+        "pitch": 5,
+        "yaw": 88,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 2,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.735Z",
+    "updated_at": "2025-09-01T23:15:36.735Z"
+  }
+},
+{
+  "model": "tours.panorama",
+  "pk": 33,
+  "fields": {
+    "monastery": 40,
+    "title": "Sanga Choeling Monastery - Prayer Wheels",
+    "description": "Traditional prayer wheels area",
+    "location_name": "prayer_area",
+    "image": "",
+    "image_alt": "",
+    "thumbnail": "",
+    "narration_audio": "",
+    "audio_duration": null,
+    "audio_transcript": "",
+    "initial_yaw": 0.0,
+    "initial_pitch": 0.0,
+    "hotspots_data": [
+      {
+        "id": "hotspot_3_1",
+        "pitch": -17,
+        "yaw": 118,
+        "type": "info",
+        "text": "Learn about this sacred area of Sanga Choeling Monastery"
+      },
+      {
+        "id": "hotspot_3_2",
+        "pitch": -15,
+        "yaw": 222,
+        "type": "info",
+        "text": "Historical significance of this location"
+      }
+    ],
+    "order": 3,
+    "is_featured": false,
+    "is_active": true,
+    "view_count": 0,
+    "created_at": "2025-09-01T23:15:36.740Z",
+    "updated_at": "2025-09-01T23:15:36.740Z"
+  }
+}
+]

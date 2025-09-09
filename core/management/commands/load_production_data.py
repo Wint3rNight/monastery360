@@ -14,30 +14,48 @@ class Command(BaseCommand):
                 self.style.WARNING('This command should only be run in production')
             )
             return
-
-        self.stdout.write('Loading monastery and core app data...')
-        try:
-            call_command('loaddata', 'local_data.json')
-            self.stdout.write(
-                self.style.SUCCESS('Successfully loaded local_data.json')
-            )
-        except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f'Error loading local_data.json: {e}')
-            )
-
-        # Optional: Load users (you might skip this if you want fresh users)
-        self.stdout.write('Loading user data...')
-        try:
-            call_command('loaddata', 'users_data.json')
-            self.stdout.write(
-                self.style.SUCCESS('Successfully loaded users_data.json')
-            )
-        except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f'Error loading users_data.json: {e}')
-            )
-
+        
+        # List of data files to load in order (dependencies first)
+        data_files = [
+            ('local_data.json', 'Core app data (monasteries, audio POIs)'),
+            ('events_data.json', 'Events data'),
+            ('tours_data.json', 'Tours and panorama data'),
+            ('bookings_data.json', 'Booking data'),
+            ('users_data.json', 'User data'),
+        ]
+        
+        for filename, description in data_files:
+            self.stdout.write(f'Loading {description}...')
+            try:
+                call_command('loaddata', filename)
+                self.stdout.write(
+                    self.style.SUCCESS(f'✓ Successfully loaded {filename}')
+                )
+            except Exception as e:
+                self.stdout.write(
+                    self.style.ERROR(f'✗ Error loading {filename}: {e}')
+                )
+                # Continue with other files even if one fails
+                continue
+        
         self.stdout.write(
-            self.style.SUCCESS('Data migration complete!')
+            self.style.SUCCESS('\n🎉 Data migration complete!')
         )
+        
+        # Show summary
+        self.stdout.write('\n📊 Checking data counts...')
+        try:
+            from django.contrib.auth.models import User
+            from core.models import Monastery
+            from tours.models import Panorama
+            from bookings.models import Booking
+            from events.models import Event
+            
+            self.stdout.write(f'Users: {User.objects.count()}')
+            self.stdout.write(f'Monasteries: {Monastery.objects.count()}')
+            self.stdout.write(f'Events: {Event.objects.count()}')
+            self.stdout.write(f'Panoramas: {Panorama.objects.count()}')
+            self.stdout.write(f'Bookings: {Booking.objects.count()}')
+            
+        except Exception as e:
+            self.stdout.write(f'Could not show summary: {e}')
