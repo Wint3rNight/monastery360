@@ -2,27 +2,17 @@ services:
   - type: web
     name: monastery360
     env: python
-    region: oregon
-    plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn monastery360.wsgi:application"
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.4
       - key: DATABASE_URL
         fromDatabase:
           name: monastery360-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
-      - key: DEBUG
-        value: "False"
-      - key: DJANGO_SETTINGS_MODULE
-        value: monastery360.settings
 
 databases:
   - name: monastery360-db
     databaseName: monastery360
     user: monastery360
-    region: oregon
-    plan: free
