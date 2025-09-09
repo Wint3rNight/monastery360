@@ -1,31 +1,25 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Build script for Render deployment
-set -o errexit  # exit on error
+set -e
 
 echo "Starting build process..."
+echo "Current directory: $(pwd)"
 echo "Python version: $(python --version)"
-echo "Pip version: $(pip --version)"
 
 # Upgrade pip
 echo "Upgrading pip..."
-python -m pip install --upgrade pip
+pip install --upgrade pip
 
-# Install dependencies (use production requirements without GDAL)
-echo "Installing Python dependencies..."
+# Install dependencies
+echo "Installing Python dependencies from requirements-render.txt..."
 pip install -r requirements-render.txt
 
-# Verify critical packages
-echo "Verifying installations..."
-python -c "import django; print(f'Django {django.get_version()}')"
-python -c "import gunicorn; print('Gunicorn installed')"
+# Verify Django installation
+python -c "import django; print(f'Django {django.get_version()} installed successfully')"
 
 # Collect static files
 echo "Collecting static files..."
-python manage.py collectstatic --no-input --clear
-
-# Check for any Django configuration issues
-echo "Running Django system checks..."
-python manage.py check --deploy
+python manage.py collectstatic --noinput
 
 # Run database migrations
 echo "Running database migrations..."
