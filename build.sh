@@ -18,11 +18,29 @@ python manage.py collectstatic --noinput --clear || echo "Static files collectio
 echo "=== Running migrations ==="
 python manage.py migrate
 
-echo "=== Loading production data ==="
-python manage.py load_production_data
-
 echo "=== Creating superuser if needed ==="
 python manage.py create_superuser || echo "Superuser creation skipped (may already exist)"
+
+echo "=== Loading production data (if needed) ==="
+python -c "
+import django
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'monastery360.settings')
+django.setup()
+from core.models import Monastery
+count = Monastery.objects.count()
+print(f'Current monastery count: {count}')
+if count == 0:
+    print('Loading data...')
+    from django.core.management import call_command
+    try:
+        call_command('loaddata', 'local_data.json')
+        print('Data loaded successfully!')
+    except Exception as e:
+        print(f'Data loading failed: {e}')
+else:
+    print('Data already exists, skipping...')
+"
 
 echo "=== Checking if User model works ==="
 python -c "
