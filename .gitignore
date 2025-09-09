@@ -39,7 +39,6 @@ staticfiles/
 # Misc
 .DS_Store
 django.log
-firebase_config.py
 static/data/*.bak
 *.bak
 *.log

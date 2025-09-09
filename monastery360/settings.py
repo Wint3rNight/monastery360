@@ -88,7 +88,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'core.context_processors.firebase_config',
             ],
         },
     },
@@ -188,14 +187,6 @@ DEFAULT_FROM_EMAIL = 'noreply@monastery360.com'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# Firebase Configuration
-FIREBASE_API_KEY = env('FIREBASE_API_KEY', default='')
-FIREBASE_AUTH_DOMAIN = env('FIREBASE_AUTH_DOMAIN', default='')
-FIREBASE_PROJECT_ID = env('FIREBASE_PROJECT_ID', default='')
-FIREBASE_STORAGE_BUCKET = env('FIREBASE_STORAGE_BUCKET', default='')
-FIREBASE_MESSAGING_SENDER_ID = env('FIREBASE_MESSAGING_SENDER_ID', default='')
-FIREBASE_APP_ID = env('FIREBASE_APP_ID', default='')
 
 # Logging
 LOGGING = {

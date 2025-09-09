@@ -19,18 +19,6 @@ services:
         value: "False"
       - key: DJANGO_SETTINGS_MODULE
         value: monastery360.settings
-      - key: FIREBASE_API_KEY
-        value: ""
-      - key: FIREBASE_AUTH_DOMAIN
-        value: ""
-      - key: FIREBASE_PROJECT_ID
-        value: ""
-      - key: FIREBASE_STORAGE_BUCKET
-        value: ""
-      - key: FIREBASE_MESSAGING_SENDER_ID
-        value: ""
-      - key: FIREBASE_APP_ID
-        value: ""
 
 databases:
   - name: monastery360-db
