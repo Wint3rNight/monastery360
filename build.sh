@@ -28,4 +28,7 @@ from django.contrib.auth.models import User
 print(f'User model working. Total users: {User.objects.count()}')
 "
 
+echo "=== Creating superuser if needed ==="
+python manage.py create_superuser || echo "Superuser creation skipped or failed"
+
 echo "=== Build complete! ==="
