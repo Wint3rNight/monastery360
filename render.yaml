@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: monastery360
+    env: python
+    region: oregon  # or your preferred region
+    plan: starter   # free tier
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn monastery360.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: DATABASE_URL
+        fromDatabase:
+          name: monastery360-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DJANGO_SETTINGS_MODULE
+        value: monastery360.settings
+
+  - type: pserv
+    name: monastery360-db
+    env: postgresql
+    region: oregon  # same region as web service
+    plan: starter   # free tier
+    databaseName: monastery360
+    databaseUser: monastery360
+    ipAllowList: []  # only allow internal connections

@@ -1,26 +1,18 @@
+# Production requirements for Render deployment (without GDAL)
+# This file excludes GeoDjango dependencies that may cause issues on hosting platforms
+
 # Django and Core Dependencies
 Django==4.2.5
 django-environ==0.11.2
 dj-database-url==2.1.0
 Pillow==10.0.0
 
-# GeoDjango Dependencies
+# Database
 psycopg2-binary==2.9.7
-GDAL==3.7.1
 
 # API and JSON handling
 djangorestframework==3.14.0
 django-cors-headers==4.2.0
-
-# Development and Testing
-black==23.7.0
-flake8==6.0.0
-isort==5.12.0
-pre-commit==3.3.3
-bandit==1.7.5
-pylint==2.17.7
-pylint-django==2.5.5
-coverage==7.3.0
 
 # Security
 django-csp==3.7
