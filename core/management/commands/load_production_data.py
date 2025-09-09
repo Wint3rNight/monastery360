@@ -1,6 +1,7 @@
-from django.core.management.base import BaseCommand
-from django.core.management import call_command
 import os
+
+from django.core.management import call_command
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -13,7 +14,7 @@ class Command(BaseCommand):
                 self.style.WARNING('This command should only be run in production')
             )
             return
-        
+
         self.stdout.write('Loading monastery and core app data...')
         try:
             call_command('loaddata', 'local_data.json')
@@ -24,7 +25,7 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR(f'Error loading local_data.json: {e}')
             )
-        
+
         # Optional: Load users (you might skip this if you want fresh users)
         self.stdout.write('Loading user data...')
         try:
@@ -36,7 +37,7 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR(f'Error loading users_data.json: {e}')
             )
-        
+
         self.stdout.write(
             self.style.SUCCESS('Data migration complete!')
         )

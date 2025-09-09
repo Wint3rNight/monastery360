@@ -232,7 +232,7 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-    # Static files compression and caching  
+    # Static files compression and caching
     STORAGES = {
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
