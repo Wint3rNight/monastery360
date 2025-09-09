@@ -240,7 +240,7 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    
+
     # Static files compression and caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
