@@ -32,26 +32,20 @@ class CustomUserCreationForm(UserCreationForm):
         """Ensure email is unique."""
         email = self.cleaned_data.get('email')
         if email:
-            try:
-                existing_user = User.objects.filter(email=email).exists()
-                if existing_user:
-                    raise ValidationError("A user with this email already exists.")
-            except Exception as e:
-                # If database query fails, log it but don't block registration
-                print(f"Database error checking email: {e}")
+            # Convert to lowercase for case-insensitive comparison
+            email = email.lower()
+            if User.objects.filter(email__iexact=email).exists():
+                raise ValidationError("A user with this email already exists.")
         return email
 
     def clean_username(self):
         """Ensure username is unique and valid."""
         username = self.cleaned_data.get('username')
         if username:
-            try:
-                existing_user = User.objects.filter(username=username).exists()
-                if existing_user:
-                    raise ValidationError("A user with this username already exists.")
-            except Exception as e:
-                # If database query fails, log it but don't block registration
-                print(f"Database error checking username: {e}")
+            # Convert to lowercase for case-insensitive comparison
+            username = username.lower()
+            if User.objects.filter(username__iexact=username).exists():
+                raise ValidationError("A user with this username already exists.")
         return username
 
     def save(self, commit=True):
@@ -121,6 +115,27 @@ def login_view(request):
             signup_form = CustomUserCreationForm(request.POST)
             if signup_form.is_valid():
                 try:
+                    # Additional validation before creating user
+                    username = signup_form.cleaned_data['username'].lower()
+                    email = signup_form.cleaned_data['email'].lower()
+                    
+                    # Double-check uniqueness before creating user
+                    if User.objects.filter(username__iexact=username).exists():
+                        messages.error(request, 'Username already exists. Please choose a different username.')
+                        return render(request, 'auth/login_test.html', {
+                            'login_form': login_form,
+                            'signup_form': signup_form,
+                            'show_signup': True,
+                        })
+                    
+                    if User.objects.filter(email__iexact=email).exists():
+                        messages.error(request, 'An account with this email already exists. Please use a different email or try logging in.')
+                        return render(request, 'auth/login_test.html', {
+                            'login_form': login_form,
+                            'signup_form': signup_form,
+                            'show_signup': True,
+                        })
+
                     # Ensure we're not already logged in
                     if request.user.is_authenticated:
                         logout(request)
