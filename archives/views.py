@@ -45,7 +45,9 @@ def item_download(request, monastery_slug, catalog_number):
     If `?inline=1` is provided, attempt to display inline (Content-Disposition inline).
     Otherwise serve as attachment.
     """
-    from django.http import FileResponse, Http404
+    from django.http import FileResponse, Http404, HttpResponse
+    import mimetypes
+    
     item = ArchiveItem.objects.select_related('monastery').filter(
         monastery__slug=monastery_slug,
         catalog_number=catalog_number,
@@ -55,19 +57,43 @@ def item_download(request, monastery_slug, catalog_number):
     if not item or not item.scan:
         raise Http404('File not found')
 
+    # Check if file exists
+    try:
+        if not item.scan.storage.exists(item.scan.name):
+            raise Http404('File not found on storage')
+    except Exception:
+        raise Http404('File not accessible')
+
     # increment download counter (best-effort)
     try:
         item.increment_download_count()
     except Exception:
         pass
 
-    # Determine disposition
+    # Determine disposition and content type
     inline = request.GET.get('inline') == '1'
     disposition = 'inline' if inline else 'attachment'
+    
+    # Get file name
+    filename = os.path.basename(item.scan.name)
+    
+    # Determine content type
+    content_type, _ = mimetypes.guess_type(filename)
+    if not content_type:
+        content_type = 'application/octet-stream'
 
-    response = FileResponse(item.scan.open('rb'), as_attachment=(not inline))
-    response['Content-Disposition'] = f"{disposition}; filename=\"{item.scan.name.split('/')[-1]}\""
-    return response
+    try:
+        # Use FileResponse for better performance
+        response = FileResponse(
+            item.scan.open('rb'), 
+            as_attachment=(not inline),
+            content_type=content_type
+        )
+        response['Content-Disposition'] = f'{disposition}; filename="{filename}"'
+        return response
+    except Exception as e:
+        # Fallback: return error message
+        return HttpResponse(f'Error serving file: {str(e)}', status=500)
 
 
 def archive_index(request):

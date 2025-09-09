@@ -27,4 +27,5 @@ urlpatterns = [
     path('thanks/<str:confirmation_number>/', views.booking_thanks, name='thanks'),
     path('search/', views.booking_search, name='search'),
     path('booking/<str:confirmation_number>/', views.booking_detail, name='booking_detail'),
+    path('booking/<str:confirmation_number>/receipt/', views.download_booking_receipt, name='download_booking_receipt'),
 ]

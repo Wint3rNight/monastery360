@@ -27,7 +27,7 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = [
-            'monastery', 'name', 'email', 'phone',
+            'monastery', 'name', 'phone',  # REMOVED 'email'
             'visit_date', 'visit_time', 'visit_type',
             'number_of_visitors', 'number_of_adults', 'number_of_children',
             'purpose_of_visit', 'special_requirements',
@@ -90,8 +90,6 @@ class BookingForm(forms.ModelForm):
         self.fields['name'].label = 'Full Name'
         self.fields['name'].help_text = 'Name of the primary contact person'
 
-        self.fields['email'].help_text = 'We will send confirmation and details to this email'
-
         self.fields['phone'].help_text = 'Include country code (e.g., +91 for India)'
 
         self.fields['visit_date'].help_text = 'Please choose a date at least 3 days in advance'
@@ -127,11 +125,11 @@ class BookingForm(forms.ModelForm):
                 'Contact Information',
                 Row(
                     Column('name', css_class='form-group col-md-6'),
-                    Column('email', css_class='form-group col-md-6'),
+                    Column('phone', css_class='form-group col-md-6'),
                 ),
                 Row(
-                    Column('phone', css_class='form-group col-md-6'),
                     Column('preferred_language', css_class='form-group col-md-6'),
+                    css_class='form-row'
                 ),
             ),
             Fieldset(
@@ -166,7 +164,7 @@ class BookingForm(forms.ModelForm):
                 'notes',
                 css_class='border-top pt-3 mt-3'
             ),
-            HTML('<div class="alert alert-info mt-3"><i class="fas fa-info-circle"></i> Your booking request will be reviewed and confirmed within 24-48 hours. You will receive an email confirmation with further details.</div>'),
+            HTML('<div class="alert alert-info mt-3"><i class="fas fa-info-circle"></i> Your booking request will be reviewed and confirmed within 24-48 hours. You will receive confirmation at your registered email address.</div>'),
             Submit('submit', 'Submit Booking Request', css_class='btn btn-primary btn-lg mt-3')
         )
 

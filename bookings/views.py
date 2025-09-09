@@ -309,75 +309,83 @@ def event_booking_detail(request, confirmation_number):
 @login_required
 def download_receipt(request, confirmation_number):
     """
-    Download receipt for event booking.
+    Download receipt for event booking as plain text.
     """
     booking = get_object_or_404(EventBooking, confirmation_number=confirmation_number)
+    
+    # Security check - only allow user to download their own receipt
+    if request.user.is_authenticated and booking.user and booking.user != request.user:
+        return HttpResponse("Unauthorized", status=403)
 
-    # Generate PDF receipt
-    from io import BytesIO
+    # Generate plain text receipt
+    receipt_content = f"""
+MONASTERY360 - BOOKING RECEIPT
+{'=' * 50}
 
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import letter
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.pdfgen import canvas
-    from reportlab.platypus import (
-        Paragraph,
-        SimpleDocTemplate,
-        Spacer,
-        Table,
-        TableStyle,
-    )
+Confirmation Number: {booking.confirmation_number}
+Date of Booking: {booking.created_at.strftime('%B %d, %Y at %I:%M %p')}
 
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
-    styles = getSampleStyleSheet()
-    story = []
+CUSTOMER INFORMATION
+--------------------
+Name: {booking.customer_name}
+Email: {booking.customer_email}
+Phone: {booking.customer_phone}
 
-    # Header
-    story.append(Paragraph("BOOKING RECEIPT", styles['Title']))
-    story.append(Spacer(1, 12))
+EVENT DETAILS
+-------------
+Event: {booking.event.title}
+Date: {booking.event.start_time.strftime('%B %d, %Y')}
+Time: {booking.event.start_time.strftime('%I:%M %p')}
+Monastery: {booking.event.monastery.name}
+Address: {booking.event.monastery.address}
 
-    # Booking details
-    booking_data = [
-        ['Receipt Number:', booking.receipt_number],
-        ['Confirmation Number:', booking.confirmation_number],
-        ['Date of Booking:', booking.created_at.strftime('%B %d, %Y')],
-        ['Customer Name:', booking.customer_name],
-        ['Email:', booking.customer_email],
-        ['Phone:', booking.customer_phone],
-        ['', ''],
-        ['Event:', booking.event.title],
-        ['Date:', booking.event.start_time.strftime('%B %d, %Y')],
-        ['Time:', booking.event.start_time.strftime('%I:%M %p')],
-        ['Location:', f"{booking.event.monastery.name}"],
-        ['Address:', f"{booking.event.monastery.address}"],
-        ['', ''],
-        ['Number of People:', str(booking.number_of_people)],
-        ['Adults:', str(booking.number_of_adults)],
-        ['Children:', str(booking.number_of_children)],
-        ['', ''],
-        ['Total Amount:', f"₹{booking.total_amount}" if booking.total_amount > 0 else "Free"],
-        ['Payment Status:', booking.get_payment_status_display()],
-    ]
+BOOKING DETAILS
+---------------
+Number of People: {booking.number_of_people}
+Adults: {booking.number_of_adults}
+Children: {booking.number_of_children}
 
-    table = Table(booking_data, colWidths=[150, 300])
-    table.setStyle(TableStyle([
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-    ]))
+PAYMENT INFORMATION
+------------------
+Total Amount: {'₹' + str(booking.total_amount) if booking.total_amount > 0 else 'Free'}
+Payment Status: {booking.get_payment_status_display()}
 
-    story.append(table)
-    story.append(Spacer(1, 20))
+"""
 
-    # Special requirements
     if booking.special_requirements:
-        story.append(Paragraph("Special Requirements:", styles['Heading2']))
-        story.append(Paragraph(booking.special_requirements, styles['Normal']))
-        story.append(Spacer(1, 12))
+        receipt_content += f"""
+SPECIAL REQUIREMENTS
+-------------------
+{booking.special_requirements}
 
-    # Footer
+"""
+
+    if booking.accessibility_needs:
+        receipt_content += f"""
+ACCESSIBILITY NEEDS
+------------------
+{booking.accessibility_needs}
+
+"""
+
+    receipt_content += f"""
+NOTES
+-----
+{booking.booking_notes if booking.booking_notes else 'None'}
+
+Thank you for booking with Monastery360!
+For any queries, please contact us with your confirmation number.
+
+Generated on: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}
+"""
+
+    response = HttpResponse(
+        receipt_content,
+        content_type='text/plain; charset=utf-8'
+    )
+    response['Content-Disposition'] = f'attachment; filename="receipt_{booking.confirmation_number}.txt"'
+    
+    return response
     story.append(Spacer(1, 20))
     story.append(Paragraph("Thank you for your booking! Please present this receipt at the venue.", styles['Normal']))
     story.append(Paragraph(f"For any queries, please contact: {booking.event.monastery.phone}", styles['Normal']))
@@ -521,3 +529,98 @@ def user_bookings_dashboard(request):
     }
     
     return render(request, 'bookings/user_dashboard.html', context)
+
+
+def download_booking_receipt(request, confirmation_number):
+    """
+    Download receipt for regular monastery booking as plain text.
+    """
+    booking = get_object_or_404(Booking, confirmation_number=confirmation_number)
+    
+    # Security check - only allow user to download their own receipt
+    if request.user.is_authenticated and booking.user and booking.user != request.user:
+        return HttpResponse("Unauthorized", status=403)
+
+    # Generate plain text receipt
+    receipt_content = f"""
+MONASTERY360 - VISIT BOOKING RECEIPT
+{'=' * 50}
+
+Confirmation Number: {booking.confirmation_number}
+Date of Booking: {booking.created_at.strftime('%B %d, %Y at %I:%M %p')}
+
+VISITOR INFORMATION
+------------------
+Name: {booking.name}
+Email: {booking.email}
+Phone: {booking.phone}
+Preferred Language: {booking.preferred_language}
+
+VISIT DETAILS
+-------------
+Monastery: {booking.monastery.name}
+Address: {booking.monastery.address}
+Visit Date: {booking.visit_date.strftime('%B %d, %Y')}
+Visit Time: {booking.visit_time.strftime('%I:%M %p') if booking.visit_time else 'To be confirmed'}
+Visit Type: {booking.get_visit_type_display()}
+
+GROUP INFORMATION
+----------------
+Number of Visitors: {booking.number_of_visitors}
+Adults: {booking.number_of_adults}
+Children: {booking.number_of_children}
+
+"""
+
+    if booking.organization:
+        receipt_content += f"""
+ORGANIZATION DETAILS
+-------------------
+Organization: {booking.organization}
+Group Leader: {booking.group_leader if booking.group_leader else 'Not specified'}
+
+"""
+
+    if booking.purpose_of_visit:
+        receipt_content += f"""
+PURPOSE OF VISIT
+---------------
+{booking.purpose_of_visit}
+
+"""
+
+    if booking.special_requirements:
+        receipt_content += f"""
+SPECIAL REQUIREMENTS
+-------------------
+{booking.special_requirements}
+
+"""
+
+    receipt_content += f"""
+SERVICES
+--------
+Transportation Needed: {'Yes' if booking.transportation_needed else 'No'}
+Accommodation Needed: {'Yes' if booking.accommodation_needed else 'No'}
+
+STATUS
+------
+Booking Status: {booking.get_status_display()}
+
+NOTES
+-----
+{booking.notes if booking.notes else 'None'}
+
+Thank you for choosing Monastery360!
+For any queries, please contact the monastery directly or use your confirmation number.
+
+Generated on: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}
+"""
+
+    response = HttpResponse(
+        receipt_content,
+        content_type='text/plain; charset=utf-8'
+    )
+    response['Content-Disposition'] = f'attachment; filename="booking_receipt_{booking.confirmation_number}.txt"'
+    
+    return response
