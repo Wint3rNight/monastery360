@@ -14,7 +14,7 @@ class Command(BaseCommand):
                 self.style.WARNING('This command should only be run in production')
             )
             return
-        
+
         # List of data files to load in order (dependencies first)
         data_files = [
             ('local_data.json', 'Core app data (monasteries, audio POIs)'),
@@ -23,7 +23,7 @@ class Command(BaseCommand):
             ('bookings_data.json', 'Booking data'),
             ('users_data.json', 'User data'),
         ]
-        
+
         for filename, description in data_files:
             self.stdout.write(f'Loading {description}...')
             try:
@@ -37,25 +37,26 @@ class Command(BaseCommand):
                 )
                 # Continue with other files even if one fails
                 continue
-        
+
         self.stdout.write(
             self.style.SUCCESS('\n🎉 Data migration complete!')
         )
-        
+
         # Show summary
         self.stdout.write('\n📊 Checking data counts...')
         try:
             from django.contrib.auth.models import User
-            from core.models import Monastery
-            from tours.models import Panorama
+
             from bookings.models import Booking
+            from core.models import Monastery
             from events.models import Event
-            
+            from tours.models import Panorama
+
             self.stdout.write(f'Users: {User.objects.count()}')
             self.stdout.write(f'Monasteries: {Monastery.objects.count()}')
             self.stdout.write(f'Events: {Event.objects.count()}')
             self.stdout.write(f'Panoramas: {Panorama.objects.count()}')
             self.stdout.write(f'Bookings: {Booking.objects.count()}')
-            
+
         except Exception as e:
             self.stdout.write(f'Could not show summary: {e}')

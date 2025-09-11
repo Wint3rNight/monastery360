@@ -11,7 +11,7 @@ app_name = 'bookings'
 urlpatterns = [
     # User dashboard
     path('my-bookings/', views.user_bookings_dashboard, name='user_dashboard'),
-    
+
     # Booking creation
     path('', views.booking_form, name='form'),
     path('monastery/<slug:monastery_slug>/', views.booking_form, name='monastery_form'),

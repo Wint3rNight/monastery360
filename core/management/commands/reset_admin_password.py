@@ -1,5 +1,5 @@
-from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -12,14 +12,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         username = options['username']
         password = options['password']
-        
+
         try:
             user = User.objects.get(username=username)
             user.set_password(password)
             user.is_superuser = True
             user.is_staff = True
             user.save()
-            
+
             self.stdout.write(
                 self.style.SUCCESS(f'Successfully reset password for user "{username}" and made them superuser')
             )

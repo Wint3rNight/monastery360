@@ -118,18 +118,18 @@ def login_view(request):
                     # Additional validation before creating user
                     username = signup_form.cleaned_data['username'].lower()
                     email = signup_form.cleaned_data['email'].lower()
-                    
+
                     # Double-check uniqueness before creating user
                     if User.objects.filter(username__iexact=username).exists():
-                        messages.error(request, 'Username already exists. Please choose a different username.')
+                        messages.error(request, f'Username "{username}" is already taken. Please choose a different username.')
                         return render(request, 'auth/login_test.html', {
                             'login_form': login_form,
                             'signup_form': signup_form,
                             'show_signup': True,
                         })
-                    
+
                     if User.objects.filter(email__iexact=email).exists():
-                        messages.error(request, 'An account with this email already exists. Please use a different email or try logging in.')
+                        messages.error(request, f'An account with email "{email}" already exists. Please use a different email or try logging in.')
                         return render(request, 'auth/login_test.html', {
                             'login_form': login_form,
                             'signup_form': signup_form,
@@ -159,9 +159,17 @@ def login_view(request):
             else:
                 # Show specific form errors
                 for field, errors in signup_form.errors.items():
+                    field_name = field.replace('_', ' ').title()
+                    if field == 'password2':
+                        field_name = 'Password confirmation'
+                    elif field == 'password1':
+                        field_name = 'Password'
+                    
                     for error in errors:
-                        messages.error(request, f'{field.title()}: {error}')
-                messages.error(request, 'Please correct the errors above.')
+                        messages.error(request, f'{field_name}: {error}')
+                
+                if signup_form.errors:
+                    messages.error(request, 'Please correct the errors above and try again.')
 
     return render(request, 'auth/login_test.html', {
         'login_form': login_form,

@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from .models import AudioPOI, Monastery
+from .models import ContactSubmission, Feedback
 
 
 @admin.register(Monastery)
@@ -122,4 +123,64 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'date_joined')
     search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('-date_joined',)
+
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(admin.ModelAdmin):
+    """Admin for contact form submissions."""
+    
+    list_display = ('name', 'email', 'subject', 'created_at', 'is_responded')
+    list_filter = ('subject', 'is_responded', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Contact Information', {
+            'fields': ('name', 'email', 'phone')
+        }),
+        ('Message Details', {
+            'fields': ('subject', 'message')
+        }),
+        ('Admin Response', {
+            'fields': ('is_responded', 'response_date', 'admin_notes'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('user', 'created_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    """Admin for user feedback."""
+    
+    list_display = ('name', 'category', 'rating', 'title', 'created_at', 'is_reviewed')
+    list_filter = ('category', 'rating', 'is_reviewed', 'is_public', 'created_at')
+    search_fields = ('name', 'email', 'title', 'message')
+    readonly_fields = ('created_at', 'browser_info')
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('User Information', {
+            'fields': ('name', 'email', 'user')
+        }),
+        ('Feedback Content', {
+            'fields': ('category', 'rating', 'title', 'message')
+        }),
+        ('Additional Info', {
+            'fields': ('page_url', 'browser_info'),
+            'classes': ('collapse',)
+        }),
+        ('Admin Actions', {
+            'fields': ('is_reviewed', 'is_public', 'admin_response'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
 

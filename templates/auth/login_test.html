@@ -55,6 +55,15 @@
     <!-- Main Container -->
     <div class="min-h-screen flex items-center justify-center p-6">
         <div id="login-app"></div>
+    
+    <!-- Hidden Django Messages for JavaScript parsing -->
+    <div class="messages" style="display: none;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
     </div>
 
     <script>
@@ -183,10 +192,25 @@
                         window.location.href = res.url;
                     } else {
                         const text = await res.text();
-                        if (text.includes('already exists') || text.includes('already taken')) {
+                        
+                        // Parse Django messages from the HTML response
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'text/html');
+                        const messages = doc.querySelectorAll('.messages .alert, .message');
+                        
+                        if (messages.length > 0) {
+                            // Extract and display the actual Django error messages
+                            const errorMessages = Array.from(messages)
+                                .map(msg => msg.textContent.trim())
+                                .filter(msg => msg.length > 0)
+                                .join(' ');
+                            setError(errorMessages || "Please check your information and try again.");
+                        } else if (text.includes('already exists') || text.includes('already taken')) {
                             setError("Username or email already exists.");
                         } else if (text.includes('password') && text.includes('error')) {
                             setError("Password requirements not met.");
+                        } else if (text.includes('error') || text.includes('invalid')) {
+                            setError("Please check your information and try again.");
                         } else {
                             setSuccess("Account created! Logging you in...");
                             setTimeout(() => {

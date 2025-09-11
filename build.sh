@@ -39,7 +39,7 @@ event_count = Event.objects.count()
 
 print(f'Current data counts:')
 print(f'- Monasteries: {monastery_count}')
-print(f'- Events: {event_count}')  
+print(f'- Events: {event_count}')
 print(f'- Tours: {tour_count}')
 print(f'- Bookings: {booking_count}')
 

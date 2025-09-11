@@ -45,9 +45,10 @@ def item_download(request, monastery_slug, catalog_number):
     If `?inline=1` is provided, attempt to display inline (Content-Disposition inline).
     Otherwise serve as attachment.
     """
-    from django.http import FileResponse, Http404, HttpResponse
     import mimetypes
-    
+
+    from django.http import FileResponse, Http404, HttpResponse
+
     item = ArchiveItem.objects.select_related('monastery').filter(
         monastery__slug=monastery_slug,
         catalog_number=catalog_number,
@@ -73,10 +74,10 @@ def item_download(request, monastery_slug, catalog_number):
     # Determine disposition and content type
     inline = request.GET.get('inline') == '1'
     disposition = 'inline' if inline else 'attachment'
-    
+
     # Get file name
     filename = os.path.basename(item.scan.name)
-    
+
     # Determine content type
     content_type, _ = mimetypes.guess_type(filename)
     if not content_type:
@@ -85,7 +86,7 @@ def item_download(request, monastery_slug, catalog_number):
     try:
         # Use FileResponse for better performance
         response = FileResponse(
-            item.scan.open('rb'), 
+            item.scan.open('rb'),
             as_attachment=(not inline),
             content_type=content_type
         )

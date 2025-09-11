@@ -58,9 +58,11 @@ urlpatterns = [
     ), name='offline'),
 ]
 
-# Development-only: serve media and static files
+# Serve media and static files
+# In production, this should be handled by a web server (nginx/apache) or cloud storage
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     # Development-only: serve legacy /downloads/ assets referenced by static JSON
     try:

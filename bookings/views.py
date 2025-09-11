@@ -7,7 +7,6 @@ Handles visitor booking creation, confirmation, and management.
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -34,7 +33,7 @@ def booking_form(request, monastery_slug=None):
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
-            
+
             # SECURITY FIX: Always link booking to logged-in user if authenticated
             if request.user.is_authenticated:
                 booking.user = request.user
@@ -45,7 +44,7 @@ def booking_form(request, monastery_slug=None):
                     booking.name = f"{request.user.first_name} {request.user.last_name}".strip()
                     if not booking.name:  # If no first/last name, use username
                         booking.name = request.user.username
-            
+
             booking.save()
 
             # Send confirmation email
@@ -250,7 +249,7 @@ def event_booking_form(request, event_id):
             payment_status='confirmed' if total_amount == 0 else 'pending',
             user=request.user if request.user.is_authenticated else None,  # SECURITY FIX
         )
-        
+
         # SECURITY FIX: For logged-in users, enforce their email
         if request.user.is_authenticated:
             booking.customer_email = request.user.email
@@ -311,26 +310,39 @@ def download_receipt(request, confirmation_number):
     """
     Download receipt for event booking as PDF.
     """
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import letter, A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.units import inch
-    from io import BytesIO
     import os
-    
+    from io import BytesIO
+
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import A4, letter
+        from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+        from reportlab.lib.units import inch
+        from reportlab.platypus import (
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
+    except ImportError:
+        return HttpResponse(
+            "PDF generation is temporarily unavailable. Please contact support.",
+            status=503
+        )
+
     booking = get_object_or_404(EventBooking, confirmation_number=confirmation_number)
-    
+
     # Security check - only allow user to download their own receipt
     if request.user.is_authenticated and booking.user and booking.user != request.user:
         return HttpResponse("Unauthorized", status=403)
 
     # Create PDF buffer
     buffer = BytesIO()
-    
+
     # Create PDF document
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=1*inch)
-    
+
     # Get styles
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
@@ -341,7 +353,7 @@ def download_receipt(request, confirmation_number):
         textColor=colors.HexColor('#1f2937'),
         alignment=1  # Center alignment
     )
-    
+
     heading_style = ParagraphStyle(
         'CustomHeading',
         parent=styles['Heading2'],
@@ -350,21 +362,21 @@ def download_receipt(request, confirmation_number):
         textColor=colors.HexColor('#3b82f6'),
         spaceBefore=20
     )
-    
+
     # Build content
     story = []
-    
+
     # Title
     story.append(Paragraph("MONASTERY360 - BOOKING RECEIPT", title_style))
     story.append(Spacer(1, 20))
-    
+
     # Confirmation details
     confirmation_data = [
         ['Confirmation Number:', booking.confirmation_number],
         ['Receipt Number:', booking.receipt_number],
         ['Date of Booking:', booking.created_at.strftime('%B %d, %Y at %I:%M %p')]
     ]
-    
+
     confirmation_table = Table(confirmation_data, colWidths=[2*inch, 3*inch])
     confirmation_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -375,7 +387,7 @@ def download_receipt(request, confirmation_number):
     ]))
     story.append(confirmation_table)
     story.append(Spacer(1, 20))
-    
+
     # Customer Information
     story.append(Paragraph("CUSTOMER INFORMATION", heading_style))
     customer_data = [
@@ -383,7 +395,7 @@ def download_receipt(request, confirmation_number):
         ['Email:', booking.customer_email],
         ['Phone:', booking.customer_phone]
     ]
-    
+
     customer_table = Table(customer_data, colWidths=[2*inch, 3*inch])
     customer_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -394,7 +406,7 @@ def download_receipt(request, confirmation_number):
     ]))
     story.append(customer_table)
     story.append(Spacer(1, 20))
-    
+
     # Event Details
     story.append(Paragraph("EVENT DETAILS", heading_style))
     event_data = [
@@ -404,7 +416,7 @@ def download_receipt(request, confirmation_number):
         ['Monastery:', booking.event.monastery.name],
         ['Address:', booking.event.monastery.address]
     ]
-    
+
     event_table = Table(event_data, colWidths=[2*inch, 3*inch])
     event_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -415,7 +427,7 @@ def download_receipt(request, confirmation_number):
     ]))
     story.append(event_table)
     story.append(Spacer(1, 20))
-    
+
     # Booking Details
     story.append(Paragraph("BOOKING DETAILS", heading_style))
     booking_data = [
@@ -423,7 +435,7 @@ def download_receipt(request, confirmation_number):
         ['Adults:', str(booking.number_of_adults)],
         ['Children:', str(booking.number_of_children)]
     ]
-    
+
     booking_table = Table(booking_data, colWidths=[2*inch, 3*inch])
     booking_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -434,14 +446,14 @@ def download_receipt(request, confirmation_number):
     ]))
     story.append(booking_table)
     story.append(Spacer(1, 20))
-    
+
     # Payment Information
     story.append(Paragraph("PAYMENT INFORMATION", heading_style))
     payment_data = [
         ['Total Amount:', f"₹{booking.total_amount}" if booking.total_amount > 0 else 'Free'],
         ['Payment Status:', booking.get_payment_status_display()]
     ]
-    
+
     payment_table = Table(payment_data, colWidths=[2*inch, 3*inch])
     payment_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -452,40 +464,44 @@ def download_receipt(request, confirmation_number):
     ]))
     story.append(payment_table)
     story.append(Spacer(1, 20))
-    
+
     # Additional information
     if booking.special_requirements:
         story.append(Paragraph("SPECIAL REQUIREMENTS", heading_style))
         story.append(Paragraph(booking.special_requirements, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     if booking.accessibility_needs:
         story.append(Paragraph("ACCESSIBILITY NEEDS", heading_style))
         story.append(Paragraph(booking.accessibility_needs, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     if booking.booking_notes:
         story.append(Paragraph("NOTES", heading_style))
         story.append(Paragraph(booking.booking_notes, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     story.append(Spacer(1, 30))
     story.append(Paragraph("Thank you for booking with Monastery360!", styles['Normal']))
     story.append(Paragraph("Please present this receipt at the venue.", styles['Normal']))
     if booking.event.monastery.phone:
         story.append(Paragraph(f"For any queries, please contact: {booking.event.monastery.phone}", styles['Normal']))
-    
+
     story.append(Spacer(1, 20))
     story.append(Paragraph(f"Generated on: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Italic']))
 
     # Build PDF
-    doc.build(story)
-    
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="receipt_{booking.confirmation_number}.pdf"'
-    
-    return response
+    try:
+        doc.build(story)
+        buffer.seek(0)
+        response = HttpResponse(buffer, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="receipt_{booking.confirmation_number}.pdf"'
+        return response
+    except Exception as e:
+        return HttpResponse(
+            f"Error generating receipt: {str(e)}. Please contact support.",
+            status=500
+        )
 
 
 def send_event_booking_confirmation_email(booking):
@@ -606,17 +622,17 @@ def user_bookings_dashboard(request):
     """
     # Get user's regular bookings
     user_bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
-    
+
     # Get user's event bookings
     user_event_bookings = EventBooking.objects.filter(user=request.user).order_by('-created_at')
-    
+
     context = {
         'user_bookings': user_bookings,
         'user_event_bookings': user_event_bookings,
         'page_title': 'My Bookings - Monastery360',
         'page_description': 'View and manage all your monastery visit bookings and event registrations',
     }
-    
+
     return render(request, 'bookings/user_dashboard.html', context)
 
 
@@ -624,26 +640,39 @@ def download_booking_receipt(request, confirmation_number):
     """
     Download receipt for regular monastery booking as PDF.
     """
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import letter, A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.units import inch
-    from io import BytesIO
     import os
-    
+    from io import BytesIO
+
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import A4, letter
+        from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+        from reportlab.lib.units import inch
+        from reportlab.platypus import (
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
+    except ImportError:
+        return HttpResponse(
+            "PDF generation is temporarily unavailable. Please contact support.",
+            status=503
+        )
+
     booking = get_object_or_404(Booking, confirmation_number=confirmation_number)
-    
+
     # Security check - only allow user to download their own receipt
     if request.user.is_authenticated and booking.user and booking.user != request.user:
         return HttpResponse("Unauthorized", status=403)
 
     # Create PDF buffer
     buffer = BytesIO()
-    
+
     # Create PDF document
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=1*inch)
-    
+
     # Get styles
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
@@ -654,7 +683,7 @@ def download_booking_receipt(request, confirmation_number):
         textColor=colors.HexColor('#1f2937'),
         alignment=1  # Center alignment
     )
-    
+
     heading_style = ParagraphStyle(
         'CustomHeading',
         parent=styles['Heading2'],
@@ -663,20 +692,20 @@ def download_booking_receipt(request, confirmation_number):
         textColor=colors.HexColor('#3b82f6'),
         spaceBefore=20
     )
-    
+
     # Build content
     story = []
-    
+
     # Title
     story.append(Paragraph("MONASTERY360 - VISIT BOOKING RECEIPT", title_style))
     story.append(Spacer(1, 20))
-    
+
     # Confirmation details
     confirmation_data = [
         ['Confirmation Number:', booking.confirmation_number],
         ['Date of Booking:', booking.created_at.strftime('%B %d, %Y at %I:%M %p')]
     ]
-    
+
     confirmation_table = Table(confirmation_data, colWidths=[2*inch, 3*inch])
     confirmation_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -687,7 +716,7 @@ def download_booking_receipt(request, confirmation_number):
     ]))
     story.append(confirmation_table)
     story.append(Spacer(1, 20))
-    
+
     # Visitor Information
     story.append(Paragraph("VISITOR INFORMATION", heading_style))
     visitor_data = [
@@ -696,7 +725,7 @@ def download_booking_receipt(request, confirmation_number):
         ['Phone:', booking.phone],
         ['Preferred Language:', booking.preferred_language]
     ]
-    
+
     visitor_table = Table(visitor_data, colWidths=[2*inch, 3*inch])
     visitor_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -707,7 +736,7 @@ def download_booking_receipt(request, confirmation_number):
     ]))
     story.append(visitor_table)
     story.append(Spacer(1, 20))
-    
+
     # Visit Details
     story.append(Paragraph("VISIT DETAILS", heading_style))
     visit_data = [
@@ -717,7 +746,7 @@ def download_booking_receipt(request, confirmation_number):
         ['Visit Time:', booking.visit_time.strftime('%I:%M %p') if booking.visit_time else 'To be confirmed'],
         ['Visit Type:', booking.get_visit_type_display()]
     ]
-    
+
     visit_table = Table(visit_data, colWidths=[2*inch, 3*inch])
     visit_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -728,7 +757,7 @@ def download_booking_receipt(request, confirmation_number):
     ]))
     story.append(visit_table)
     story.append(Spacer(1, 20))
-    
+
     # Group Information
     story.append(Paragraph("GROUP INFORMATION", heading_style))
     group_data = [
@@ -736,7 +765,7 @@ def download_booking_receipt(request, confirmation_number):
         ['Adults:', str(booking.number_of_adults)],
         ['Children:', str(booking.number_of_children)]
     ]
-    
+
     group_table = Table(group_data, colWidths=[2*inch, 3*inch])
     group_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -747,7 +776,7 @@ def download_booking_receipt(request, confirmation_number):
     ]))
     story.append(group_table)
     story.append(Spacer(1, 20))
-    
+
     # Organization details (if applicable)
     if booking.organization:
         story.append(Paragraph("ORGANIZATION DETAILS", heading_style))
@@ -755,7 +784,7 @@ def download_booking_receipt(request, confirmation_number):
             ['Organization:', booking.organization],
             ['Group Leader:', booking.group_leader if booking.group_leader else 'Not specified']
         ]
-        
+
         org_table = Table(org_data, colWidths=[2*inch, 3*inch])
         org_table.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -766,7 +795,7 @@ def download_booking_receipt(request, confirmation_number):
         ]))
         story.append(org_table)
         story.append(Spacer(1, 20))
-    
+
     # Services
     story.append(Paragraph("SERVICES", heading_style))
     services_data = [
@@ -774,7 +803,7 @@ def download_booking_receipt(request, confirmation_number):
         ['Accommodation Needed:', 'Yes' if booking.accommodation_needed else 'No'],
         ['Booking Status:', booking.get_status_display()]
     ]
-    
+
     services_table = Table(services_data, colWidths=[2*inch, 3*inch])
     services_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -785,35 +814,39 @@ def download_booking_receipt(request, confirmation_number):
     ]))
     story.append(services_table)
     story.append(Spacer(1, 20))
-    
+
     # Additional information
     if booking.purpose_of_visit:
         story.append(Paragraph("PURPOSE OF VISIT", heading_style))
         story.append(Paragraph(booking.purpose_of_visit, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     if booking.special_requirements:
         story.append(Paragraph("SPECIAL REQUIREMENTS", heading_style))
         story.append(Paragraph(booking.special_requirements, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     if booking.notes:
         story.append(Paragraph("NOTES", heading_style))
         story.append(Paragraph(booking.notes, styles['Normal']))
         story.append(Spacer(1, 15))
-    
+
     story.append(Spacer(1, 30))
     story.append(Paragraph("Thank you for choosing Monastery360!", styles['Normal']))
     story.append(Paragraph("For any queries, please contact the monastery directly or use your confirmation number.", styles['Normal']))
-    
+
     story.append(Spacer(1, 20))
     story.append(Paragraph(f"Generated on: {timezone.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Italic']))
 
     # Build PDF
-    doc.build(story)
-    
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="booking_receipt_{booking.confirmation_number}.pdf"'
-    
-    return response
+    try:
+        doc.build(story)
+        buffer.seek(0)
+        response = HttpResponse(buffer, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="booking_receipt_{booking.confirmation_number}.pdf"'
+        return response
+    except Exception as e:
+        return HttpResponse(
+            f"Error generating receipt: {str(e)}. Please contact support.",
+            status=500
+        )

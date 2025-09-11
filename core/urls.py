@@ -4,7 +4,7 @@ URL configuration for core app.
 
 from django.urls import path
 
-from . import auth_views, views
+from . import auth_views, views, contact_views
 from .pwa_views import manifest_view, service_worker_view
 
 app_name = 'core'
@@ -27,6 +27,14 @@ urlpatterns = [
 
     # Search
     path('search/', views.search, name='search'),
+
+    # Contact and Feedback
+    path('contact/', contact_views.contact_page, name='contact'),
+    path('contact/submit/', contact_views.submit_contact, name='submit_contact'),
+    path('feedback/', contact_views.feedback_page, name='feedback'),
+    path('feedback/submit/', contact_views.submit_feedback, name='submit_feedback'),
+    path('about/', contact_views.about_page, name='about'),
+    path('resources/', contact_views.resources_page, name='resources'),
 
     # PWA URLs
     path('manifest.json', manifest_view, name='manifest'),

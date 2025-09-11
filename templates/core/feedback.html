@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Monastery360</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-dharmachakra text-2xl text-amber-600"></i>
+                    <h1 class="text-2xl font-bold text-gray-800">Monastery360</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="{% url 'core:home' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Home</a>
+                    <a href="{% url 'core:monastery_list' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Monasteries</a>
+                    <a href="{% url 'core:about' %}" class="text-gray-600 hover:text-amber-600 transition-colors">About</a>
+                    <a href="{% url 'core:contact' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-2xl mx-auto">
+            
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-comment-dots text-amber-600 mr-3"></i>
+                    Your Feedback
+                </h1>
+                {% if user.is_authenticated %}
+                    <p class="text-xl text-gray-600">
+                        Hi {{ user.first_name|default:user.username }}! We'd love to hear what you think about Monastery360.
+                    </p>
+                {% else %}
+                    <p class="text-xl text-gray-600">
+                        We'd love to hear what you think about Monastery360. Your feedback helps us improve!
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-6 p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-300{% else %}bg-red-100 text-red-800 border border-red-300{% endif %}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %} mr-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Feedback Form -->
+            <div class="bg-white rounded-xl shadow-2xl p-8">
+                <!-- User Info Display for Logged-in Users -->
+                {% if user.is_authenticated %}
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-circle text-2xl text-amber-600 mr-3"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-sm text-gray-600">{{ user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'core:submit_feedback' %}" class="space-y-6">
+                    {% csrf_token %}
+
+                    <!-- Subject Field -->
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-tag mr-2"></i>Subject
+                        </label>
+                        <select id="subject" 
+                                name="subject" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors">
+                            <option value="general">General Feedback</option>
+                            <option value="feature_request">Feature Request</option>
+                            <option value="bug_report">Bug Report</option>
+                            <option value="compliment">Compliment</option>
+                            <option value="suggestion">Suggestion</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Message Field -->
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-comment mr-2"></i>Your Feedback *
+                        </label>
+                        <textarea id="message" 
+                                  name="message" 
+                                  rows="8" 
+                                  required
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-vertical"
+                                  placeholder="Tell us what you think about Monastery360... What do you like? What could we improve? Any suggestions?"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" 
+                                class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-amber-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Send Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="text-center mt-8 text-gray-600">
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+                    <p class="text-amber-800">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Your feedback is important to us. We read every message and use your input to make Monastery360 better.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center mb-4">
+                <i class="fas fa-dharmachakra text-2xl text-amber-400 mr-2"></i>
+                <h3 class="text-xl font-semibold">Monastery360</h3>
+            </div>
+            <p class="text-gray-400">Connecting you with spiritual heritage</p>
+            <div class="mt-4 space-x-4">
+                <a href="{% url 'core:home' %}" class="text-gray-400 hover:text-amber-400 transition-colors">Home</a>
+                <a href="{% url 'core:about' %}" class="text-gray-400 hover:text-amber-400 transition-colors">About</a>
+                <a href="{% url 'core:contact' %}" class="text-gray-400 hover:text-amber-400 transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

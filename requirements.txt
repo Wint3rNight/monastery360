@@ -35,6 +35,9 @@ django-admin-interface==0.26.0
 # File handling and storage
 django-storages==1.14.0
 
+# PDF Generation
+reportlab==4.0.4
+
 # Form handling
 django-crispy-forms==2.0
 crispy-bootstrap5==0.7

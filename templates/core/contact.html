@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Monastery360 team for support, partnerships, and general inquiries. Get in touch via phone or email.">
+    <title>Contact Us - Monastery360</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & React DOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .contact-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="{% url 'core:home' %}" class="flex items-center space-x-2">
+                    <i class="fas fa-dharmachakra text-2xl text-blue-600"></i>
+                    <span class="text-xl font-bold text-gray-800">Monastery360</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'core:home' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Home</a>
+                    <a href="{% url 'core:monastery_list' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Monasteries</a>
+                    <a href="{% url 'tours:panorama_list' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Virtual Tours</a>
+                    <a href="{% url 'archives:digital_portal' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Archives</a>
+                    <a href="{% url 'events:calendar' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Events</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'core:profile' %}" class="text-gray-600 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-user"></i> {{ user.first_name|default:user.username }}
+                        </a>
+                        <a href="{% url 'core:logout' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Logout</a>
+                    {% else %}
+                        <a href="{% url 'core:login' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Login</a>
+                        <a href="{% url 'core:login' %}?signup=true" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="contact-app"></div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-dharmachakra text-2xl text-blue-400"></i>
+                        <span class="text-xl font-bold">Monastery360</span>
+                    </div>
+                    <p class="text-gray-400">Preserving and sharing the rich Buddhist heritage of Sikkim's monasteries through digital innovation.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Explore</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{% url 'core:monastery_list' %}" class="hover:text-white transition-colors">Monasteries</a></li>
+                        <li><a href="{% url 'tours:panorama_list' %}" class="hover:text-white transition-colors">Virtual Tours</a></li>
+                        <li><a href="{% url 'archives:digital_portal' %}" class="hover:text-white transition-colors">Digital Archives</a></li>
+                        <li><a href="{% url 'events:calendar' %}" class="hover:text-white transition-colors">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{% url 'core:about' %}" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="{% url 'core:feedback' %}" class="hover:text-white transition-colors">Feedback</a></li>
+                        <li><a href="{% url 'core:resources' %}" class="hover:text-white transition-colors">Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Connect</h4>
+                    <div class="space-y-2 text-gray-400">
+                        <p><i class="fas fa-envelope mr-2"></i> pratap2003singh@gmail.com</p>
+                        <p><i class="fas fa-phone mr-2"></i> +91-915-301-4860</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i> Gangtok, Sikkim</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Monastery360. Built for Smart India Hackathon. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- React Contact App -->
+    {% verbatim %}
+    <script type="text/babel">
+        const { useState } = React;
+
+        function ContactApp() {
+            const [formData, setFormData] = useState({
+                name: '',
+                email: '',
+                phone: '',
+                subject: 'general',
+                message: ''
+            });
+            const [loading, setLoading] = useState(false);
+            const [message, setMessage] = useState({ text: '', type: '' });
+
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setMessage({ text: '', type: '' });
+
+                try {
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+                    
+                    const formDataObj = new FormData();
+                    Object.keys(formData).forEach(key => {
+                        formDataObj.append(key, formData[key]);
+                    });
+                    formDataObj.append('csrfmiddlewaretoken', csrfToken);
+
+                    const response = await fetch('{% endverbatim %}{% url "core:submit_contact" %}{% verbatim %}', {
+                        method: 'POST',
+                        body: formDataObj,
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        setMessage({ text: result.message, type: 'success' });
+                        setFormData({ name: '', email: '', phone: '', subject: 'general', message: '' });
+                    } else {
+                        setMessage({ text: result.message, type: 'error' });
+                    }
+                } catch (error) {
+                    setMessage({ text: 'Network error. Please try again.', type: 'error' });
+                }
+
+                setLoading(false);
+            };
+
+            return (
+                <div className="min-h-screen">
+                    {/* Hero Section */}
+                    <div className="contact-bg py-20">
+                        <div className="container mx-auto px-4 text-center">
+                            <div className="max-w-3xl mx-auto">
+                                <h1 className="text-5xl font-bold text-white mb-6">Get In Touch</h1>
+                                <p className="text-xl text-white/90 leading-relaxed">
+                                    Have questions about our monasteries, need support, or want to collaborate? 
+                                    We'd love to hear from you. Reach out to us directly or send us a message.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contact Methods */}
+                    <div className="py-16">
+                        <div className="container mx-auto px-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                                
+                                {/* Phone */}
+                                <div className="text-center p-8 bg-white rounded-xl shadow-lg card-hover">
+                                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-phone text-blue-600 text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-semibold mb-2">Call Us</h3>
+                                    <p className="text-gray-600 mb-4">Speak directly with our team</p>
+                                    <a href="tel:+919153014860" className="text-blue-600 font-semibold text-lg hover:text-blue-800 transition-colors">
+                                        +91-915-301-4860
+                                    </a>
+                                </div>
+
+                                {/* Email */}
+                                <div className="text-center p-8 bg-white rounded-xl shadow-lg card-hover">
+                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-envelope text-green-600 text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-semibold mb-2">Email Us</h3>
+                                    <p className="text-gray-600 mb-4">Send us a detailed message</p>
+                                    <a href="mailto:pratap2003singh@gmail.com" className="text-green-600 font-semibold hover:text-green-800 transition-colors">
+                                        pratap2003singh@gmail.com
+                                    </a>
+                                </div>
+
+                                {/* Location */}
+                                <div className="text-center p-8 bg-white rounded-xl shadow-lg card-hover">
+                                    <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-map-marker-alt text-purple-600 text-2xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-semibold mb-2">Visit Us</h3>
+                                    <p className="text-gray-600 mb-4">Our office location</p>
+                                    <p className="text-purple-600 font-semibold">
+                                        Gangtok, Sikkim<br />
+                                        India
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contact Form */}
+                    <div className="py-16 bg-gray-50">
+                        <div className="container mx-auto px-4">
+                            <div className="max-w-2xl mx-auto">
+                                <div className="text-center mb-12">
+                                    <h2 className="text-4xl font-bold text-gray-800 mb-4">Send Us a Message</h2>
+                                    <p className="text-xl text-gray-600">We'll get back to you within 24-48 hours</p>
+                                </div>
+
+                                {/* CSRF Token */}
+                                {% endverbatim %}
+                                <form style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                {% verbatim %}
+
+                                {/* Message Display */}
+                                {message.text && (
+                                    <div className={`mb-6 p-4 rounded-lg ${
+                                        message.type === 'success' 
+                                            ? 'bg-green-100 border border-green-400 text-green-700' 
+                                            : 'bg-red-100 border border-red-400 text-red-700'
+                                    }`}>
+                                        {message.text}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Full Name *
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleInputChange}
+                                                required
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                placeholder="Your full name"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Email Address *
+                                            </label>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                required
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                placeholder="your@email.com"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Phone Number
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleInputChange}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                placeholder="+91 XXXXX XXXXX"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Subject
+                                            </label>
+                                            <select
+                                                name="subject"
+                                                value={formData.subject}
+                                                onChange={handleInputChange}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                            >
+                                                <option value="general">General Inquiry</option>
+                                                <option value="booking">Booking Support</option>
+                                                <option value="technical">Technical Issue</option>
+                                                <option value="partnership">Partnership</option>
+                                                <option value="media">Media Inquiry</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-6">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Message *
+                                        </label>
+                                        <textarea
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleInputChange}
+                                            required
+                                            rows={6}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                            placeholder="Please describe your inquiry in detail..."
+                                        ></textarea>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-colors ${
+                                            loading 
+                                                ? 'bg-gray-400 cursor-not-allowed' 
+                                                : 'bg-blue-600 hover:bg-blue-700'
+                                        }`}
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <i className="fas fa-spinner fa-spin mr-2"></i>
+                                                Sending Message...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fas fa-paper-plane mr-2"></i>
+                                                Send Message
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ContactApp />, document.getElementById('contact-app'));
+    </script>
+    {% endverbatim %}
+</body>
+</html>
