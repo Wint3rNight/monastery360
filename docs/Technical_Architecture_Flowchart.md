@@ -294,7 +294,7 @@
 │    information          │    └──────────────────────────────────────────┘
 │  • Cached bookings      │
 │  • Offline maps        │
-└─────────┬───────────────┘I 
+└─────────┬───────────────┘I
           │
           ▼
 ┌─────────────────────────┐    ┌──────────────────────────────────────────┐
@@ -420,6 +420,7 @@ DATA FLOW SEQUENCE:
 │   RESPONSE TO CLIENT    │
 │   • JSON/HTML Response  │
 │   • Cached headers      │
+
 │   • Compressed content  │
 └─────────────────────────┘
 ```

@@ -41,17 +41,25 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          key: ${{ runner.os }}-pip-v2-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-v2-
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
           # Some binary packages (GDAL) require numpy available during install; preinstall it.
           python -m pip install numpy
+          # Install critical packages first to ensure they're available
+          python -m pip install dj-database-url==2.1.0 Django==4.2.5
           # Use development requirements file that excludes GDAL and has compatible versions
           pip install --prefer-binary -r requirements_dev.txt
+
+      - name: Verify critical packages
+        run: |
+          python -c "import dj_database_url; print('dj_database_url OK')"
+          python -c "import django; print(f'Django {django.get_version()}')"
+          python -c "import reportlab; print('reportlab OK')"
 
       - name: Run linting
         run: |

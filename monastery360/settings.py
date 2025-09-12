@@ -96,7 +96,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'monastery360.wsgi.application'
 
 # Database
-import dj_database_url
+try:
+    import dj_database_url
+except ImportError as e:
+    print(f"Error importing dj_database_url: {e}")
+    print("Make sure dj-database-url is installed: pip install dj-database-url==2.1.0")
+    raise
 
 DATABASES = {
     'default': dj_database_url.config(
