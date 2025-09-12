@@ -85,10 +85,10 @@ def _handle_login(request, login_form):
     if not login_form.is_valid():
         messages.error(request, 'Please correct the errors below.')
         return None
-    
+
     username = login_form.cleaned_data['username']
     password = login_form.cleaned_data['password']
-    
+
     user = authenticate(request, username=username, password=password)
     if user is not None and user.is_active:
         login(request, user)
@@ -109,7 +109,7 @@ def _validate_user_uniqueness(request, username, email, login_form, signup_form)
             'signup_form': signup_form,
             'show_signup': True,
         })
-    
+
     if User.objects.filter(email__iexact=email).exists():
         messages.error(request, f'An account with email "{email}" already exists. Please use a different email or try logging in.')
         return render(request, 'auth/login_test.html', {
@@ -117,7 +117,7 @@ def _validate_user_uniqueness(request, username, email, login_form, signup_form)
             'signup_form': signup_form,
             'show_signup': True,
         })
-    
+
     return None
 
 
@@ -128,23 +128,23 @@ def _handle_signup(request, signup_form, login_form):
             for error in errors:
                 messages.error(request, f'{field.replace("_", " ").title()}: {error}')
         return None
-    
+
     try:
         username = signup_form.cleaned_data['username'].lower()
         email = signup_form.cleaned_data['email'].lower()
-        
+
         # Check uniqueness
         uniqueness_response = _validate_user_uniqueness(request, username, email, login_form, signup_form)
         if uniqueness_response:
             return uniqueness_response
-        
+
         # Ensure we're not already logged in
         if request.user.is_authenticated:
             logout(request)
-        
+
         # Create the user
         user = signup_form.save()
-        
+
         if user and user.pk:
             created_user = User.objects.get(pk=user.pk)
             login(request, created_user)
@@ -154,7 +154,7 @@ def _handle_signup(request, signup_form, login_form):
             messages.error(request, 'Account creation failed. Please try again.')
     except Exception as e:
         messages.error(request, f'Account creation failed: {str(e)}')
-    
+
     return None
 
 
