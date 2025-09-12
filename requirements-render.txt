@@ -39,3 +39,6 @@ python-decouple==3.8
 gunicorn==22.0.0
 whitenoise==6.4.0
 python-dotenv==1.0.0
+
+# PDF Generation
+reportlab==4.0.4

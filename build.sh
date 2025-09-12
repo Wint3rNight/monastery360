@@ -3,7 +3,7 @@ set -e
 
 echo "=== Installing dependencies ==="
 pip install --upgrade pip
-pip install -r requirements-minimal.txt
+pip install -r requirements-render.txt
 
 echo "=== Verifying Django installation ==="
 python -c "import django; print(f'Django {django.get_version()}')"
