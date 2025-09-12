@@ -4,7 +4,7 @@ URL configuration for core app.
 
 from django.urls import path
 
-from . import auth_views, views, contact_views
+from . import auth_views, contact_views, views
 from .pwa_views import manifest_view, service_worker_view
 
 app_name = 'core'

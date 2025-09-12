@@ -6,8 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from .models import AudioPOI, Monastery
-from .models import ContactSubmission, Feedback
+from .models import AudioPOI, ContactSubmission, Feedback, Monastery
 
 
 @admin.register(Monastery)
@@ -128,13 +127,13 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(ContactSubmission)
 class ContactSubmissionAdmin(admin.ModelAdmin):
     """Admin for contact form submissions."""
-    
+
     list_display = ('name', 'email', 'subject', 'created_at', 'is_responded')
     list_filter = ('subject', 'is_responded', 'created_at')
     search_fields = ('name', 'email', 'message')
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Contact Information', {
             'fields': ('name', 'email', 'phone')
@@ -156,13 +155,13 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     """Admin for user feedback."""
-    
+
     list_display = ('name', 'category', 'rating', 'title', 'created_at', 'is_reviewed')
     list_filter = ('category', 'rating', 'is_reviewed', 'is_public', 'created_at')
     search_fields = ('name', 'email', 'title', 'message')
     readonly_fields = ('created_at', 'browser_info')
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('User Information', {
             'fields': ('name', 'email', 'user')

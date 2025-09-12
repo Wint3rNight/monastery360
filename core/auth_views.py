@@ -80,10 +80,86 @@ class CustomAuthenticationForm(AuthenticationForm):
         return username
 
 
+def _handle_login(request, login_form):
+    """Handle user login logic."""
+    if not login_form.is_valid():
+        messages.error(request, 'Please correct the errors below.')
+        return None
+    
+    username = login_form.cleaned_data['username']
+    password = login_form.cleaned_data['password']
+    
+    user = authenticate(request, username=username, password=password)
+    if user is not None and user.is_active:
+        login(request, user)
+        messages.success(request, f'Welcome back, {user.first_name or user.username}!')
+        next_url = request.GET.get('next', reverse('core:home'))
+        return redirect(next_url)
+    else:
+        messages.error(request, 'Invalid username/email or password.')
+        return None
+
+
+def _validate_user_uniqueness(request, username, email, login_form, signup_form):
+    """Validate that username and email are unique."""
+    if User.objects.filter(username__iexact=username).exists():
+        messages.error(request, f'Username "{username}" is already taken. Please choose a different username.')
+        return render(request, 'auth/login_test.html', {
+            'login_form': login_form,
+            'signup_form': signup_form,
+            'show_signup': True,
+        })
+    
+    if User.objects.filter(email__iexact=email).exists():
+        messages.error(request, f'An account with email "{email}" already exists. Please use a different email or try logging in.')
+        return render(request, 'auth/login_test.html', {
+            'login_form': login_form,
+            'signup_form': signup_form,
+            'show_signup': True,
+        })
+    
+    return None
+
+
+def _handle_signup(request, signup_form, login_form):
+    """Handle user signup logic."""
+    if not signup_form.is_valid():
+        for field, errors in signup_form.errors.items():
+            for error in errors:
+                messages.error(request, f'{field.replace("_", " ").title()}: {error}')
+        return None
+    
+    try:
+        username = signup_form.cleaned_data['username'].lower()
+        email = signup_form.cleaned_data['email'].lower()
+        
+        # Check uniqueness
+        uniqueness_response = _validate_user_uniqueness(request, username, email, login_form, signup_form)
+        if uniqueness_response:
+            return uniqueness_response
+        
+        # Ensure we're not already logged in
+        if request.user.is_authenticated:
+            logout(request)
+        
+        # Create the user
+        user = signup_form.save()
+        
+        if user and user.pk:
+            created_user = User.objects.get(pk=user.pk)
+            login(request, created_user)
+            messages.success(request, f'Welcome to Monastery360, {created_user.first_name}! Your account "{created_user.username}" has been created successfully.')
+            return redirect('core:home')
+        else:
+            messages.error(request, 'Account creation failed. Please try again.')
+    except Exception as e:
+        messages.error(request, f'Account creation failed: {str(e)}')
+    
+    return None
+
+
 def login_view(request):
     """Handle user login and registration."""
-
-    # If user is already authenticated, redirect them
     if request.user.is_authenticated:
         return redirect('core:home')
 
@@ -92,84 +168,15 @@ def login_view(request):
 
     if request.method == 'POST':
         if 'login_submit' in request.POST:
-            # Handle login
             login_form = CustomAuthenticationForm(data=request.POST)
-            if login_form.is_valid():
-                username = login_form.cleaned_data['username']
-                password = login_form.cleaned_data['password']
-
-                # Authenticate user
-                user = authenticate(request, username=username, password=password)
-                if user is not None and user.is_active:
-                    login(request, user)
-                    messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-                    next_url = request.GET.get('next', reverse('core:home'))
-                    return redirect(next_url)
-                else:
-                    messages.error(request, 'Invalid username/email or password.')
-            else:
-                messages.error(request, 'Please correct the errors below.')
-
+            result = _handle_login(request, login_form)
+            if result:
+                return result
         elif 'signup_submit' in request.POST:
-            # Handle signup
             signup_form = CustomUserCreationForm(request.POST)
-            if signup_form.is_valid():
-                try:
-                    # Additional validation before creating user
-                    username = signup_form.cleaned_data['username'].lower()
-                    email = signup_form.cleaned_data['email'].lower()
-
-                    # Double-check uniqueness before creating user
-                    if User.objects.filter(username__iexact=username).exists():
-                        messages.error(request, f'Username "{username}" is already taken. Please choose a different username.')
-                        return render(request, 'auth/login_test.html', {
-                            'login_form': login_form,
-                            'signup_form': signup_form,
-                            'show_signup': True,
-                        })
-
-                    if User.objects.filter(email__iexact=email).exists():
-                        messages.error(request, f'An account with email "{email}" already exists. Please use a different email or try logging in.')
-                        return render(request, 'auth/login_test.html', {
-                            'login_form': login_form,
-                            'signup_form': signup_form,
-                            'show_signup': True,
-                        })
-
-                    # Ensure we're not already logged in
-                    if request.user.is_authenticated:
-                        logout(request)
-
-                    # Create the user
-                    user = signup_form.save()
-
-                    # Verify the user was created correctly
-                    if user and user.pk:
-                        # Double check the user exists and get fresh instance
-                        created_user = User.objects.get(pk=user.pk)
-
-                        # Log the newly created user in
-                        login(request, created_user)
-                        messages.success(request, f'Welcome to Monastery360, {created_user.first_name}! Your account "{created_user.username}" has been created successfully.')
-                        return redirect('core:home')
-                    else:
-                        messages.error(request, 'Account creation failed. Please try again.')
-                except Exception as e:
-                    messages.error(request, f'Account creation failed: {str(e)}')
-            else:
-                # Show specific form errors
-                for field, errors in signup_form.errors.items():
-                    field_name = field.replace('_', ' ').title()
-                    if field == 'password2':
-                        field_name = 'Password confirmation'
-                    elif field == 'password1':
-                        field_name = 'Password'
-                    
-                    for error in errors:
-                        messages.error(request, f'{field_name}: {error}')
-                
-                if signup_form.errors:
-                    messages.error(request, 'Please correct the errors above and try again.')
+            result = _handle_signup(request, signup_form, login_form)
+            if result:
+                return result
 
     return render(request, 'auth/login_test.html', {
         'login_form': login_form,

@@ -92,24 +92,96 @@
         }
     </style>
 </head>
-<body class="min-h-screen animated-bg overflow-hidden relative">
+<body class="min-h-screen animated-bg overflow-x-hidden relative">
+    <!-- Mobile Navigation Bar -->
+    <nav class="relative z-50 bg-white/10 backdrop-blur-xl border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'core:home' %}" class="flex items-center space-x-2">
+                        <i class="fas fa-dharmachakra text-2xl text-amber-400"></i>
+                        <span class="text-xl font-bold text-white">Monastery360</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'core:home' %}" class="text-white/80 hover:text-white transition-colors">Home</a>
+                    <a href="{% url 'core:monastery_list' %}" class="text-white/80 hover:text-white transition-colors">Monasteries</a>
+                    <a href="{% url 'events:calendar' %}" class="text-white/80 hover:text-white transition-colors">Events</a>
+
+                    <!-- Language Selector Desktop -->
+                    <div class="relative">
+                        <button id="langDropdown" class="flex items-center space-x-1 text-white/80 hover:text-white bg-white/10 px-3 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-globe text-sm"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="langMenu" class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl rounded-lg shadow-lg border border-white/20 hidden">
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-white/20 transition-colors" data-lang="en" data-name="English">
+                                <i class="fas fa-flag mr-2"></i>English
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-white/20 transition-colors" data-lang="hi" data-name="हिन्दी">
+                                <i class="fas fa-flag mr-2"></i>हिन्दी (Hindi)
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-white/20 transition-colors" data-lang="ne" data-name="नेपाली">
+                                <i class="fas fa-flag mr-2"></i>नेपाली (Nepali)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden pb-4">
+                <div class="space-y-2">
+                    <a href="{% url 'core:home' %}" class="block text-white/80 hover:text-white py-2 transition-colors">Home</a>
+                    <a href="{% url 'core:monastery_list' %}" class="block text-white/80 hover:text-white py-2 transition-colors">Monasteries</a>
+                    <a href="{% url 'events:calendar' %}" class="block text-white/80 hover:text-white py-2 transition-colors">Events</a>
+
+                    <!-- Mobile Language Selector -->
+                    <div class="py-2">
+                        <p class="text-white/60 text-sm mb-2">Language:</p>
+                        <div class="space-y-1">
+                            <button class="lang-option-mobile block w-full text-left text-white/80 hover:text-white py-1 transition-colors" data-lang="en" data-name="English">
+                                <i class="fas fa-flag mr-2"></i>English
+                            </button>
+                            <button class="lang-option-mobile block w-full text-left text-white/80 hover:text-white py-1 transition-colors" data-lang="hi" data-name="हिन्दी">
+                                <i class="fas fa-flag mr-2"></i>हिन्दी (Hindi)
+                            </button>
+                            <button class="lang-option-mobile block w-full text-left text-white/80 hover:text-white py-1 transition-colors" data-lang="ne" data-name="नेपाली">
+                                <i class="fas fa-flag mr-2"></i>नेपाली (Nepali)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <!-- Wave Effects -->
     <div class="wave-effect"></div>
     <div class="wave-effect" style="animation-delay: -4s;"></div>
 
-    <!-- Floating Elements -->
-    <div class="floating-element absolute top-20 left-10 w-32 h-32 bg-purple-400 opacity-20 rounded-full blur-xl" style="animation: float 6s ease-in-out infinite;"></div>
-    <div class="floating-element absolute top-40 right-20 w-24 h-24 bg-pink-400 opacity-30 rounded-full blur-lg" style="animation: float 8s ease-in-out infinite reverse;"></div>
-    <div class="floating-element absolute bottom-32 left-1/4 w-40 h-40 bg-blue-400 opacity-15 rounded-full blur-2xl" style="animation: float 10s ease-in-out infinite;"></div>
-    <div class="floating-element absolute top-1/2 right-10 w-16 h-16 bg-indigo-400 opacity-25 rounded-full blur-lg" style="animation: float 7s ease-in-out infinite;"></div>
+    <!-- Floating Elements - Hidden on mobile -->
+    <div class="floating-element absolute top-20 left-10 w-32 h-32 bg-purple-400 opacity-20 rounded-full blur-xl hidden lg:block" style="animation: float 6s ease-in-out infinite;"></div>
+    <div class="floating-element absolute top-40 right-20 w-24 h-24 bg-pink-400 opacity-30 rounded-full blur-lg hidden lg:block" style="animation: float 8s ease-in-out infinite reverse;"></div>
+    <div class="floating-element absolute bottom-32 left-1/4 w-40 h-40 bg-blue-400 opacity-15 rounded-full blur-2xl hidden lg:block" style="animation: float 10s ease-in-out infinite;"></div>
+    <div class="floating-element absolute top-1/2 right-10 w-16 h-16 bg-indigo-400 opacity-25 rounded-full blur-lg hidden lg:block" style="animation: float 7s ease-in-out infinite;"></div>
 
     <!-- Main Container -->
-    <div class="min-h-screen flex items-center justify-center p-6">
-        <div id="profile-app"></div>
+    <div class="min-h-screen flex items-center justify-center p-4 sm:p-6">
+        <div id="profile-app" class="w-full"></div>
 
         <!-- My Bookings Section -->
         <div class="relative z-10 w-full max-w-4xl mt-8 mx-auto px-4">
-            <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-4 sm:p-8 shadow-2xl">
                 <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
                     <svg class="w-6 h-6 mr-3 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -123,10 +195,10 @@
                 {% if bookings %}
                     <!-- Scrollable bookings container with fixed height -->
                     <div class="max-h-96 overflow-y-auto scrollable-bookings">
-                        <div class="space-y-4 pr-2">
+                        <div class="space-y-3 sm:space-y-4 pr-2">
                             {% for booking in bookings %}
-                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
-                            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
                                 <div class="flex-1">
                                     <div class="flex items-start justify-between mb-3">
                                         <div>
@@ -142,7 +214,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-sm">
                                         <div>
                                             <span class="text-white text-opacity-60">Date:</span>
                                             <p class="text-white font-medium">{{ booking.event.start_time|date:"M j, Y" }}</p>
@@ -369,7 +441,7 @@
                         </div>
 
                         {/* Profile Stats */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
                             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
                                 <div className="flex items-center mb-3">
                                     <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
@@ -426,7 +498,7 @@
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                             <button
                                 onClick={() => window.location.href = window.HOME_URL}
                                 className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
@@ -479,7 +551,7 @@
                                 )}
 
                                 <form onSubmit={handleSaveProfile}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input
                                             type="text"
                                             name="firstName"
@@ -537,6 +609,99 @@
     {% endverbatim %}
 
     <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const langDropdown = document.getElementById('langDropdown');
+            const langMenu = document.getElementById('langMenu');
+
+            // Mobile menu toggle
+            mobileMenuBtn?.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+
+            // Desktop language dropdown
+            langDropdown?.addEventListener('click', function() {
+                langMenu.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!langDropdown?.contains(e.target)) {
+                    langMenu?.classList.add('hidden');
+                }
+            });
+
+            // Language selection handlers
+            const langOptions = document.querySelectorAll('.lang-option, .lang-option-mobile');
+            langOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    const name = this.getAttribute('data-name');
+
+                    // Update current language display
+                    const currentLang = document.getElementById('currentLang');
+                    if (currentLang) {
+                        currentLang.textContent = lang.toUpperCase();
+                    }
+
+                    // Trigger Google Translate
+                    translatePage(lang);
+
+                    // Close menus
+                    langMenu?.classList.add('hidden');
+                    mobileMenu?.classList.add('hidden');
+
+                    // Reset mobile menu button
+                    const icon = mobileMenuBtn?.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            });
+        });
+
+        // Google Translate functionality
+        let currentLanguage = 'en';
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ne',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false,
+                multilanguagePage: false
+            }, 'google_translate_element');
+        }
+
+        function translatePage(targetLanguage) {
+            if (typeof google !== 'undefined' && google.translate) {
+                const selectElement = document.querySelector('.goog-te-combo');
+                if (selectElement) {
+                    selectElement.value = targetLanguage;
+                    selectElement.dispatchEvent(new Event('change'));
+                } else {
+                    doTranslate(targetLanguage);
+                }
+            } else {
+                doTranslate(targetLanguage);
+            }
+        }
+
+        function doTranslate(targetLanguage) {
+            const selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+                selectElement.value = targetLanguage;
+                selectElement.dispatchEvent(new Event('change'));
+                currentLanguage = targetLanguage;
+            }
+        }
+
         function confirmCancelBooking(bookingId, eventTitle) {
             if (confirm(`Are you sure you want to cancel your booking for "${eventTitle}"? This action cannot be undone.`)) {
                 document.getElementById('cancel-form-' + bookingId).submit();
@@ -563,5 +728,9 @@
             }
         }
     </script>
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="display: none;"></div>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

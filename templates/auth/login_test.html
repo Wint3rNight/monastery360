@@ -55,7 +55,7 @@
     <!-- Main Container -->
     <div class="min-h-screen flex items-center justify-center p-6">
         <div id="login-app"></div>
-    
+
     <!-- Hidden Django Messages for JavaScript parsing -->
     <div class="messages" style="display: none;">
         {% if messages %}
@@ -192,12 +192,12 @@
                         window.location.href = res.url;
                     } else {
                         const text = await res.text();
-                        
+
                         // Parse Django messages from the HTML response
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(text, 'text/html');
                         const messages = doc.querySelectorAll('.messages .alert, .message');
-                        
+
                         if (messages.length > 0) {
                             // Extract and display the actual Django error messages
                             const errorMessages = Array.from(messages)

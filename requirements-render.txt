@@ -1,4 +1,4 @@
-# Production requirements for Render deployment (without GDAL)
+the # Production requirements for Render deployment (without GDAL)
 # This file excludes GeoDjango dependencies that may cause issues on hosting platforms
 
 # Django and Core Dependencies

@@ -14,26 +14,79 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-dharmachakra text-2xl text-amber-600"></i>
-                    <h1 class="text-2xl font-bold text-gray-800">Monastery360</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Monastery360</h1>
                 </div>
-                <div class="hidden md:flex space-x-6">
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
                     <a href="{% url 'core:home' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Home</a>
                     <a href="{% url 'core:monastery_list' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Monasteries</a>
                     <a href="{% url 'core:about' %}" class="text-gray-600 hover:text-amber-600 transition-colors">About</a>
                     <a href="{% url 'core:contact' %}" class="text-gray-600 hover:text-amber-600 transition-colors">Contact</a>
+
+                    <!-- Language Selector Desktop -->
+                    <div class="relative">
+                        <button id="langDropdown" class="flex items-center space-x-1 text-gray-600 hover:text-amber-600 bg-gray-100 px-3 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-globe text-sm"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="langMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden">
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors" data-lang="en" data-name="English">
+                                <i class="fas fa-flag mr-2"></i>English
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors" data-lang="hi" data-name="हिन्दी">
+                                <i class="fas fa-flag mr-2"></i>हिन्दी (Hindi)
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors" data-lang="ne" data-name="नेपाली">
+                                <i class="fas fa-flag mr-2"></i>नेपाली (Nepali)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-800">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden pb-4 border-t border-gray-200 mt-4 pt-4">
+                <div class="space-y-2">
+                    <a href="{% url 'core:home' %}" class="block text-gray-600 hover:text-amber-600 py-2 transition-colors">Home</a>
+                    <a href="{% url 'core:monastery_list' %}" class="block text-gray-600 hover:text-amber-600 py-2 transition-colors">Monasteries</a>
+                    <a href="{% url 'core:about' %}" class="block text-gray-600 hover:text-amber-600 py-2 transition-colors">About</a>
+                    <a href="{% url 'core:contact' %}" class="block text-gray-600 hover:text-amber-600 py-2 transition-colors">Contact</a>
+
+                    <!-- Mobile Language Selector -->
+                    <div class="py-2 border-t border-gray-200 mt-2 pt-2">
+                        <p class="text-gray-500 text-sm mb-2">Language:</p>
+                        <div class="space-y-1">
+                            <button class="lang-option-mobile block w-full text-left text-gray-600 hover:text-amber-600 py-1 transition-colors" data-lang="en" data-name="English">
+                                <i class="fas fa-flag mr-2"></i>English
+                            </button>
+                            <button class="lang-option-mobile block w-full text-left text-gray-600 hover:text-amber-600 py-1 transition-colors" data-lang="hi" data-name="हिन्दी">
+                                <i class="fas fa-flag mr-2"></i>हिन्दी (Hindi)
+                            </button>
+                            <button class="lang-option-mobile block w-full text-left text-gray-600 hover:text-amber-600 py-1 transition-colors" data-lang="ne" data-name="नेपाली">
+                                <i class="fas fa-flag mr-2"></i>नेपाली (Nepali)
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-12">
+    <div class="container mx-auto px-4 py-8 sm:py-12">
         <div class="max-w-2xl mx-auto">
-            
+
             <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-gray-800 mb-4">
-                    <i class="fas fa-comment-dots text-amber-600 mr-3"></i>
+            <div class="text-center mb-6 sm:mb-8">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-comment-dots text-amber-600 mr-2 sm:mr-3"></i>
                     Your Feedback
                 </h1>
                 {% if user.is_authenticated %}
@@ -58,10 +111,10 @@
             {% endif %}
 
             <!-- Feedback Form -->
-            <div class="bg-white rounded-xl shadow-2xl p-8">
+            <div class="bg-white rounded-xl shadow-2xl p-4 sm:p-8">
                 <!-- User Info Display for Logged-in Users -->
                 {% if user.is_authenticated %}
-                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div class="mb-6 p-3 sm:p-4 bg-amber-50 border border-amber-200 rounded-lg">
                         <div class="flex items-center">
                             <i class="fas fa-user-circle text-2xl text-amber-600 mr-3"></i>
                             <div>
@@ -80,8 +133,8 @@
                         <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-tag mr-2"></i>Subject
                         </label>
-                        <select id="subject" 
-                                name="subject" 
+                        <select id="subject"
+                                name="subject"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors">
                             <option value="general">General Feedback</option>
                             <option value="feature_request">Feature Request</option>
@@ -97,9 +150,9 @@
                         <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-comment mr-2"></i>Your Feedback *
                         </label>
-                        <textarea id="message" 
-                                  name="message" 
-                                  rows="8" 
+                        <textarea id="message"
+                                  name="message"
+                                  rows="8"
                                   required
                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-vertical"
                                   placeholder="Tell us what you think about Monastery360... What do you like? What could we improve? Any suggestions?"></textarea>
@@ -107,7 +160,7 @@
 
                     <!-- Submit Button -->
                     <div class="text-center">
-                        <button type="submit" 
+                        <button type="submit"
                                 class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-amber-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
                             <i class="fas fa-paper-plane mr-2"></i>
                             Send Feedback

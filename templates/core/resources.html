@@ -8,31 +8,31 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- React & React DOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
+
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         .resources-bg {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         }
-        
+
         .card-hover {
             transition: all 0.3s ease;
         }
-        
+
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .resource-icon {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -47,7 +47,7 @@
                     <i class="fas fa-dharmachakra text-2xl text-blue-600"></i>
                     <span class="text-xl font-bold text-gray-800">Monastery360</span>
                 </a>
-                
+
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="{% url 'core:home' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Home</a>
                     <a href="{% url 'core:monastery_list' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Monasteries</a>
@@ -55,7 +55,7 @@
                     <a href="{% url 'archives:digital_portal' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Archives</a>
                     <a href="{% url 'events:calendar' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Events</a>
                 </div>
-                
+
                 <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
                         <a href="{% url 'core:profile' %}" class="text-gray-600 hover:text-blue-600 transition-colors">
@@ -85,7 +85,7 @@
                     </div>
                     <p class="text-gray-400">Preserving and sharing the rich Buddhist heritage of Sikkim's monasteries through digital innovation.</p>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Explore</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -95,7 +95,7 @@
                         <li><a href="{% url 'events:calendar' %}" class="hover:text-white transition-colors">Events</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Resources</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -105,7 +105,7 @@
                         <li><a href="{% url 'core:resources' %}" class="hover:text-white transition-colors">Resources</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Connect</h4>
                     <div class="space-y-2 text-gray-400">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
                 <p>&copy; 2025 Monastery360. Built for Smart India Hackathon. All rights reserved.</p>
             </div>
@@ -135,7 +135,7 @@
                         topics: ["Four Noble Truths", "Eightfold Path", "Meditation", "Karma"]
                     },
                     {
-                        title: "Monastery Etiquette", 
+                        title: "Monastery Etiquette",
                         description: "Guidelines for respectful monastery visits",
                         icon: "fas fa-hands-pray",
                         topics: ["Dress Code", "Photography Rules", "Behavior Guidelines", "Offerings"]
@@ -155,7 +155,7 @@
                         icon: "fab fa-python"
                     },
                     {
-                        title: "React Documentation", 
+                        title: "React Documentation",
                         description: "React library for building user interfaces",
                         link: "https://react.dev/",
                         icon: "fab fa-react"
@@ -183,7 +183,7 @@
                     {
                         title: "Loving-Kindness Meditation",
                         description: "Cultivating compassion and goodwill",
-                        duration: "15-30 minutes", 
+                        duration: "15-30 minutes",
                         icon: "fas fa-heart"
                     },
                     {
@@ -229,7 +229,7 @@
                             <div className="max-w-4xl mx-auto">
                                 <h1 className="text-5xl font-bold text-gray-800 mb-6">Learning Resources</h1>
                                 <p className="text-xl text-gray-700 leading-relaxed">
-                                    Discover comprehensive resources to deepen your understanding of Buddhism, 
+                                    Discover comprehensive resources to deepen your understanding of Buddhism,
                                     monastery culture, meditation practices, and our technical implementation.
                                 </p>
                             </div>
@@ -305,10 +305,10 @@
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {resources.technical.map((tech, index) => (
-                                    <a key={index} 
-                                       href={tech.link} 
-                                       target="_blank" 
-                                       rel="noopener noreferrer" 
+                                    <a key={index}
+                                       href={tech.link}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
                                        className="bg-white p-6 rounded-xl shadow-lg card-hover block">
                                         <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                                             <i className={`${tech.icon} text-blue-600 text-xl`}></i>
@@ -336,10 +336,10 @@
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                                 {resources.external.map((resource, index) => (
-                                    <a key={index} 
-                                       href={resource.link} 
-                                       target="_blank" 
-                                       rel="noopener noreferrer" 
+                                    <a key={index}
+                                       href={resource.link}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
                                        className="bg-white p-6 rounded-xl shadow-lg card-hover block">
                                         <div className="flex items-start space-x-4">
                                             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -365,15 +365,15 @@
                             <div className="max-w-3xl mx-auto">
                                 <h2 className="text-4xl font-bold text-white mb-6">Need More Information?</h2>
                                 <p className="text-xl text-white/90 leading-relaxed mb-8">
-                                    Can't find what you're looking for? Our team is here to help you with 
+                                    Can't find what you're looking for? Our team is here to help you with
                                     any questions about Buddhism, monastery visits, or our platform.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <a href="{% endverbatim %}{% url 'core:contact' %}{% verbatim %}" 
+                                    <a href="{% endverbatim %}{% url 'core:contact' %}{% verbatim %}"
                                        className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                                         Contact Us
                                     </a>
-                                    <a href="{% endverbatim %}{% url 'core:feedback' %}{% verbatim %}" 
+                                    <a href="{% endverbatim %}{% url 'core:feedback' %}{% verbatim %}"
                                        className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
                                         Request Resources
                                     </a>
@@ -389,27 +389,27 @@
                                 <h2 className="text-3xl font-bold text-gray-800 mb-4">Quick Access</h2>
                                 <p className="text-lg text-gray-600">Jump directly to our main features</p>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                                <a href="{% endverbatim %}{% url 'core:monastery_list' %}{% verbatim %}" 
+                                <a href="{% endverbatim %}{% url 'core:monastery_list' %}{% verbatim %}"
                                    className="bg-blue-50 hover:bg-blue-100 p-4 rounded-lg text-center transition-colors">
                                     <i className="fas fa-place-of-worship text-blue-600 text-2xl mb-2"></i>
                                     <div className="text-sm font-medium text-blue-800">Monasteries</div>
                                 </a>
-                                
-                                <a href="{% endverbatim %}{% url 'tours:panorama_list' %}{% verbatim %}" 
+
+                                <a href="{% endverbatim %}{% url 'tours:panorama_list' %}{% verbatim %}"
                                    className="bg-green-50 hover:bg-green-100 p-4 rounded-lg text-center transition-colors">
                                     <i className="fas fa-vr-cardboard text-green-600 text-2xl mb-2"></i>
                                     <div className="text-sm font-medium text-green-800">Virtual Tours</div>
                                 </a>
-                                
-                                <a href="{% endverbatim %}{% url 'archives:digital_portal' %}{% verbatim %}" 
+
+                                <a href="{% endverbatim %}{% url 'archives:digital_portal' %}{% verbatim %}"
                                    className="bg-yellow-50 hover:bg-yellow-100 p-4 rounded-lg text-center transition-colors">
                                     <i className="fas fa-archive text-yellow-600 text-2xl mb-2"></i>
                                     <div className="text-sm font-medium text-yellow-800">Archives</div>
                                 </a>
-                                
-                                <a href="{% endverbatim %}{% url 'events:calendar' %}{% verbatim %}" 
+
+                                <a href="{% endverbatim %}{% url 'events:calendar' %}{% verbatim %}"
                                    className="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg text-center transition-colors">
                                     <i className="fas fa-calendar text-purple-600 text-2xl mb-2"></i>
                                     <div className="text-sm font-medium text-purple-800">Events</div>

@@ -8,31 +8,31 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- React & React DOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
+
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         .about-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
+
         .card-hover {
             transition: all 0.3s ease;
         }
-        
+
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .feature-icon {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -47,7 +47,7 @@
                     <i class="fas fa-dharmachakra text-2xl text-blue-600"></i>
                     <span class="text-xl font-bold text-gray-800">Monastery360</span>
                 </a>
-                
+
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="{% url 'core:home' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Home</a>
                     <a href="{% url 'core:monastery_list' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Monasteries</a>
@@ -55,7 +55,7 @@
                     <a href="{% url 'archives:digital_portal' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Archives</a>
                     <a href="{% url 'events:calendar' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Events</a>
                 </div>
-                
+
                 <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
                         <a href="{% url 'core:profile' %}" class="text-gray-600 hover:text-blue-600 transition-colors">
@@ -85,7 +85,7 @@
                     </div>
                     <p class="text-gray-400">Preserving and sharing the rich Buddhist heritage of Sikkim's monasteries through digital innovation.</p>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Explore</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -95,7 +95,7 @@
                         <li><a href="{% url 'events:calendar' %}" class="hover:text-white transition-colors">Events</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Resources</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -105,7 +105,7 @@
                         <li><a href="{% url 'core:resources' %}" class="hover:text-white transition-colors">Resources</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">Connect</h4>
                     <div class="space-y-2 text-gray-400">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
                 <p>&copy; 2025 Monastery360. Built for Smart India Hackathon. All rights reserved.</p>
             </div>
@@ -134,7 +134,7 @@
                             <div className="max-w-4xl mx-auto">
                                 <h1 className="text-5xl font-bold text-white mb-6">About Monastery360</h1>
                                 <p className="text-xl text-white/90 leading-relaxed mb-8">
-                                    Bridging ancient wisdom with modern technology to preserve and share 
+                                    Bridging ancient wisdom with modern technology to preserve and share
                                     the sacred heritage of Sikkim's Buddhist monasteries for future generations.
                                 </p>
                             </div>
@@ -147,8 +147,8 @@
                             <div className="max-w-4xl mx-auto text-center mb-16">
                                 <h2 className="text-4xl font-bold text-gray-800 mb-6">Our Mission</h2>
                                 <p className="text-xl text-gray-600 leading-relaxed">
-                                    To create a comprehensive digital ecosystem that preserves, promotes, and makes accessible 
-                                    the rich Buddhist heritage of Sikkim through innovative technology, virtual experiences, 
+                                    To create a comprehensive digital ecosystem that preserves, promotes, and makes accessible
+                                    the rich Buddhist heritage of Sikkim through innovative technology, virtual experiences,
                                     and cultural education.
                                 </p>
                             </div>
@@ -160,7 +160,7 @@
                                     </div>
                                     <h3 className="text-2xl font-semibold mb-4">Preserve</h3>
                                     <p className="text-gray-600">
-                                        Digitally preserve ancient manuscripts, artifacts, and cultural practices 
+                                        Digitally preserve ancient manuscripts, artifacts, and cultural practices
                                         to safeguard them for future generations.
                                     </p>
                                 </div>
@@ -171,7 +171,7 @@
                                     </div>
                                     <h3 className="text-2xl font-semibold mb-4">Share</h3>
                                     <p className="text-gray-600">
-                                        Make Buddhist heritage accessible to global audiences through 
+                                        Make Buddhist heritage accessible to global audiences through
                                         virtual tours, digital archives, and educational content.
                                     </p>
                                 </div>
@@ -182,7 +182,7 @@
                                     </div>
                                     <h3 className="text-2xl font-semibold mb-4">Educate</h3>
                                     <p className="text-gray-600">
-                                        Promote understanding and appreciation of Buddhist culture, 
+                                        Promote understanding and appreciation of Buddhist culture,
                                         philosophy, and spiritual practices through interactive experiences.
                                     </p>
                                 </div>
@@ -240,8 +240,8 @@
                             <div className="text-center mb-16">
                                 <h2 className="text-4xl font-bold text-gray-800 mb-6">Built for Smart India Hackathon</h2>
                                 <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                                    Monastery360 was developed as part of the Smart India Hackathon initiative, 
-                                    combining cutting-edge technology with cultural preservation to address the 
+                                    Monastery360 was developed as part of the Smart India Hackathon initiative,
+                                    combining cutting-edge technology with cultural preservation to address the
                                     challenge of digitizing and promoting India's rich heritage.
                                 </p>
                             </div>
@@ -253,7 +253,7 @@
                                     </div>
                                     <h3 className="text-2xl font-semibold text-center mb-4">Innovation</h3>
                                     <p className="text-gray-600 text-center">
-                                        Leveraging modern web technologies, 360° photography, and digital archiving 
+                                        Leveraging modern web technologies, 360° photography, and digital archiving
                                         to create an unprecedented cultural preservation platform.
                                     </p>
                                 </div>
@@ -264,7 +264,7 @@
                                     </div>
                                     <h3 className="text-2xl font-semibold text-center mb-4">Impact</h3>
                                     <p className="text-gray-600 text-center">
-                                        Empowering cultural institutions, researchers, and enthusiasts worldwide 
+                                        Empowering cultural institutions, researchers, and enthusiasts worldwide
                                         to explore and learn about Buddhist heritage in an accessible way.
                                     </p>
                                 </div>
@@ -278,16 +278,16 @@
                             <div className="max-w-4xl mx-auto">
                                 <h2 className="text-4xl font-bold text-white mb-6">Our Vision</h2>
                                 <p className="text-xl text-white/90 leading-relaxed mb-8">
-                                    To become the world's leading platform for Buddhist cultural preservation, 
-                                    connecting people globally with the profound wisdom and beauty of Himalayan 
+                                    To become the world's leading platform for Buddhist cultural preservation,
+                                    connecting people globally with the profound wisdom and beauty of Himalayan
                                     Buddhist traditions through technology.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <a href="{% endverbatim %}{% url 'core:contact' %}{% verbatim %}" 
+                                    <a href="{% endverbatim %}{% url 'core:contact' %}{% verbatim %}"
                                        className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                                         Get In Touch
                                     </a>
-                                    <a href="{% endverbatim %}{% url 'core:feedback' %}{% verbatim %}" 
+                                    <a href="{% endverbatim %}{% url 'core:feedback' %}{% verbatim %}"
                                        className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
                                         Share Feedback
                                     </a>

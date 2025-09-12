@@ -3,24 +3,29 @@
 ## Critical Fix for Production Issues
 
 ### 1. Receipt Download Fix
+
 The receipt download functionality requires the `reportlab` library for PDF generation.
 
 **Action Required:**
+
 ```bash
 pip install reportlab==4.0.4
 ```
 
 Or update from requirements.txt:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 2. Media Files Serving Fix
+
 Archive downloads (PDF files) need proper media serving in production.
 
 **For Render.com or similar platforms:**
-- The Django app now serves media files directly (not recommended for high-traffic, but works for moderate usage)
-- For better performance, configure a CDN or cloud storage (AWS S3, Cloudinary, etc.)
+
+-   The Django app now serves media files directly (not recommended for high-traffic, but works for moderate usage)
+-   For better performance, configure a CDN or cloud storage (AWS S3, Cloudinary, etc.)
 
 **For nginx/apache deployments:**
 Configure your web server to serve media files directly:
@@ -35,19 +40,25 @@ location /media/ {
 ```
 
 ### 3. Environment Variables
+
 Ensure these are set in production:
-- `DEBUG=False`
-- `ALLOWED_HOSTS` includes your domain
-- Database settings are correctly configured
+
+-   `DEBUG=False`
+-   `ALLOWED_HOSTS` includes your domain
+-   Database settings are correctly configured
 
 ### 4. Static Files
+
 Run collectstatic after deployment:
+
 ```bash
 python manage.py collectstatic --noinput
 ```
 
 ### 5. Dependencies Update
+
 The requirements.txt now includes reportlab. Ensure all dependencies are installed:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -61,6 +72,7 @@ pip install -r requirements.txt
 ## Troubleshooting
 
 If you still get errors:
+
 1. Check server logs for specific error messages
 2. Ensure reportlab is installed: `python -c "import reportlab; print('OK')"`
 3. Verify media files exist in the media directory
