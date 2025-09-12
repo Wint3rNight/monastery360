@@ -320,6 +320,14 @@
                             <span className="w-6 text-center">🇳🇵</span>
                             <span>नेपाली (Nepali)</span>
                           </button>
+                          <button
+                            onClick={() => handleLanguageChange('bn', 'বাংলা')}
+                            className="notranslate w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-800"
+                            translate="no"
+                          >
+                            <span className="w-6 text-center">🇮🇳</span>
+                            <span>বাংলা (Bengali)</span>
+                          </button>
                         </div>
                       </div>
                     )}
@@ -830,7 +838,7 @@
         window.googleTranslateElementInit = function() {
             new google.translate.TranslateElement({
                 pageLanguage: 'en',
-                includedLanguages: 'en,hi,ne',
+                includedLanguages: 'en,hi,ne,bn',
                 layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
                 autoDisplay: false
             }, 'google_translate_element');

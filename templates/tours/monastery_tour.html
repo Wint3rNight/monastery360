@@ -251,14 +251,14 @@
 
     <script>
         console.log('=== MONASTERY TOUR SCRIPT STARTING ===');
-        
+
         (function(){
             console.log('=== INSIDE IIFE ===');
-            
+
             // Parse JSON data injected via json_script
             const panoramaData = JSON.parse(document.getElementById('panorama-data').textContent || '[]');
             const poiData = JSON.parse(document.getElementById('poi-data').textContent || '[]');
-            
+
             console.log('Parsed data:', { panoramaData, poiData });
 
             // Load panorama configuration from JSON
@@ -583,10 +583,10 @@
             // Test function to verify script execution
             window.toggleAudio = function() {
               console.log('=== toggleAudio function called ===');
-              
+
               const currentView = monasteryViews?.views?.[currentViewIndex];
               const audioBtn = document.getElementById('audio-btn');
-              
+
               console.log('currentView:', currentView);
               console.log('audioBtn:', audioBtn);
               console.log('currentAudio:', currentAudio);
@@ -601,7 +601,7 @@
               } else {
                 // Play audio - simplified approach
                 console.log('Creating/playing audio');
-                
+
                 if (!currentAudio) {
                   try {
                     // Try to initialize AudioContext
@@ -609,35 +609,35 @@
                     if (!AudioContext) {
                       throw new Error('Web Audio API not supported');
                     }
-                    
+
                     const audioContext = new AudioContext();
                     console.log('AudioContext created:', audioContext.state);
-                    
+
                     // Resume audio context if it's suspended (required by browser policies)
                     if (audioContext.state === 'suspended') {
                       audioContext.resume().then(() => {
                         console.log('AudioContext resumed');
                       });
                     }
-                    
+
                     // Create a simple beep sound
                     function playBeep() {
                       const oscillator = audioContext.createOscillator();
                       const gainNode = audioContext.createGain();
-                      
+
                       oscillator.connect(gainNode);
                       gainNode.connect(audioContext.destination);
-                      
+
                       oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A note
                       gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
                       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2);
-                      
+
                       oscillator.start(audioContext.currentTime);
                       oscillator.stop(audioContext.currentTime + 2);
-                      
+
                       return oscillator;
                     }
-                    
+
                     // Create mock audio object with progress tracking
                     currentAudio = {
                       paused: true,
@@ -646,7 +646,7 @@
                       oscillator: null,
                       progressInterval: null,
                       startTime: null,
-                      
+
                       play: function() {
                         console.log('Audio play() called');
                         this.paused = false;
@@ -655,12 +655,12 @@
                         this.playLoop();
                         return Promise.resolve();
                       },
-                      
+
                       playLoop: function() {
                         if (this.paused) return; // Exit if paused
-                        
+
                         this.oscillator = playBeep();
-                        
+
                         // Auto-restart for looping after each beep
                         setTimeout(() => {
                           if (!this.paused) {
@@ -668,21 +668,21 @@
                           }
                         }, 3000); // 3 second interval between beeps
                       },
-                      
+
                       startProgressTracking: function() {
                         this.progressInterval = setInterval(() => {
                           if (!this.paused && this.startTime) {
                             const elapsed = (Date.now() - this.startTime) / 1000;
                             this.currentTime = elapsed % this.duration; // Loop the time
-                            
+
                             // Update progress bar
                             const progressBar = document.getElementById('progress-bar');
                             const timeDisplay = document.getElementById('audio-time');
-                            
+
                             if (progressBar && timeDisplay) {
                               const progress = (this.currentTime / this.duration) * 100;
                               progressBar.style.width = progress + '%';
-                              
+
                               const current = Math.floor(this.currentTime);
                               const total = Math.floor(this.duration);
                               timeDisplay.textContent = this.formatTime(current) + ' / ' + this.formatTime(total);
@@ -690,25 +690,25 @@
                           }
                         }, 100); // Update every 100ms for smooth animation
                       },
-                      
+
                       stopProgressTracking: function() {
                         if (this.progressInterval) {
                           clearInterval(this.progressInterval);
                           this.progressInterval = null;
                         }
                       },
-                      
+
                       formatTime: function(seconds) {
                         const mins = Math.floor(seconds / 60);
                         const secs = seconds % 60;
                         return mins + ':' + String(secs).padStart(2, '0');
                       },
-                      
+
                       pause: function() {
                         console.log('Audio pause() called');
                         this.paused = true;
                         this.stopProgressTracking();
-                        
+
                         if (this.oscillator) {
                           try {
                             this.oscillator.stop();
@@ -717,7 +717,7 @@
                           }
                           this.oscillator = null;
                         }
-                        
+
                         // Reset button UI when paused
                         const audioBtn = document.getElementById('audio-btn');
                         const currentView = monasteryViews?.views?.[currentViewIndex];
@@ -726,18 +726,18 @@
                             (currentView?.audioDuration ? ' (' + currentView.audioDuration + 's)' : '') + '</span>';
                           audioBtn.className = 'flex items-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium shadow-lg transform hover:scale-105';
                         }
-                        
+
                         // Reset progress bar
                         const progressBar = document.getElementById('progress-bar');
                         const timeDisplay = document.getElementById('audio-time');
                         if (progressBar) progressBar.style.width = '0%';
                         if (timeDisplay) timeDisplay.textContent = '0:00 / ' + this.formatTime(this.duration);
-                        
+
                         this.currentTime = 0;
                         this.startTime = null;
                       }
                     };
-                    
+
                   } catch (error) {
                     console.error('Failed to create audio context:', error);
                     // Fallback: just show visual feedback with mock progress
@@ -746,32 +746,32 @@
                       duration: 30,
                       currentTime: 0,
                       progressInterval: null,
-                      
+
                       formatTime: function(seconds) {
                         const mins = Math.floor(seconds / 60);
                         const secs = seconds % 60;
                         return mins + ':' + String(secs).padStart(2, '0');
                       },
-                      
+
                       play: function() {
                         console.log('Fallback audio play()');
                         this.paused = false;
                         this.startMockProgress();
                         return Promise.resolve();
                       },
-                      
+
                       startMockProgress: function() {
                         this.progressInterval = setInterval(() => {
                           if (!this.paused) {
                             this.currentTime = (this.currentTime + 0.1) % this.duration;
-                            
+
                             const progressBar = document.getElementById('progress-bar');
                             const timeDisplay = document.getElementById('audio-time');
-                            
+
                             if (progressBar && timeDisplay) {
                               const progress = (this.currentTime / this.duration) * 100;
                               progressBar.style.width = progress + '%';
-                              
+
                               const current = Math.floor(this.currentTime);
                               const total = Math.floor(this.duration);
                               timeDisplay.textContent = this.formatTime(current) + ' / ' + this.formatTime(total);
@@ -779,7 +779,7 @@
                           }
                         }, 100);
                       },
-                      
+
                       pause: function() {
                         console.log('Fallback audio pause()');
                         this.paused = true;
@@ -787,7 +787,7 @@
                           clearInterval(this.progressInterval);
                           this.progressInterval = null;
                         }
-                        
+
                         // Reset progress
                         const progressBar = document.getElementById('progress-bar');
                         const timeDisplay = document.getElementById('audio-time');
@@ -803,7 +803,7 @@
                 try {
                   console.log('Attempting to play audio...');
                   const playPromise = currentAudio.play();
-                  
+
                   if (playPromise && playPromise.then) {
                     playPromise.then(() => {
                       console.log('Audio started successfully');
@@ -840,7 +840,7 @@
               console.log('=== seekAudio CALLED ===');
               console.log('Event:', event);
               console.log('currentAudio:', currentAudio);
-              
+
               if (!currentAudio) {
                 console.log('seekAudio: No currentAudio object');
                 return;
@@ -866,7 +866,7 @@
               const newTime = percentage * currentAudio.duration;
               console.log('seekAudio: Setting currentTime from', currentAudio.currentTime, 'to', newTime);
               currentAudio.currentTime = newTime;
-              
+
               // Update start time if playing to maintain sync
               if (!currentAudio.paused && currentAudio.startTime) {
                 console.log('seekAudio: Updating startTime for sync');
@@ -876,17 +876,17 @@
               // Update UI immediately
               const progressBar = document.getElementById('progress-bar');
               const timeDisplay = document.getElementById('audio-time');
-              
+
               console.log('seekAudio: Updating UI elements', {
                 progressBar: !!progressBar,
                 timeDisplay: !!timeDisplay
               });
-              
+
               if (progressBar) {
                 progressBar.style.width = (percentage * 100) + '%';
                 console.log('seekAudio: Set progress bar width to', (percentage * 100) + '%');
               }
-              
+
               if (timeDisplay && currentAudio.formatTime) {
                 const current = Math.floor(currentAudio.currentTime);
                 const total = Math.floor(currentAudio.duration);
@@ -894,7 +894,7 @@
                 timeDisplay.textContent = timeText;
                 console.log('seekAudio: Set time display to', timeText);
               }
-              
+
               console.log('seekAudio: Completed - new time is', currentAudio.currentTime, 'seconds');
             }
 

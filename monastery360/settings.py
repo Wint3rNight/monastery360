@@ -2,7 +2,12 @@
 Django settings for monastery360 project.
 
 This settings file is configured for development with GeoDjango support,
-internationalization, and Progressive Web App capabilities.
+internationalizLANGUAGES = [
+    ('en', 'English'),
+    ('hi', 'हिन्दी'),
+    ('ne', 'नেপাली'),
+    ('bn', 'বাংলা'),
+], and Progressive Web App capabilities.
 """
 
 import os
